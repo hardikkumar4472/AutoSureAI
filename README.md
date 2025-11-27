@@ -1,6 +1,5 @@
 # 🚗 AutoSureAI — Intelligent Accident Analysis & Insurance Resolution Platform
 
-## 📌 Tagline  
 **On-the-spot accident analysis, real‑time accident information & AI‑powered insurance dispute resolution**
 
 AutoSureAI is an end‑to‑end intelligent motor‑insurance lifecycle platform.  
