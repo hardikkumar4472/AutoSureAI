@@ -162,8 +162,8 @@ Traditional insurance claims face:
 
 ```
 AutoSureAI/
-├── client/            # React frontend
-├── server/            # Express backend
+├── Frontend/            # React frontend
+├── Backend/            # Express backend
 ├── ml-service/        # DenseNet121 inference API
 └── README.md
 ```
