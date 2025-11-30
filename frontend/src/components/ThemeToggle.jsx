@@ -9,7 +9,7 @@ const ThemeToggle = ({ showLabel = true, className = '' }) => {
   const themes = [
     { id: 'light', label: 'Light', icon: Sun, color: 'text-yellow-500' },
     { id: 'dark', label: 'Dark', icon: Moon, color: 'text-indigo-400' },
-    { id: 'system', label: 'System', icon: Monitor, color: 'text-gray-500' },
+    // { id: 'system', label: 'System', icon: Monitor, color: 'text-gray-500' },
   ];
 
   const currentTheme = themes.find(t => t.id === theme);

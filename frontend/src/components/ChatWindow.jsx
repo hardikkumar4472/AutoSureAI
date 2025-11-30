@@ -178,7 +178,7 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
   const MessageBubble = ({ message }) => {
     const isOwn = message.sender?._id === user?.id || message.sender === user?.id;
     const isSystem = message.sender?.role === 'system';
-    const isOnline = onlineUsers.has(message.sender?._id);
+    // const isOnline = onlineUsers.has(message.sender?._id);
 
     if (isSystem) {
       return (
@@ -204,9 +204,9 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
                 <User className="w-4 h-4 text-white" />
               </div>
-              {isOnline && (
+              {/* {isOnline && (
                 <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full"></div>
-              )}
+              )} */}
             </div>
           )}
 
@@ -235,7 +235,7 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
               <span className={`text-xs ${isOwn ? 'text-blue-100' : 'text-gray-500'}`}>
                 {formatMessageTime(message.createdAt)}
               </span>
-              {getMessageStatusIcon(message, isOwn)}
+              {/* {getMessageStatusIcon(message, isOwn)} */}
             </div>
           </div>
         </div>
@@ -280,16 +280,16 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
           <div>
             <h3 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center space-x-1">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-              <span>Online • Claim #{claimId}</span>
+              {/* <span className="w-2 h-2 bg-green-500 rounded-full"></span> */}
+              {/* <span>Online • Claim #{claimId}</span> */}
             </p>
           </div>
         </div>
 
         <div className="flex items-center space-x-2">
-          <button className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-2xl transition-all duration-200">
+          {/* <button className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-2xl transition-all duration-200">
             <MoreVertical className="w-5 h-5" />
-          </button>
+          </button> */}
           {onClose && (
             <button
               onClick={onClose}
@@ -389,13 +389,13 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
 
         {}
         <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-          <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
-            <span>Press Enter to send</span>
+          {/* <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400"> */}
+            {/* <span>Press Enter to send</span>
             <span>•</span>
-            <span>Shift + Enter for new line</span>
-          </div>
+            <span>Shift + Enter for new line</span> */}
+          {/* </div> */}
 
-          <div className="flex items-center space-x-1">
+          {/* <div className="flex items-center space-x-1">
             <button className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200">
               <ImageIcon className="w-4 h-4" />
             </button>
@@ -404,8 +404,8 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
             </button>
             <button className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200">
               <Mic className="w-4 h-4" />
-            </button>
-          </div>
+            </button> */}
+          {/* </div> */}
         </div>
       </div>
     </div>
