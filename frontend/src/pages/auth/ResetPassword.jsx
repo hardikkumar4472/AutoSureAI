@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Lock, Car } from 'lucide-react';
+import { Lock, Car, Check, X } from 'lucide-react';
 import ThemeToggle from '../../components/ThemeToggle';
 
 const ResetPassword = () => {
@@ -10,6 +10,13 @@ const ResetPassword = () => {
     newPassword: '',
     confirmPassword: '',
   });
+  const [passwordErrors, setPasswordErrors] = useState({
+    minLength: false,
+    hasUppercase: false,
+    hasLowercase: false,
+    hasNumber: false,
+  });
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
   const [loading, setLoading] = useState(false);
   const { resetPassword } = useAuth();
   const navigate = useNavigate();
@@ -145,8 +152,47 @@ const ResetPassword = () => {
     };
   }, []);
 
+  const validatePassword = (password) => {
+    const errors = {
+      minLength: password.length >= 6,
+      hasUppercase: /[A-Z]/.test(password),
+      hasLowercase: /[a-z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+    };
+    setPasswordErrors(errors);
+    return Object.values(errors).every(Boolean);
+  };
+
+  const validateConfirmPassword = (password, confirmPassword) => {
+    if (confirmPassword && password !== confirmPassword) {
+      setConfirmPasswordError('Passwords do not match');
+      return false;
+    }
+    setConfirmPasswordError('');
+    return true;
+  };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    const sanitizedValue = value.replace(/[<>]/g, ''); // Basic sanitization
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: sanitizedValue
+    }));
+
+    // Validate password in real-time
+    if (name === 'newPassword') {
+      validatePassword(sanitizedValue);
+      if (formData.confirmPassword) {
+        validateConfirmPassword(sanitizedValue, formData.confirmPassword);
+      }
+    }
+
+    // Validate confirm password in real-time
+    if (name === 'confirmPassword') {
+      validateConfirmPassword(formData.newPassword, sanitizedValue);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -158,7 +204,16 @@ const ResetPassword = () => {
       return;
     }
 
-    if (formData.newPassword !== formData.confirmPassword) {
+    // Validate all password requirements
+    const isPasswordValid = validatePassword(formData.newPassword);
+    const isConfirmPasswordValid = validateConfirmPassword(formData.newPassword, formData.confirmPassword);
+
+    if (!isPasswordValid) {
+      alert('Please fix password requirements before submitting');
+      return;
+    }
+
+    if (!isConfirmPasswordValid) {
       alert('Passwords do not match');
       return;
     }
@@ -171,6 +226,19 @@ const ResetPassword = () => {
       navigate('/login');
     }
   };
+
+  const PasswordRequirement = ({ met, text }) => (
+    <div className={`flex items-center space-x-2 text-sm transition-colors duration-200 ${
+      met ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'
+    }`}>
+      {met ? (
+        <Check className="w-4 h-4" />
+      ) : (
+        <X className="w-4 h-4" />
+      )}
+      <span>{text}</span>
+    </div>
+  );
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-950 px-4 transition-colors overflow-hidden">
@@ -238,10 +306,40 @@ const ResetPassword = () => {
               name="newPassword"
               value={formData.newPassword}
               onChange={handleChange}
-              className="input-field rounded-full"
+              className={`input-field rounded-full ${
+                formData.newPassword && !Object.values(passwordErrors).every(Boolean) 
+                  ? 'border-yellow-500 focus:border-yellow-500' 
+                  : ''
+              }`}
               placeholder="Enter new password"
               required
+              minLength={6}
             />
+            
+            {/* Password Requirements */}
+            {formData.newPassword && (
+              <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-2">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Password must contain:
+                </p>
+                <PasswordRequirement 
+                  met={passwordErrors.minLength} 
+                  text="At least 6 characters" 
+                />
+                <PasswordRequirement 
+                  met={passwordErrors.hasUppercase} 
+                  text="At least one uppercase letter (A-Z)" 
+                />
+                <PasswordRequirement 
+                  met={passwordErrors.hasLowercase} 
+                  text="At least one lowercase letter (a-z)" 
+                />
+                <PasswordRequirement 
+                  met={passwordErrors.hasNumber} 
+                  text="At least one number (0-9)" 
+                />
+              </div>
+            )}
           </div>
 
           <div>
@@ -253,15 +351,23 @@ const ResetPassword = () => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="input-field rounded-full"
+              className={`input-field rounded-full ${
+                confirmPasswordError ? 'border-red-500 focus:border-red-500' : ''
+              }`}
               placeholder="Confirm new password"
               required
             />
+            {confirmPasswordError && (
+              <p className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center">
+                <X className="w-4 h-4 mr-1" />
+                {confirmPasswordError}
+              </p>
+            )}
           </div>
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !Object.values(passwordErrors).every(Boolean) || confirmPasswordError}
             className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed rounded-3xl transform transition-transform hover:scale-105 active:scale-95"
           >
             {loading ? (

@@ -112,9 +112,9 @@ const AdminTraffic = () => {
   );
 
   const OfficerCard = ({ officer }) => (
-    <div className="card rounded-2xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+    <div className="card rounded-lg p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2">
       <div className="flex items-start justify-between">
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
           <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-2xl flex items-center justify-center">
             <Shield className="w-8 h-8 text-white" />
           </div>
@@ -147,7 +147,7 @@ const AdminTraffic = () => {
           </div>
         </div>
         
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-0">
           <button
             onClick={() => openEditModal(officer)}
             className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-xl transition-all duration-200 transform hover:scale-110"
