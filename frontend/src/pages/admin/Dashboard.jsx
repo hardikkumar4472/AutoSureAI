@@ -269,13 +269,6 @@ const AdminDashboard = () => {
       link: '/admin/exports',
       color: 'border-indigo-500',
     },
-    {
-      title: 'System Settings',
-      description: 'Configure system parameters and preferences',
-      icon: Settings,
-      link: '/admin/settings',
-      color: 'border-gray-500',
-    },
   ];
 
   if (loading) {
