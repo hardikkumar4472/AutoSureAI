@@ -122,16 +122,25 @@ const AdminDashboard = () => {
 
   const fetchStats = async () => {
     try {
-      const [agentsRes, trafficRes] = await Promise.all([
+      const [agentsRes, trafficRes, claimsRes] = await Promise.all([
         api.get('/admin/agents'),
         api.get('/admin/traffic'),
+        api.get('/admin/claims'),
       ]);
+      
+      const claimsData = claimsRes.data.claims || [];
+      const totalClaims = claimsData.length;
+      
+      // Count accident reports - assuming all claims are accident reports
+      // OR if you have a separate accidents endpoint, use this instead:
+      // const accidentsRes = await api.get('/admin/accidents');
+      // const accidentReports = accidentsRes.data.accidents?.length || 0;
       
       setStats({
         agents: agentsRes.data.agents?.length || 0,
         traffic: trafficRes.data.officers?.length || 0,
-        claims: 0, // You can add a claims endpoint if needed
-        accidents: 0, // You can add an accidents endpoint if needed
+        claims: totalClaims,
+        accidents: totalClaims, // Using claims count as accident reports
       });
     } catch (error) {
       console.error('Error fetching stats:', error);

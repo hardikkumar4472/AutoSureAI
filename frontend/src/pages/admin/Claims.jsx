@@ -258,7 +258,7 @@ const AdminClaims = () => {
         </div>
 
         {}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <StatCard
             title="Total Claims"
             value={stats.total}
@@ -287,13 +287,13 @@ const AdminClaims = () => {
             color="text-red-600 dark:text-red-400"
             description="Not approved"
           />
-          <StatCard
+          {/* <StatCard
             title="Unassigned"
             value={stats.unassigned}
             icon={Users}
             color="text-blue-600 dark:text-blue-400"
             description="Need agent assignment"
-          />
+          /> */}
         </div>
 
         {}
