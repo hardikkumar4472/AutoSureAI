@@ -364,7 +364,6 @@ const Register = () => {
               minLength={6}
             />
             
-            {/* Password Requirements */}
             {formData.password && (
               <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-2">
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

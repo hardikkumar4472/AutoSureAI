@@ -198,7 +198,6 @@ const ClaimDetails = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Link
             to="/my-reports"
@@ -216,9 +215,7 @@ const ClaimDetails = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* LEFT SECTION */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Main Claim Card */}
             <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-3">
@@ -262,7 +259,6 @@ const ClaimDetails = () => {
                 </div>
               )}
 
-              {/* Claim Information */}
               <div className="space-y-6">
                 {claim.assignedAgent && (
                   <div className="p-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-2xl border border-gray-200 dark:border-gray-600">
@@ -363,7 +359,6 @@ const ClaimDetails = () => {
               </div>
             </div>
 
-            {/* Chat Section */}
             {claim.status !== 'rejected' && claim.status !== 'approved' && (
               <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
                 <ChatWindow claimId={id} />
@@ -371,9 +366,7 @@ const ClaimDetails = () => {
             )}
           </div>
 
-          {/* RIGHT SECTION */}
           <div className="space-y-8">
-            {/* Status Timeline */}
             <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-2 h-8 bg-gradient-to-b from-green-600 to-green-400 rounded-full"></div>
@@ -408,7 +401,6 @@ const ClaimDetails = () => {
               </div>
             </div>
 
-            {/* Quick Actions */}
             <div className="card rounded-3xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
               <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
               <div className="space-y-3">

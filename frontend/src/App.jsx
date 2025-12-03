@@ -16,12 +16,16 @@ import DriverDashboard from './pages/driver/Dashboard';
 import ReportAccident from './pages/driver/ReportAccident';
 import MyReports from './pages/driver/MyReports';
 import ClaimDetails from './pages/driver/ClaimDetails';
+import DriverAnalytics from './pages/driver/Analytics';
 
 import AgentDashboard from './pages/agent/Dashboard';
 import AgentClaimDetails from './pages/agent/ClaimDetails';
+import AgentAnalytics from './pages/agent/Analytics';
+import AgentHotspots from './pages/agent/Hotspots';
 
 import TrafficDashboard from './pages/traffic/Dashboard';
 import TrafficReportDetails from './pages/traffic/ReportDetails';
+import TrafficAnalytics from './pages/traffic/Analytics';
 
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminAgents from './pages/admin/Agents';
@@ -60,8 +64,8 @@ const Unauthorized = () => {
       <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-md text-center border border-gray-200 dark:border-gray-800">
         <h1 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h1>
         <p className="text-gray-600 dark:text-gray-300 mb-4">You don't have permission to access this page.</p>
-        <button 
-          onClick={() => window.history.back()} 
+        <button
+          onClick={() => window.history.back()}
           className="bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700 transition"
         >
           Go Back
@@ -75,7 +79,7 @@ const NotFound = () => {
   const { isAuthenticated, user } = useAuth();
 
   const getDashboardPath = () => {
-    switch(user?.role) {
+    switch (user?.role) {
       case 'driver': return '/dashboard';
       case 'agent': return '/agent';
       case 'traffic': return '/traffic';
@@ -90,7 +94,7 @@ const NotFound = () => {
         <h1 className="text-6xl font-bold text-gray-800 dark:text-white mb-4">404</h1>
         <h2 className="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Page Not Found</h2>
         <p className="text-gray-600 dark:text-gray-300 mb-6">The page you're looking for doesn't exist.</p>
-        <button 
+        <button
           onClick={() => window.location.href = isAuthenticated ? getDashboardPath() : '/'}
           className="bg-primary-600 text-white px-6 py-2 rounded hover:bg-primary-700 transition"
         >
@@ -121,7 +125,6 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      {}
       <Route
         path="/"
         element={
@@ -133,18 +136,15 @@ const AppRoutes = () => {
         }
       />
 
-      {}
       <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" replace />} />
       <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/" replace />} />
       <Route path="/verify-otp" element={!isAuthenticated ? <VerifyOtp /> : <Navigate to="/" replace />} />
       <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword /> : <Navigate to="/" replace />} />
       <Route path="/reset-password" element={!isAuthenticated ? <ResetPassword /> : <Navigate to="/" replace />} />
 
-      {}
       <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/404" element={<NotFound />} />
 
-      {}
       <Route
         path="/dashboard"
         element={
@@ -190,7 +190,14 @@ const AppRoutes = () => {
         }
       />
 
-      {}
+      <Route
+        path="/driver/analytics"
+        element={
+          <PrivateRoute allowedRoles={['driver']}>
+            <Layout><DriverAnalytics /></Layout>
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/agent"
         element={
@@ -209,7 +216,24 @@ const AppRoutes = () => {
         }
       />
 
-      {}
+      <Route
+        path="/agent/analytics"
+        element={
+          <PrivateRoute allowedRoles={['agent']}>
+            <Layout><AgentAnalytics /></Layout>
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/agent/hotspots"
+        element={
+          <PrivateRoute allowedRoles={['agent']}>
+            <Layout><AgentHotspots /></Layout>
+          </PrivateRoute>
+        }
+      />
+
       <Route
         path="/traffic"
         element={
@@ -228,7 +252,15 @@ const AppRoutes = () => {
         }
       />
 
-      {}
+      <Route
+        path="/traffic/analytics"
+        element={
+          <PrivateRoute allowedRoles={['traffic']}>
+            <Layout><TrafficAnalytics /></Layout>
+          </PrivateRoute>
+        }
+      />
+
       <Route
         path="/admin"
         element={
@@ -300,8 +332,6 @@ const AppRoutes = () => {
           </PrivateRoute>
         }
       />
-
-      {}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

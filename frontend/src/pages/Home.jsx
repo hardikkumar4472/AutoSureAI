@@ -155,19 +155,15 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 transition-colors overflow-hidden">
-      {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Floating car 1 */}
         <div className="absolute -left-20 top-1/4 animate-float-car-1">
           <Car className="w-8 h-8 text-primary-400 dark:text-primary-600 opacity-60" />
         </div>
 
-        {/* Floating car 2 */}
         <div className="absolute -right-20 top-1/2 animate-float-car-2">
           <Car className="w-6 h-6 text-primary-300 dark:text-primary-500 opacity-40" />
         </div>
 
-        {/* Floating car 3 */}
         <div className="absolute -left-16 bottom-1/3 animate-float-car-3">
           <Car className="w-10 h-10 text-primary-500 dark:text-primary-400 opacity-50" />
         </div>
