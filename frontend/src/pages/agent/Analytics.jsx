@@ -343,7 +343,7 @@ const AgentAnalytics = () => {
                 ) : (
                     <>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-=                            <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+                            <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
                                 <div className="flex items-center space-x-3 mb-6">
                                     <div className="w-2 h-8 bg-gradient-to-b from-primary-600 to-primary-400 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Claims by Status</h2>
