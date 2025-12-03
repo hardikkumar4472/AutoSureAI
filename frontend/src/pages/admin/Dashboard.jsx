@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Users, 
-  Shield, 
-  ClipboardList, 
-  BarChart3, 
+import {
+  Users,
+  Shield,
+  ClipboardList,
+  BarChart3,
   MessageSquare,
   AlertCircle,
   TrendingUp,
@@ -28,13 +28,11 @@ const AdminDashboard = () => {
   });
   const [loading, setLoading] = useState(true);
   const [recentActivity, setRecentActivity] = useState([]);
-
-  // Particle effect for background
   useEffect(() => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     const container = document.querySelector('.min-h-screen');
-    
+
     if (!container) return;
 
     canvas.style.position = 'fixed';
@@ -45,34 +43,34 @@ const AdminDashboard = () => {
     canvas.style.pointerEvents = 'none';
     canvas.style.zIndex = '0';
     canvas.style.opacity = '0.3';
-    
+
     container.style.position = 'relative';
     container.appendChild(canvas);
-    
+
     const resizeCanvas = () => {
       canvas.width = container.clientWidth;
       canvas.height = container.clientHeight;
     };
-    
+
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
-    
+
     class Particle {
       constructor() {
         this.reset();
       }
-      
+
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 2 + 1;
         this.speed = Math.random() * 0.4 + 0.1;
         this.opacity = Math.random() * 0.2 + 0.1;
-        this.color = document.documentElement.classList.contains('dark') 
-          ? Math.random() > 0.7 ? '#6366f1' : '#8b5cf6' 
+        this.color = document.documentElement.classList.contains('dark')
+          ? Math.random() > 0.7 ? '#6366f1' : '#8b5cf6'
           : Math.random() > 0.7 ? '#4f46e5' : '#6366f1';
       }
-      
+
       update() {
         this.y += this.speed;
         if (this.y > canvas.height) {
@@ -80,7 +78,7 @@ const AdminDashboard = () => {
           this.y = -10;
         }
       }
-      
+
       draw() {
         if (!ctx) return;
         ctx.fillStyle = this.color;
@@ -90,23 +88,23 @@ const AdminDashboard = () => {
         ctx.fill();
       }
     }
-    
+
     const particles = Array.from({ length: 25 }, () => new Particle());
-    
+
     const animate = () => {
       if (!ctx) return;
-      
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(particle => {
         particle.update();
         particle.draw();
       });
-      
+
       requestAnimationFrame(animate);
     };
-    
+
     animate();
-    
+
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       if (canvas.parentNode) {
@@ -127,20 +125,16 @@ const AdminDashboard = () => {
         api.get('/admin/traffic'),
         api.get('/admin/claims'),
       ]);
-      
+
       const claimsData = claimsRes.data.claims || [];
       const totalClaims = claimsData.length;
-      
-      // Count accident reports - assuming all claims are accident reports
-      // OR if you have a separate accidents endpoint, use this instead:
-      // const accidentsRes = await api.get('/admin/accidents');
-      // const accidentReports = accidentsRes.data.accidents?.length || 0;
-      
+
+
       setStats({
         agents: agentsRes.data.agents?.length || 0,
         traffic: trafficRes.data.officers?.length || 0,
         claims: totalClaims,
-        accidents: totalClaims, // Using claims count as accident reports
+        accidents: totalClaims, 
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -294,7 +288,6 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center space-x-3">
@@ -311,14 +304,14 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-2 text-sm text-indigo-600 dark:text-indigo-400 bg-white dark:bg-gray-800 px-4 py-2 rounded-2xl border border-indigo-200 dark:border-indigo-800">
             <Eye className="w-4 h-4" />
             <span>System Overview</span>
           </div>
         </div>
 
-        {/* System Stats Grid */}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
             title="Insurance Agents"
@@ -349,8 +342,6 @@ const AdminDashboard = () => {
             description="Reported incidents"
           />
         </div>
-
-        {/* System Status Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="card rounded-2xl p-6 border border-green-200 dark:border-green-800 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
             <div className="flex items-center justify-between">
@@ -387,7 +378,6 @@ const AdminDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Quick Actions */}
           <div className="lg:col-span-2">
             <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
               <div className="flex items-center space-x-3 mb-6">
@@ -401,14 +391,12 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-
-          {/* Recent Activity */}
           <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
             <div className="flex items-center space-x-3 mb-6">
               <div className="w-2 h-8 bg-gradient-to-b from-purple-600 to-purple-400 rounded-full"></div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Recent Activity</h2>
             </div>
-            
+
             {recentActivity.length === 0 ? (
               <div className="text-center py-8">
                 <Activity className="w-12 h-12 text-gray-400 mx-auto mb-3" />
@@ -433,32 +421,31 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Quick Stats Summary */}
         <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-2 h-8 bg-gradient-to-b from-green-600 to-green-400 rounded-full"></div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">System Summary</h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
               <Users className="w-8 h-8 text-green-600 dark:text-green-400 mx-auto mb-2" />
               <p className="font-semibold text-gray-900 dark:text-white">{stats.agents}</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">Agents</p>
             </div>
-            
+
             <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
               <Shield className="w-8 h-8 text-yellow-600 dark:text-yellow-400 mx-auto mb-2" />
               <p className="font-semibold text-gray-900 dark:text-white">{stats.traffic}</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">Officers</p>
             </div>
-            
+
             <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
               <ClipboardList className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
               <p className="font-semibold text-gray-900 dark:text-white">{stats.claims}</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">Claims</p>
             </div>
-            
+
             <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
               <TrendingUp className="w-8 h-8 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
               <p className="font-semibold text-gray-900 dark:text-white">{stats.accidents}</p>

@@ -19,7 +19,7 @@ const AgentClaimDetails = () => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     const container = document.querySelector('.min-h-screen');
-    
+
     if (!container) return;
 
     canvas.style.position = 'fixed';
@@ -30,34 +30,34 @@ const AgentClaimDetails = () => {
     canvas.style.pointerEvents = 'none';
     canvas.style.zIndex = '0';
     canvas.style.opacity = '0.4';
-    
+
     container.style.position = 'relative';
     container.appendChild(canvas);
-    
+
     const resizeCanvas = () => {
       canvas.width = container.clientWidth;
       canvas.height = container.clientHeight;
     };
-    
+
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
-    
+
     class Particle {
       constructor() {
         this.reset();
       }
-      
+
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 2 + 1;
         this.speed = Math.random() * 0.3 + 0.1;
         this.opacity = Math.random() * 0.2 + 0.1;
-        this.color = document.documentElement.classList.contains('dark') 
-          ? Math.random() > 0.7 ? '#8b5cf6' : '#a78bfa' 
+        this.color = document.documentElement.classList.contains('dark')
+          ? Math.random() > 0.7 ? '#8b5cf6' : '#a78bfa'
           : Math.random() > 0.7 ? '#7c3aed' : '#8b5cf6';
       }
-      
+
       update() {
         this.y += this.speed;
         if (this.y > canvas.height) {
@@ -65,7 +65,7 @@ const AgentClaimDetails = () => {
           this.y = -10;
         }
       }
-      
+
       draw() {
         if (!ctx) return;
         ctx.fillStyle = this.color;
@@ -75,23 +75,23 @@ const AgentClaimDetails = () => {
         ctx.fill();
       }
     }
-    
+
     const particles = Array.from({ length: 30 }, () => new Particle());
-    
+
     const animate = () => {
       if (!ctx) return;
-      
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(particle => {
         particle.update();
         particle.draw();
       });
-      
+
       requestAnimationFrame(animate);
     };
-    
+
     animate();
-    
+
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       if (canvas.parentNode) {
@@ -197,8 +197,8 @@ const AgentClaimDetails = () => {
           <AlertTriangle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Claim Not Found</h3>
           <p className="text-gray-600 dark:text-gray-300 mb-6">The requested claim could not be found.</p>
-          <button 
-            onClick={() => navigate('/agent')} 
+          <button
+            onClick={() => navigate('/agent')}
             className="btn-primary rounded-2xl px-6 py-3 inline-flex items-center space-x-2"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -212,7 +212,6 @@ const AgentClaimDetails = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => navigate('/agent')}
@@ -221,7 +220,7 @@ const AgentClaimDetails = () => {
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Back to Dashboard</span>
           </button>
-          
+
           <div className="text-right">
             <span className={`px-4 py-2 rounded-2xl text-sm font-semibold capitalize ${getStatusColor(claim.status)}`}>
               {claim.status.replace('_', ' ')}
@@ -230,9 +229,7 @@ const AgentClaimDetails = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* LEFT SECTION */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Main Claim Card */}
             <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-3">
@@ -295,9 +292,7 @@ const AgentClaimDetails = () => {
                 </div>
               )}
 
-              {/* Claim Information */}
               <div className="space-y-6">
-                {/* Driver Information */}
                 <div className="p-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-2xl border border-gray-200 dark:border-gray-600">
                   <div className="flex items-center space-x-3 mb-4">
                     <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center">
@@ -329,7 +324,6 @@ const AgentClaimDetails = () => {
                   </div>
                 </div>
 
-                {/* Location Information */}
                 {claim.reportId?.location && (
                   <div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-200 dark:border-blue-800">
                     <div className="flex items-center space-x-3 mb-4">
@@ -340,7 +334,6 @@ const AgentClaimDetails = () => {
                   </div>
                 )}
 
-                {/* Traffic Verification */}
                 {claim.reportId?.verification && (
                   <div className="p-6 bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl border border-yellow-200 dark:border-yellow-800">
                     <div className="flex items-center space-x-3 mb-4">
@@ -362,7 +355,6 @@ const AgentClaimDetails = () => {
               </div>
             </div>
 
-            {/* Chat Section */}
             {claim.status === 'in_review' && (
               <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
                 <ChatWindow claimId={id} />
@@ -370,16 +362,14 @@ const AgentClaimDetails = () => {
             )}
           </div>
 
-          {/* RIGHT SECTION */}
-          <div className="space-y-8">
-            {/* Review Actions */}
+          <div className="space-y-8 lg:sticky lg:top-8 lg:h-fit">
             {claim.status === 'in_review' && (
               <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
                 <div className="flex items-center space-x-3 mb-6">
                   <div className="w-2 h-8 bg-gradient-to-b from-green-600 to-green-400 rounded-full"></div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Review Claim</h2>
                 </div>
-                
+
                 <div className="mb-6">
                   <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                     Remarks *
@@ -407,7 +397,7 @@ const AgentClaimDetails = () => {
                     )}
                     <span>Approve Claim</span>
                   </button>
-                  
+
                   <button
                     onClick={handleReject}
                     disabled={actionLoading || !remarks.trim()}
@@ -424,7 +414,6 @@ const AgentClaimDetails = () => {
               </div>
             )}
 
-            {/* Claim Information */}
             <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></div>

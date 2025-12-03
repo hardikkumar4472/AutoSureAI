@@ -174,7 +174,6 @@ const ReportAccident = () => {
     }
   };
 
-  /* ----------------------- GET CURRENT LOCATION + ADDRESS ----------------------- */
   const getCurrentLocation = async () => {
     if (!navigator.geolocation) {
       toast.error("Geolocation is not supported by your browser");
@@ -232,7 +231,6 @@ const ReportAccident = () => {
     );
   };
 
-  /* ----------------------------- SUBMIT FORM ----------------------------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -270,7 +268,6 @@ const ReportAccident = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4 transition-colors">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-2xl mb-4">
             <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
@@ -285,7 +282,6 @@ const ReportAccident = () => {
 
         <form onSubmit={handleSubmit} className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl relative z-10">
           
-          {/* IMAGE UPLOAD SECTION */}
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-2 h-8 bg-gradient-to-b from-red-600 to-red-400 rounded-full"></div>
@@ -338,14 +334,12 @@ const ReportAccident = () => {
             </div>
           </div>
 
-          {/* LOCATION SECTION */}
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Location Details</h2>
             </div>
 
-            {/* Location Capture Button */}
             <div className="flex justify-center mb-6">
               <button
                 type="button"
@@ -364,7 +358,6 @@ const ReportAccident = () => {
               </button>
             </div>
 
-            {/* Coordinates Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
@@ -384,8 +377,6 @@ const ReportAccident = () => {
                 </div>
               </div>
             </div>
-
-            {/* Address Field */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                 Address
@@ -396,7 +387,6 @@ const ReportAccident = () => {
             </div>
           </div>
 
-          {/* ACTION BUTTONS */}
           <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
             <button
               type="submit"

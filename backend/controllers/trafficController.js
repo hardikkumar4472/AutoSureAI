@@ -31,6 +31,21 @@ export const listPendingReports = async (req, res) => {
   }
 };
 
+export const getAllReports = async (req, res) => {
+  try {
+    // Fetch all reports for analytics without pagination
+    const reports = await Accident.find()
+      .sort({ createdAt: -1 })
+      .populate("userId", "name email")
+      .select("verification trafficVerification status createdAt location prediction repair_cost");
+
+    res.json({ success: true, reports });
+  } catch (err) {
+    console.error("getAllReports error:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
 export const verifyReport = async (req, res) => {
   try {
     const reportId = req.params.id;
@@ -102,7 +117,7 @@ export const updateFIR = async (req, res) => {
 
     if (req.file) {
       firDocumentUrl = await uploadToSupabase(req.file);
-      fs.unlink(req.file.path, () => {}); 
+      fs.unlink(req.file.path, () => { });
     }
 
     accident.trafficVerification = {
