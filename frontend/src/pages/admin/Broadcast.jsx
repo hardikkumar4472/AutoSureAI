@@ -15,7 +15,7 @@ const AdminBroadcast = () => {
   const [characterCount, setCharacterCount] = useState(0);
 
   const roles = [
-    { value: 'driver', label: 'Drivers', icon: Users, color: 'text-blue-600', count: 1250 },
+    { value: 'driver', label: 'Drivers', icon: Users, color: 'text-blue-600', count: 1250},
     { value: 'agent', label: 'Insurance Agents', icon: ClipboardList, color: 'text-green-600', count: 45 },
     { value: 'traffic', label: 'Traffic Officers', icon: Shield, color: 'text-yellow-600', count: 89 },
   ];
@@ -64,7 +64,7 @@ const AdminBroadcast = () => {
     setLoading(true);
     try {
       await api.post('/admin/broadcast/send', formData);
-      toast.success(`Broadcast sent successfully to ${getSelectedRecipientsCount()} recipients!`);
+      toast.success(`Broadcast sent successfully`);
       setFormData({
         subject: '',
         message: '',
@@ -106,7 +106,6 @@ const AdminBroadcast = () => {
             <p className={`text-sm ${
               selected ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400'
             }`}>
-              {role.count.toLocaleString()} users
             </p>
           </div>
           <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
@@ -216,9 +215,9 @@ const AdminBroadcast = () => {
                 <label className="block text-sm font-semibold text-gray-900 dark:text-white">
                   Recipients *
                 </label>
-                <span className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
+                {/* <span className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
                   {getSelectedRecipientsCount().toLocaleString()} users selected
-                </span>
+                </span> */}
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {roles.map((role) => (

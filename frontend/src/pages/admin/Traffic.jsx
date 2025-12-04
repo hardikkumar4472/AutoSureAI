@@ -196,7 +196,6 @@ const AdminTraffic = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center space-x-4">
@@ -226,7 +225,6 @@ const AdminTraffic = () => {
           </div>
         </div>
 
-        {/* Stats and Actions */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="card rounded-2xl p-6 border border-yellow-200 dark:border-yellow-800 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20">
             <div className="flex items-center justify-between">
@@ -272,7 +270,6 @@ const AdminTraffic = () => {
           </button>
         </div>
 
-        {/* Search and Filter */}
         <div className="card rounded-3xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="relative flex-1 max-w-md">
@@ -297,7 +294,6 @@ const AdminTraffic = () => {
           </div>
         </div>
 
-        {/* Officers Grid */}
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -340,7 +336,6 @@ const AdminTraffic = () => {
         </div>
       </div>
 
-      {/* Create/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-3xl max-w-md w-full p-8 shadow-2xl">
