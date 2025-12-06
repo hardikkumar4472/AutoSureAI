@@ -17,6 +17,7 @@ import adminTrafficRoutes from "./routes/adminTrafficRoutes.js";
 import claimSettlementRoutes from "./routes/settlementRoutes.js";
 import hotspotRoutes from "./routes/hotspotRoutes.js";
 import exportRoutes from "./routes/exportRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 import { authLimiter ,uploadLimiter} from "./middleware/rateLimiter.js";
 import trafficRoutes from "./routes/trafficRoutes.js";
 import claimRoutes from "./routes/claimRoutes.js";
@@ -46,6 +47,7 @@ app.use("/api/admin/hotspots", hotspotRoutes);
 app.use("/api/admin/export", exportRoutes);
 app.use("/api/traffic",trafficRoutes);
 app.use("/api/claims", claimRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 app.get("/", (req, res) => res.send("AutoSureAI Backend Running 🚗"));
 
@@ -55,6 +57,9 @@ const server = http.createServer(app);
 export const io = new IOServer(server, {
   cors: { origin: "*" },
 });
+
+import { setIO } from "./services/notificationService.js";
+setIO(io);
 
 io.on("connection", (socket) => {
   console.log("Socket connected:", socket.id);

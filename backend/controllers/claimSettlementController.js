@@ -3,6 +3,7 @@ import Settlement from "../models/Settlement.js";
 import User from "../models/User.js";
 import { io } from "../server.js";
 import { sendClaimUpdateEmail } from "../utils/sendClaimEmail.js";
+import { notifyClaimSettled } from "../services/notificationService.js";
 
 export const settleClaim = async (req, res) => {
   try {
@@ -64,6 +65,7 @@ export const settleClaim = async (req, res) => {
       "Your insurance claim has been settled",
       claim
     );
+    await notifyClaimSettled(claim, claim.driverId, settlement);
 
     res.json({
       success: true,

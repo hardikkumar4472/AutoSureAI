@@ -110,7 +110,7 @@ const DriverAnalytics = () => {
         }
     };
 
-    // Calculate statistics
+
     const stats = {
         total: reports.length,
         pending: reports.filter(r => r.claimId?.status === 'in_review' || r.claimId?.status === 'pending').length,
@@ -120,21 +120,21 @@ const DriverAnalytics = () => {
         avgCost: reports.length > 0 ? reports.reduce((sum, r) => sum + (r.repair_cost?.estimated_cost || 0), 0) / reports.length : 0,
     };
 
-    // Prepare data for status bar chart
+
     const statusData = [
         { name: 'Pending', value: stats.pending, color: '#eab308' },
         { name: 'Approved', value: stats.approved, color: '#22c55e' },
         { name: 'Rejected', value: stats.rejected, color: '#ef4444' },
     ];
 
-    // Prepare data for severity pie chart
+
     const severityData = [
         { name: 'Severe', value: reports.filter(r => r.prediction?.severity === 'severe').length, color: '#ef4444' },
         { name: 'Moderate', value: reports.filter(r => r.prediction?.severity === 'moderate').length, color: '#f97316' },
         { name: 'Minor', value: reports.filter(r => r.prediction?.severity === 'minor').length, color: '#22c55e' },
     ].filter(item => item.value > 0);
 
-    // Prepare data for timeline chart
+
     const getTimelineData = () => {
         if (reports.length === 0) return [];
 

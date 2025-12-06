@@ -31,10 +31,12 @@ import AdminDashboard from './pages/admin/Dashboard';
 import AdminAgents from './pages/admin/Agents';
 import AdminTraffic from './pages/admin/Traffic';
 import AdminClaims from './pages/admin/Claims';
+import AdminClaimDetails from './pages/admin/ClaimDetails';
 import AdminBroadcast from './pages/admin/Broadcast';
 import AdminAuditLogs from './pages/admin/AuditLogs';
 import AdminAnalytics from './pages/admin/Analytics';
 import AdminExports from './pages/admin/Exports';
+import Notifications from './pages/Notifications';
 
 import Layout from './components/Layout';
 
@@ -198,6 +200,16 @@ const AppRoutes = () => {
           </PrivateRoute>
         }
       />
+
+      <Route
+        path="/notifications"
+        element={
+          <PrivateRoute>
+            <Layout><Notifications /></Layout>
+          </PrivateRoute>
+        }
+      />
+
       <Route
         path="/agent"
         element={
@@ -293,6 +305,15 @@ const AppRoutes = () => {
         element={
           <PrivateRoute allowedRoles={['admin']}>
             <Layout><AdminClaims /></Layout>
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/claims/:id"
+        element={
+          <PrivateRoute allowedRoles={['admin']}>
+            <Layout><AdminClaimDetails /></Layout>
           </PrivateRoute>
         }
       />

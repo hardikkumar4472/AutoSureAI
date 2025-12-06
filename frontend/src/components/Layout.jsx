@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import ThemeToggle from './ThemeToggle';
+import NotificationBell from './NotificationBell';
 
 const Layout = ({ children }) => {
   const { user, logout, isAdmin, isAgent, isTraffic, isDriver } = useAuth();
@@ -170,7 +171,10 @@ const Layout = ({ children }) => {
           </nav>
 
           <div className="p-6 border-t border-gray-200/50 dark:border-gray-700/50 space-y-4">
-            <ThemeToggle showLabel={true} className="w-full justify-center rounded-2xl py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700" />
+            <div className="flex items-center space-x-2">
+              <NotificationBell />
+              <ThemeToggle showLabel={true} className="flex-1 justify-center rounded-2xl py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700" />
+            </div>
 
             <div className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
               <div className={`w-12 h-12 bg-gradient-to-r ${roleColor} rounded-2xl flex items-center justify-center shadow-md`}>
@@ -212,6 +216,7 @@ const Layout = ({ children }) => {
           </div>
 
           <div className="flex items-center space-x-2">
+            <NotificationBell />
             <ThemeToggle showLabel={false} className="rounded-2xl" />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
