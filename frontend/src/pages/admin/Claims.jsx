@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { RefreshCw, Users, FileText, Shield, ClipboardList, UserCheck, ArrowRight, Search, Filter } from 'lucide-react';
+import { RefreshCw, Users, FileText, Shield, ClipboardList, UserCheck, ArrowRight, Search, Filter, Eye } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 
 const AdminClaims = () => {
+  const navigate = useNavigate();
   const [claims, setClaims] = useState([]);
   const [agents, setAgents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -465,6 +467,7 @@ const AdminClaims = () => {
                     <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Agent</th>
                     <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Report</th>
                     <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Created</th>
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -526,6 +529,15 @@ const AdminClaims = () => {
                       </td>
                       <td className="py-4 px-6 text-sm text-gray-600 dark:text-gray-400">
                         {format(new Date(claim.createdAt), 'MMM dd, yyyy')}
+                      </td>
+                      <td className="py-4 px-6">
+                        <button
+                          onClick={() => navigate(`/admin/claims/${claim._id}`)}
+                          className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-sm font-medium transition-colors duration-200 bg-primary-50 dark:bg-primary-900/20 px-3 py-2 rounded-xl hover:bg-primary-100 dark:hover:bg-primary-900/30"
+                        >
+                          <Eye className="w-4 h-4" />
+                          <span>View</span>
+                        </button>
                       </td>
                     </tr>
                   ))}

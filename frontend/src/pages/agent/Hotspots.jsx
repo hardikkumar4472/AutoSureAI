@@ -19,30 +19,23 @@ const AgentHotspots = () => {
             const response = await api.get('/agent/claims');
             const claims = response.data.claims || [];
 
-            // Process claims to group by area
             const areaMap = new Map();
 
             claims.forEach(claim => {
-                // Try to get a meaningful area name from address
                 const address = claim.reportId?.location?.address || 'Unknown Location';
-                // Simple heuristic: Use the city/locality (assuming format "Street, City, State")
-                // If address is short, use it as is. If long, try to split.
+
                 let areaName = address;
                 if (address.includes(',')) {
                     const parts = address.split(',').map(p => p.trim());
-                    // Take the second to last part if available (often City), or just the first part
                     if (parts.length >= 2) {
                         areaName = parts[parts.length - 2] || parts[0];
-                        // If it's too short (e.g. state code), maybe take the one before
                         if (areaName.length < 3 && parts.length >= 3) {
                             areaName = parts[parts.length - 3];
                         }
                     }
                 }
 
-                // Fallback if extraction fails or is empty
                 if (!areaName || areaName === 'Unknown Location') {
-                    // Try coordinates if address is missing
                     const loc = claim.reportId?.location;
                     if (loc?.latitude && loc?.longitude) {
                         areaName = `Loc: ${loc.latitude.toFixed(2)}, ${loc.longitude.toFixed(2)}`;
@@ -68,10 +61,9 @@ const AgentHotspots = () => {
                 }
             });
 
-            // Convert to array and sort by count descending
             const sortedAreas = Array.from(areaMap.values())
                 .sort((a, b) => b.count - a.count)
-                .slice(0, 10); // Top 10 areas
+                .slice(0, 10); 
 
             setAreaData(sortedAreas);
 

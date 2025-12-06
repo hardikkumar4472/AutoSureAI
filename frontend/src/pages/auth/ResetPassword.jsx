@@ -174,14 +174,14 @@ const ResetPassword = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const sanitizedValue = value.replace(/[<>]/g, ''); // Basic sanitization
+    const sanitizedValue = value.replace(/[<>]/g, '');
     
     setFormData(prev => ({
       ...prev,
       [name]: sanitizedValue
     }));
 
-    // Validate password in real-time
+
     if (name === 'newPassword') {
       validatePassword(sanitizedValue);
       if (formData.confirmPassword) {
@@ -189,7 +189,6 @@ const ResetPassword = () => {
       }
     }
 
-    // Validate confirm password in real-time
     if (name === 'confirmPassword') {
       validateConfirmPassword(formData.newPassword, sanitizedValue);
     }
@@ -204,7 +203,6 @@ const ResetPassword = () => {
       return;
     }
 
-    // Validate all password requirements
     const isPasswordValid = validatePassword(formData.newPassword);
     const isConfirmPasswordValid = validateConfirmPassword(formData.newPassword, formData.confirmPassword);
 

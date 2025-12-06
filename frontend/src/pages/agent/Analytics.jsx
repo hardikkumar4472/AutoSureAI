@@ -128,7 +128,6 @@ const AgentAnalytics = () => {
         }
     };
 
-    // Calculate statistics
     const stats = {
         total: claims.length,
         pending: claims.filter(c => c.status === 'in_review' || c.status === 'pending').length,
@@ -138,17 +137,12 @@ const AgentAnalytics = () => {
         averageCost: claims.length > 0 ? claims.reduce((sum, claim) => sum + (claim.estimatedCost || 0), 0) / claims.length : 0
     };
 
-    // Prepare data for status bar chart
     const statusData = [
         { name: 'Pending Review', value: stats.pending, color: '#eab308' },
         { name: 'Approved', value: stats.approved, color: '#22c55e' },
         { name: 'Rejected', value: stats.rejected, color: '#ef4444' },
     ];
-
-    // Prepare data for pie chart
     const pieData = statusData.filter(item => item.value > 0);
-
-    // Prepare data for timeline chart (claims over time)
     const getTimelineData = () => {
         if (claims.length === 0) return [];
 
@@ -175,7 +169,6 @@ const AgentAnalytics = () => {
         });
     };
 
-    // Prepare data for cost analysis
     const getCostData = () => {
         if (claims.length === 0) return [];
 

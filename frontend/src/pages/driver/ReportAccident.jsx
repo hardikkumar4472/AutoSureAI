@@ -17,7 +17,7 @@ const ReportAccident = () => {
   const [gettingLocation, setGettingLocation] = useState(false);
   const navigate = useNavigate();
 
-  // Particle effect for background
+
   useEffect(() => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
@@ -45,7 +45,7 @@ const ReportAccident = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
     
-    // Particle class
+
     class Particle {
       constructor() {
         this.reset();
@@ -80,7 +80,7 @@ const ReportAccident = () => {
       }
     }
     
-    // Car particle for accident theme
+
     class CarParticle {
       constructor() {
         this.reset();
@@ -154,13 +154,13 @@ const ReportAccident = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type
+
       if (!file.type.startsWith('image/')) {
         toast.error('Please upload an image file');
         return;
       }
       
-      // Validate file size (5MB max)
+
       if (file.size > 5 * 1024 * 1024) {
         toast.error('Image size should be less than 5MB');
         return;
@@ -195,7 +195,7 @@ const ReportAccident = () => {
 
         toast.success("Location captured successfully");
 
-        // Call Reverse Geocoding API to get address
+
         try {
           const res = await fetch(
             `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
