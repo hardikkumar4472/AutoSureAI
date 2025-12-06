@@ -37,50 +37,107 @@ const Register = () => {
     canvas.style.pointerEvents = 'none';
     canvas.style.zIndex = '0';
 
-    if (container) {
-      container.appendChild(canvas);
+    container.style.position = 'relative';
+    container.appendChild(canvas);
+
+    const resizeCanvas = () => {
       canvas.width = container.clientWidth;
       canvas.height = container.clientHeight;
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speed = Math.random() * 1 + 0.5;
+        this.opacity = Math.random() * 0.5 + 0.2;
+
+        this.color = document.documentElement.classList.contains('dark') 
+          ? Math.random() > 0.7 ? '#60a5fa' : '#93c5fd' 
+          : Math.random() > 0.7 ? '#2563eb' : '#3b82f6';
+      }
+
+      update() {
+        this.y += this.speed;
+        if (this.y > canvas.height) {
+          this.reset();
+          this.y = -10;
+        }
+      }
+
+      draw() {
+        if (!ctx) return;
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.opacity;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
-    const vehicles = [];
-    const vehicleCount = 15;
+    class CarParticle {
+      constructor() {
+        this.reset();
+      }
 
-    for (let i = 0; i < vehicleCount; i++) {
-      vehicles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 20 + 10,
-        speed: Math.random() * 1 + 0.5,
-        angle: Math.random() * Math.PI * 2,
-      });
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = (Math.random() - 0.5) * 2;
+        this.speedY = (Math.random() - 0.5) * 2;
+        this.opacity = Math.random() * 0.8 + 0.2;
+        this.color = document.documentElement.classList.contains('dark')
+          ? '#fbbf24'
+          : '#dc2626';
+        this.life = 100;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life--;
+        this.opacity = this.life / 100 * 0.8;
+
+        if (this.life <= 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+          this.reset();
+        }
+      }
+
+      draw() {
+        if (!ctx) return;
+        ctx.fillStyle = this.color;
+        ctx.globalAlpha = this.opacity;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
+
+    const particles = Array.from({ length: 50 }, () => new Particle());
+    const carParticles = Array.from({ length: 20 }, () => new CarParticle());
 
     const animate = () => {
+      if (!ctx) return;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgba(59, 130, 246, 0.1)';
 
-      vehicles.forEach(vehicle => {
-        ctx.save();
-        ctx.translate(vehicle.x, vehicle.y);
-        ctx.rotate(vehicle.angle);
-        ctx.fillRect(-vehicle.size / 2, -vehicle.size / 4, vehicle.size, vehicle.size / 2);
-        ctx.fillStyle = 'rgba(30, 64, 175, 0.2)';
-        ctx.fillRect(-vehicle.size / 2 + 2, -vehicle.size / 4 + 2, vehicle.size - 4, vehicle.size / 2 - 4);
-        ctx.restore();
-        ctx.fillStyle = 'rgba(59, 130, 246, 0.1)';
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
 
-        vehicle.x += Math.cos(vehicle.angle) * vehicle.speed;
-        vehicle.y += Math.sin(vehicle.angle) * vehicle.speed;
-
-        if (vehicle.x < -20) vehicle.x = canvas.width + 20;
-        if (vehicle.x > canvas.width + 20) vehicle.x = -20;
-        if (vehicle.y < -20) vehicle.y = canvas.height + 20;
-        if (vehicle.y > canvas.height + 20) vehicle.y = -20;
-
-        if (Math.random() < 0.01) {
-          vehicle.angle += (Math.random() - 0.5) * 0.5;
-        }
+      carParticles.forEach(particle => {
+        particle.update();
+        particle.draw();
       });
 
       requestAnimationFrame(animate);
@@ -88,271 +145,344 @@ const Register = () => {
 
     animate();
 
-    const handleResize = () => {
-      if (container) {
-        canvas.width = container.clientWidth;
-        canvas.height = container.clientHeight;
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
     return () => {
-      window.removeEventListener('resize', handleResize);
-      if (container && canvas.parentNode === container) {
-        container.removeChild(canvas);
+      window.removeEventListener('resize', resizeCanvas);
+      if (canvas.parentNode) {
+        canvas.parentNode.removeChild(canvas);
       }
     };
   }, []);
 
-  const sanitizeVehicleNumber = (value) => {
-    return value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
+  const validatePassword = (password) => {
+    const errors = {
+      minLength: password.length >= 6,
+      hasUppercase: /[A-Z]/.test(password),
+      hasLowercase: /[a-z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+    };
+    setPasswordErrors(errors);
+    return Object.values(errors).every(Boolean);
   };
 
-  const sanitizePhoneNumber = (value) => {
-    return value.replace(/\D/g, '').slice(0, 10);
+  const validateConfirmPassword = (password, confirmPassword) => {
+    if (confirmPassword && password !== confirmPassword) {
+      setConfirmPasswordError('Passwords do not match');
+      return false;
+    }
+    setConfirmPasswordError('');
+    return true;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const sanitizedValue = value.replace(/[<>]/g, '');
     
-    let sanitizedValue = value;
-    if (name === 'vehicleNumber') {
-      sanitizedValue = sanitizeVehicleNumber(value);
-    } else if (name === 'phone') {
-      sanitizedValue = sanitizePhoneNumber(value);
-    }
-
     setFormData(prev => ({
       ...prev,
       [name]: sanitizedValue
     }));
 
     if (name === 'password') {
-      validatePassword(value);
-    }
-
-    if (name === 'confirmPassword' || (name === 'password' && formData.confirmPassword)) {
-      if (name === 'password') {
-        validateConfirmPassword(formData.confirmPassword, value);
-      } else {
-        validateConfirmPassword(value, formData.password);
+      validatePassword(sanitizedValue);
+      if (formData.confirmPassword) {
+        validateConfirmPassword(sanitizedValue, formData.confirmPassword);
       }
     }
-  };
 
-  const validatePassword = (password) => {
-    setPasswordErrors({
-      minLength: password.length >= 8,
-      hasUppercase: /[A-Z]/.test(password),
-      hasLowercase: /[a-z]/.test(password),
-      hasNumber: /[0-9]/.test(password),
-    });
-  };
-
-  const validateConfirmPassword = (confirmPassword, password = formData.password) => {
-    if (confirmPassword && password !== confirmPassword) {
-      setConfirmPasswordError('Passwords do not match');
-    } else {
-      setConfirmPasswordError('');
+    if (name === 'confirmPassword') {
+      validateConfirmPassword(formData.password, sanitizedValue);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (formData.password !== formData.confirmPassword) {
-      setConfirmPasswordError('Passwords do not match');
-      return;
-    }
 
-    const isPasswordValid = Object.values(passwordErrors).every(error => error);
+    const isPasswordValid = validatePassword(formData.password);
+    const isConfirmPasswordValid = validateConfirmPassword(formData.password, formData.confirmPassword);
+
     if (!isPasswordValid) {
+      alert('Please fix password requirements before submitting');
       return;
     }
 
-    if (formData.phone.length !== 10) {
+    if (!isConfirmPasswordValid) {
+      alert('Passwords do not match');
       return;
     }
 
     setLoading(true);
-    try {
-      await register({
-        ...formData,
-        vehicleNumber: formData.vehicleNumber.toUpperCase()
-      });
-      navigate('/dashboard');
-    } catch (error) {
-      console.error('Registration failed:', error);
-    } finally {
-      setLoading(false);
+    const result = await register({
+      name: formData.name.replace(/[<>]/g, ''),
+      email: formData.email.toLowerCase().trim(),
+      phone: formData.phone.replace(/[^0-9+\-() ]/g, ''), 
+      vehicleNumber: formData.vehicleNumber.toUpperCase().replace(/[^A-Z0-9]/g, ''), 
+      password: formData.password,
+    });
+    setLoading(false);
+
+    if (result.success) {
+      navigate('/verify-otp', { state: { email: formData.email } });
     }
   };
 
-  const isPasswordValid = Object.values(passwordErrors).every(error => error);
-  const isFormValid = formData.name && 
-                     formData.email && 
-                     formData.phone.length === 10 && 
-                     formData.vehicleNumber && 
-                     isPasswordValid && 
-                     formData.confirmPassword && 
-                     !confirmPasswordError;
+  const PasswordRequirement = ({ met, text }) => (
+    <div className={`flex items-center space-x-2 text-sm transition-colors duration-200 ${
+      met ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'
+    }`}>
+      {met ? (
+        <Check className="w-4 h-4" />
+      ) : (
+        <X className="w-4 h-4" />
+      )}
+      <span>{text}</span>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-950 px-4 transition-colors overflow-hidden">
+      {}
       <div className="absolute top-4 right-4 z-10">
         <ThemeToggle />
       </div>
-      <div className="relative z-10 w-full max-w-md">
-        <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-2xl p-8">
-          <div className="flex justify-center mb-8">
-            <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
-              <Car className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-            </div>
-          </div>
-          
-          <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-2">
-            Create Account
-          </h2>
-          <p className="text-center text-gray-600 dark:text-gray-300 mb-8">
-            Join our parking community
-          </p>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Full Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="Enter your full name"
-                required
-              />
-            </div>
+      {}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {}
+        <div className="absolute -left-20 top-1/4 animate-float-car-1">
+          <Car className="w-8 h-8 text-primary-400 dark:text-primary-600 opacity-60" />
+        </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Email Address
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="Enter your email"
-                required
-              />
-            </div>
+        {}
+        <div className="absolute -right-20 top-1/2 animate-float-car-2">
+          <Car className="w-6 h-6 text-primary-300 dark:text-primary-500 opacity-40" />
+        </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="Enter 10-digit phone number"
-                maxLength="10"
-                required
-              />
-              {formData.phone.length > 0 && formData.phone.length !== 10 && (
-                <p className="mt-1 text-sm text-red-600">Phone number must be 10 digits</p>
-              )}
-            </div>
+        {}
+        <div className="absolute -left-16 bottom-1/3 animate-float-car-3">
+          <Car className="w-10 h-10 text-primary-500 dark:text-primary-400 opacity-50" />
+        </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Vehicle Number
-              </label>
-              <input
-                type="text"
-                name="vehicleNumber"
-                value={formData.vehicleNumber}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="e.g., AB12CD1234"
-                maxLength="10"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Password
-              </label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="Create a strong password"
-                required
-              />
-              
-              <div className="mt-3 space-y-2">
-                <div className="flex items-center">
-                  {passwordErrors.minLength ? <Check className="w-4 h-4 text-green-500 mr-2" /> : <X className="w-4 h-4 text-red-500 mr-2" />}
-                  <span className="text-sm">At least 8 characters</span>
-                </div>
-                <div className="flex items-center">
-                  {passwordErrors.hasUppercase ? <Check className="w-4 h-4 text-green-500 mr-2" /> : <X className="w-4 h-4 text-red-500 mr-2" />}
-                  <span className="text-sm">One uppercase letter</span>
-                </div>
-                <div className="flex items-center">
-                  {passwordErrors.hasLowercase ? <Check className="w-4 h-4 text-green-500 mr-2" /> : <X className="w-4 h-4 text-red-500 mr-2" />}
-                  <span className="text-sm">One lowercase letter</span>
-                </div>
-                <div className="flex items-center">
-                  {passwordErrors.hasNumber ? <Check className="w-4 h-4 text-green-500 mr-2" /> : <X className="w-4 h-4 text-red-500 mr-2" />}
-                  <span className="text-sm">One number</span>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="Confirm your password"
-                required
-              />
-              {confirmPasswordError && (
-                <p className="mt-1 text-sm text-red-600">{confirmPasswordError}</p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              disabled={!isFormValid || loading}
-              className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
-            >
-              {loading ? 'Creating Account...' : 'Create Account'}
-            </button>
-          </form>
-
-          <p className="mt-8 text-center text-gray-600 dark:text-gray-300">
-            Already have an account?{' '}
-            <Link to="/login" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold transition-colors">
-              Sign in
-            </Link>
-          </p>
+        {}
+        <div className="absolute -right-24 top-1/3 animate-float-car-4">
+          <Car className="w-7 h-7 text-primary-600 dark:text-primary-300 opacity-70" />
         </div>
       </div>
+
+      <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-800 relative z-10">
+        {}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-600 rounded-full mb-4 animate-pulse">
+            <Car className="w-8 h-8 text-white animate-bounce" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white animate-pulse">Create Account</h1>
+          <p className="text-gray-600 dark:text-gray-300 mt-2">Sign up for AutoSureAI</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Full Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="input-field rounded-full"
+              placeholder="Enter your name"
+              required
+              maxLength={50}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="input-field rounded-full"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Phone
+            </label>
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="input-field rounded-full"
+              placeholder="Enter your phone number"
+              required
+              maxLength={15}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Vehicle Number
+            </label>
+            <input
+              type="text"
+              name="vehicleNumber"
+              value={formData.vehicleNumber}
+              onChange={handleChange}
+              className="input-field rounded-full"
+              placeholder="Enter vehicle number"
+              required
+              maxLength={20}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className={`input-field rounded-full ${
+                formData.password && !Object.values(passwordErrors).every(Boolean) 
+                  ? 'border-yellow-500 focus:border-yellow-500' 
+                  : ''
+              }`}
+              placeholder="Enter password"
+              required
+              minLength={6}
+            />
+            
+            {formData.password && (
+              <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-2">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Password must contain:
+                </p>
+                <PasswordRequirement 
+                  met={passwordErrors.minLength} 
+                  text="At least 6 characters" 
+                />
+                <PasswordRequirement 
+                  met={passwordErrors.hasUppercase} 
+                  text="At least one uppercase letter (A-Z)" 
+                />
+                <PasswordRequirement 
+                  met={passwordErrors.hasLowercase} 
+                  text="At least one lowercase letter (a-z)" 
+                />
+                <PasswordRequirement 
+                  met={passwordErrors.hasNumber} 
+                  text="At least one number (0-9)" 
+                />
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className={`input-field rounded-full ${
+                confirmPasswordError ? 'border-red-500 focus:border-red-500' : ''
+              }`}
+              placeholder="Confirm password"
+              required
+            />
+            {confirmPasswordError && (
+              <p className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center">
+                <X className="w-4 h-4 mr-1" />
+                {confirmPasswordError}
+              </p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading || !Object.values(passwordErrors).every(Boolean) || confirmPasswordError}
+            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed rounded-3xl transform transition-transform hover:scale-105 active:scale-95"
+          >
+            {loading ? (
+              <span className="flex items-center justify-center">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Creating account...
+              </span>
+            ) : (
+              'Create Account'
+            )}
+          </button>
+        </form>
+
+        <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-300">
+          Already have an account?{' '}
+          <Link to="/login" className="text-primary-600 hover:text-primary-700 font-semibold transition-colors duration-200">
+            Sign in
+          </Link>
+        </p>
+      </div>
+
+      <style jsx>{`
+        @keyframes float-car-1 {
+          0% { transform: translateX(-100px) translateY(0px) rotate(0deg); }
+          25% { transform: translateX(25vw) translateY(-15px) rotate(5deg); }
+          50% { transform: translateX(50vw) translateY(0px) rotate(0deg); }
+          75% { transform: translateX(75vw) translateY(15px) rotate(-5deg); }
+          100% { transform: translateX(calc(100vw + 100px)) translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes float-car-2 {
+          0% { transform: translateX(calc(100vw + 100px)) translateY(0px) rotate(0deg); }
+          25% { transform: translateX(75vw) translateY(20px) rotate(-5deg); }
+          50% { transform: translateX(50vw) translateY(0px) rotate(0deg); }
+          75% { transform: translateX(25vw) translateY(-20px) rotate(5deg); }
+          100% { transform: translateX(-100px) translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes float-car-3 {
+          0% { transform: translateX(-100px) translateY(0px) scaleX(-1); }
+          33% { transform: translateX(33vw) translateY(-10px) scaleX(-1); }
+          66% { transform: translateX(66vw) translateY(10px) scaleX(-1); }
+          100% { transform: translateX(calc(100vw + 100px)) translateY(0px) scaleX(-1); }
+        }
+
+        @keyframes float-car-4 {
+          0% { transform: translateX(calc(100vw + 100px)) translateY(0px) scaleX(-1); }
+          33% { transform: translateX(66vw) translateY(15px) scaleX(-1); }
+          66% { transform: translateX(33vw) translateY(-15px) scaleX(-1); }
+          100% { transform: translateX(-100px) translateY(0px) scaleX(-1); }
+        }
+
+        .animate-float-car-1 {
+          animation: float-car-1 25s linear infinite;
+        }
+
+        .animate-float-car-2 {
+          animation: float-car-2 30s linear infinite;
+        }
+
+        .animate-float-car-3 {
+          animation: float-car-3 35s linear infinite;
+        }
+
+        .animate-float-car-4 {
+          animation: float-car-4 40s linear infinite;
+        }
+      `}</style>
     </div>
   );
 };
