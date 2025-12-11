@@ -1,67 +1,79 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Upload, MapPin, Loader, Camera, Navigation, AlertTriangle } from 'lucide-react';
-import api from '../../utils/api';
-import toast from 'react-hot-toast';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Upload,
+  MapPin,
+  Loader,
+  Camera,
+  Navigation,
+  AlertTriangle,
+  Wifi,
+} from "lucide-react";
+import api from "../../utils/api";
+import { getCurrentLocation } from "../../utils/locationService";
+import toast from "react-hot-toast";
 
 const ReportAccident = () => {
   const [formData, setFormData] = useState({
     image: null,
-    lat: '',
-    lon: '',
-    address: '',
+    lat: "",
+    lon: "",
+    address: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const [gettingLocation, setGettingLocation] = useState(false);
+  const [locationSource, setLocationSource] = useState(null);
   const navigate = useNavigate();
 
-  // Particle effect for background
   useEffect(() => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const container = document.querySelector('.min-h-screen');
-    
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const container = document.querySelector(".min-h-screen");
+
     if (!container) return;
 
-    canvas.style.position = 'fixed';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    canvas.style.pointerEvents = 'none';
-    canvas.style.zIndex = '0';
-    canvas.style.opacity = '0.6';
-    
-    container.style.position = 'relative';
+    canvas.style.position = "fixed";
+    canvas.style.top = "0";
+    canvas.style.left = "0";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "0";
+    canvas.style.opacity = "0.6";
+
+    container.style.position = "relative";
     container.appendChild(canvas);
-    
+
     const resizeCanvas = () => {
       canvas.width = container.clientWidth;
       canvas.height = container.clientHeight;
     };
-    
+
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-    
-    // Particle class
+    window.addEventListener("resize", resizeCanvas);
+
     class Particle {
       constructor() {
         this.reset();
       }
-      
+
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 2 + 1;
         this.speed = Math.random() * 0.5 + 0.2;
         this.opacity = Math.random() * 0.3 + 0.1;
-        this.color = document.documentElement.classList.contains('dark') 
-          ? Math.random() > 0.7 ? '#ef4444' : '#dc2626' 
-          : Math.random() > 0.7 ? '#dc2626' : '#b91c1c';
+        this.color = document.documentElement.classList.contains("dark")
+          ? Math.random() > 0.7
+            ? "#ef4444"
+            : "#dc2626"
+          : Math.random() > 0.7
+          ? "#dc2626"
+          : "#b91c1c";
       }
-      
+
       update() {
         this.y += this.speed;
         if (this.y > canvas.height) {
@@ -69,7 +81,7 @@ const ReportAccident = () => {
           this.y = -10;
         }
       }
-      
+
       draw() {
         if (!ctx) return;
         ctx.fillStyle = this.color;
@@ -79,13 +91,12 @@ const ReportAccident = () => {
         ctx.fill();
       }
     }
-    
-    // Car particle for accident theme
+
     class CarParticle {
       constructor() {
         this.reset();
       }
-      
+
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
@@ -93,23 +104,29 @@ const ReportAccident = () => {
         this.speedX = (Math.random() - 0.5) * 1.5;
         this.speedY = (Math.random() - 0.5) * 1.5;
         this.opacity = Math.random() * 0.6 + 0.2;
-        this.color = document.documentElement.classList.contains('dark')
-          ? '#f59e0b'
-          : '#d97706';
+        this.color = document.documentElement.classList.contains("dark")
+          ? "#f59e0b"
+          : "#d97706";
         this.life = 80;
       }
-      
+
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
         this.life--;
-        this.opacity = this.life / 80 * 0.6;
-        
-        if (this.life <= 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+        this.opacity = (this.life / 80) * 0.6;
+
+        if (
+          this.life <= 0 ||
+          this.x < 0 ||
+          this.x > canvas.width ||
+          this.y < 0 ||
+          this.y > canvas.height
+        ) {
           this.reset();
         }
       }
-      
+
       draw() {
         if (!ctx) return;
         ctx.fillStyle = this.color;
@@ -119,32 +136,32 @@ const ReportAccident = () => {
         ctx.fill();
       }
     }
-    
+
     const particles = Array.from({ length: 40 }, () => new Particle());
     const carParticles = Array.from({ length: 15 }, () => new CarParticle());
-    
+
     const animate = () => {
       if (!ctx) return;
-      
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      particles.forEach(particle => {
+
+      particles.forEach((particle) => {
         particle.update();
         particle.draw();
       });
-      
-      carParticles.forEach(particle => {
+
+      carParticles.forEach((particle) => {
         particle.update();
         particle.draw();
       });
-      
+
       requestAnimationFrame(animate);
     };
-    
+
     animate();
-    
+
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener("resize", resizeCanvas);
       if (canvas.parentNode) {
         canvas.parentNode.removeChild(canvas);
       }
@@ -154,15 +171,13 @@ const ReportAccident = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        toast.error('Please upload an image file');
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please upload an image file");
         return;
       }
-      
-      // Validate file size (5MB max)
+
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('Image size should be less than 5MB');
+        toast.error("Image size should be less than 5MB");
         return;
       }
 
@@ -170,96 +185,133 @@ const ReportAccident = () => {
       const reader = new FileReader();
       reader.onloadend = () => setImagePreview(reader.result);
       reader.readAsDataURL(file);
-      toast.success('Image uploaded successfully');
+      toast.success("Image uploaded successfully");
     }
   };
 
-  const getCurrentLocation = async () => {
-    if (!navigator.geolocation) {
-      toast.error("Geolocation is not supported by your browser");
-      return;
-    }
+  // const getCurrentLocation = async () => {
+  //   if (!navigator.geolocation) {
+  //     toast.error("Geolocation is not supported by your browser");
+  //     return;
+  //   }
 
+  //   setGettingLocation(true);
+
+  //   navigator.geolocation.getCurrentPosition(
+  //     async (position) => {
+  //       const lat = position.coords.latitude;
+  //       const lon = position.coords.longitude;
+
+  //       setFormData((prev) => ({
+  //         ...prev,
+  //         lat: lat.toString(),
+  //         lon: lon.toString(),
+  //       }));
+
+  //       toast.success("Location captured successfully");
+
+  //       try {
+  //         const res = await fetch(
+  //           `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
+  //         );
+  //         const data = await res.json();
+  //         const address = data.display_name || "Address not found";
+
+  //         setFormData((prev) => ({
+  //           ...prev,
+  //           address,
+  //         }));
+
+  //         toast.success("Address auto-filled");
+  //       } catch (err) {
+  //         console.error(err);
+  //         toast.error("Failed to fetch address details");
+  //       } finally {
+  //         setGettingLocation(false);
+  //       }
+  //     },
+  //     (error) => {
+  //       setGettingLocation(false);
+  //       if (error.code === error.PERMISSION_DENIED) {
+  //         toast.error("Location access denied. Please enable location permissions.");
+  //       } else {
+  //         toast.error("Failed to get current location");
+  //         console.log(error);
+  //       }
+  //     },
+  //     {
+  //       timeout: 10000,
+  //       enableHighAccuracy: true
+  //     }
+  //   );
+  // };
+  const handleGetLocation = async () => {
     setGettingLocation(true);
-    
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
+    setLocationSource(null);
 
-        setFormData((prev) => ({
-          ...prev,
-          lat: lat.toString(),
-          lon: lon.toString(),
-        }));
+    try {
+      const location = await getCurrentLocation();
+      
+      setFormData((prev) => ({
+        ...prev,
+        lat: location.lat,
+        lon: location.lon,
+        address: location.address,
+      }));
 
-        toast.success("Location captured successfully");
-
-        // Call Reverse Geocoding API to get address
-        try {
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
-          );
-          const data = await res.json();
-          const address = data.display_name || "Address not found";
-
-          setFormData((prev) => ({
-            ...prev,
-            address,
-          }));
-
-          toast.success("Address auto-filled");
-        } catch (err) {
-          console.error(err);
-          toast.error("Failed to fetch address details");
-        } finally {
-          setGettingLocation(false);
-        }
-      },
-      (error) => {
-        setGettingLocation(false);
-        if (error.code === error.PERMISSION_DENIED) {
-          toast.error("Location access denied. Please enable location permissions.");
-        } else {
-          toast.error("Failed to get current location");
-        }
-      },
-      {
-        timeout: 10000,
-        enableHighAccuracy: true
+      setLocationSource(location.source || 'gps');
+      
+      if (location.source === 'ip') {
+        toast.success("Location found using IP address");
+      } else {
+        toast.success("GPS location captured successfully");
       }
-    );
+      
+    } catch (error) {
+      console.error("Location error:", error);
+      toast.error(error.message || "Failed to get location");
+    } finally {
+      setGettingLocation(false);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.image) {
-      toast.error('Please upload an accident image');
+      toast.error("Please upload an accident image");
       return;
     }
 
     if (!formData.lat || !formData.lon) {
-      toast.error('Please capture your location before submitting');
+      toast.error("Please capture your location before submitting");
       return;
     }
 
     setLoading(true);
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('image', formData.image);
-      formDataToSend.append('lat', formData.lat);
-      formDataToSend.append('lon', formData.lon);
-      formDataToSend.append('address', formData.address || 'Location not specified');
+      formDataToSend.append("image", formData.image);
+      formDataToSend.append("lat", formData.lat);
+      formDataToSend.append("lon", formData.lon);
+      formDataToSend.append(
+        "address",
+        formData.address || "Location not specified"
+      );
 
-      const response = await api.post('/accidents/report', formDataToSend, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await api.post("/accidents/report", formDataToSend, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      toast.success('Accident reported successfully! AI analysis in progress...');
-      navigate('/my-reports');
+      toast.success(
+        "Accident reported successfully! AI analysis in progress..."
+      );
+      navigate("/my-reports");
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to report accident. Please try again.');
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to report accident. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -276,18 +328,23 @@ const ReportAccident = () => {
             Report Accident
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 mt-2 max-w-2xl mx-auto">
-            Upload accident images and provide location details for immediate AI analysis and insurance processing
+            Upload accident images and provide location details for immediate AI
+            analysis and insurance processing
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl relative z-10">
-          
+        <form
+          onSubmit={handleSubmit}
+          className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl relative z-10"
+        >
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-2 h-8 bg-gradient-to-b from-red-600 to-red-400 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Accident Evidence</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Accident Evidence
+              </h2>
             </div>
-            
+
             <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-red-500 dark:hover:border-red-400 transition-all duration-300 bg-gray-50 dark:bg-gray-700/50">
               {imagePreview ? (
                 <div className="space-y-4">
@@ -337,26 +394,50 @@ const ReportAccident = () => {
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Location Details</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Location Details
+              </h2>
             </div>
 
             <div className="flex justify-center mb-6">
               <button
                 type="button"
-                onClick={getCurrentLocation}
+                onClick={handleGetLocation}
                 disabled={gettingLocation}
                 className="btn-secondary rounded-2xl px-8 py-4 flex items-center space-x-3 font-semibold disabled:opacity-50 transition-all duration-200 hover:shadow-lg transform hover:scale-105"
               >
                 {gettingLocation ? (
                   <Loader className="w-5 h-5 animate-spin" />
+                ) : locationSource === 'ip' ? (
+                  <Wifi className="w-5 h-5" />
                 ) : (
                   <Navigation className="w-5 h-5" />
                 )}
                 <span>
-                  {gettingLocation ? 'Capturing Location...' : 'Use Current Location'}
+                  {gettingLocation
+                    ? "Getting Location..."
+                    : "Get Current Location"}
                 </span>
               </button>
             </div>
+
+            {locationSource && (
+              <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                <div className="flex items-center space-x-2 text-sm text-blue-700 dark:text-blue-300">
+                  {locationSource === 'ip' ? (
+                    <>
+                      <Wifi className="w-4 h-4" />
+                      <span>Location detected using IP address (approximate)</span>
+                    </>
+                  ) : (
+                    <>
+                      <Navigation className="w-4 h-4" />
+                      <span>GPS location captured (precise)</span>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
@@ -364,7 +445,7 @@ const ReportAccident = () => {
                   Latitude
                 </label>
                 <div className="input-field rounded-2xl bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300">
-                  {formData.lat || 'Not captured'}
+                  {formData.lat || "Not captured"}
                 </div>
               </div>
 
@@ -373,7 +454,7 @@ const ReportAccident = () => {
                   Longitude
                 </label>
                 <div className="input-field rounded-2xl bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300">
-                  {formData.lon || 'Not captured'}
+                  {formData.lon || "Not captured"}
                 </div>
               </div>
             </div>
@@ -382,7 +463,8 @@ const ReportAccident = () => {
                 Address
               </label>
               <div className="input-field rounded-2xl bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 min-h-[80px] flex items-start">
-                {formData.address || 'Address will appear here after location capture'}
+                {formData.address ||
+                  "Address will appear here after location capture"}
               </div>
             </div>
           </div>
@@ -408,7 +490,7 @@ const ReportAccident = () => {
 
             <button
               type="button"
-              onClick={() => navigate('/my-reports')}
+              onClick={() => navigate("/my-reports")}
               className="btn-secondary rounded-2xl px-8 py-4 font-semibold transition-all duration-200 hover:shadow-lg transform hover:scale-105 flex-1"
             >
               Cancel Report

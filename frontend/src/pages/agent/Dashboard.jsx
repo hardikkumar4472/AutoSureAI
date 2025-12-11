@@ -10,7 +10,7 @@ const AgentDashboard = () => {
   const [claims, setClaims] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('latest'); // latest, oldest, highest, lowest
+  const [sortBy, setSortBy] = useState('latest'); 
   const [isSortOpen, setIsSortOpen] = useState(false);
   const sortRef = useRef(null);
   const { socket } = useSocket();
@@ -168,34 +168,28 @@ const AgentDashboard = () => {
     }
   };
 
-  // Filter and sort claims based on search query and sort option
+
   const getFilteredAndSortedClaims = () => {
     let result = claims;
 
-    // Apply search filter if query exists
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
 
-      // Score each claim based on match relevance
       const scoredClaims = claims.map(claim => {
         const driverName = (claim.driverId?.name || '').toLowerCase();
         const driverEmail = (claim.driverId?.email || '').toLowerCase();
 
         let score = 0;
 
-        // Exact match gets highest score
         if (driverName === query || driverEmail === query) {
           score = 1000;
         }
-        // Starts with query gets high score
         else if (driverName.startsWith(query) || driverEmail.startsWith(query)) {
           score = 500;
         }
-        // Contains query gets medium score
         else if (driverName.includes(query) || driverEmail.includes(query)) {
           score = 100;
         }
-        // Word starts with query gets lower score
         else {
           const nameWords = driverName.split(' ');
           const emailParts = driverEmail.split('@')[0].split('.');
@@ -211,30 +205,28 @@ const AgentDashboard = () => {
         return { claim, score };
       });
 
-      // Filter out non-matching claims and sort by score
       result = scoredClaims
         .filter(item => item.score > 0)
         .sort((a, b) => b.score - a.score)
         .map(item => item.claim);
     }
 
-    // Apply sorting
     const sortedResult = [...result].sort((a, b) => {
       switch (sortBy) {
         case 'latest':
-          // Sort by date descending (newest first)
+
           return new Date(b.createdAt) - new Date(a.createdAt);
 
         case 'oldest':
-          // Sort by date ascending (oldest first)
+
           return new Date(a.createdAt) - new Date(b.createdAt);
 
         case 'highest':
-          // Sort by estimated cost descending (highest first)
+      
           return (b.estimatedCost || 0) - (a.estimatedCost || 0);
 
         case 'lowest':
-          // Sort by estimated cost ascending (lowest first)
+    
           return (a.estimatedCost || 0) - (b.estimatedCost || 0);
 
         default:

@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import Accident from "../models/Accident.js";
 import { io } from "../server.js";
 import { sendClaimUpdateEmail } from "../utils/sendClaimEmail.js";
+import { notifyClaimApproved, notifyClaimRejected } from "../services/notificationService.js";
 
 export const getAssignedClaims = async (req, res) => {
   try {
@@ -43,13 +44,16 @@ export const approveClaim = async (req, res) => {
       claimId,
       { status: "approved", remarks: req.body.remarks || "" },
       { new: true }
-    ).populate("driverId", "name email").populate("reportId");
+    ).populate("driverId", "name email")
+      .populate("assignedAgent", "name email")
+      .populate("reportId");
 
     if (!claim) return res.status(404).json({ message: "Claim not found" });
 
     io.to(`user_${claim.driverId._id}`).emit("claim_updated", { claimId, status: "approved" });
 
     await sendClaimUpdateEmail(claim.driverId.email, "Claim Approved", claim);
+    await notifyClaimApproved(claim, claim.driverId, claim.assignedAgent);
 
     res.json({ success: true, claim });
   } catch (err) {
@@ -66,13 +70,16 @@ export const rejectClaim = async (req, res) => {
       claimId,
       { status: "rejected", remarks: remarks || "" },
       { new: true }
-    ).populate("driverId", "name email").populate("reportId");
+    ).populate("driverId", "name email")
+      .populate("assignedAgent", "name email")
+      .populate("reportId");
 
     if (!claim) return res.status(404).json({ message: "Claim not found" });
 
     io.to(`user_${claim.driverId._id}`).emit("claim_updated", { claimId, status: "rejected", remarks });
 
     await sendClaimUpdateEmail(claim.driverId.email, "Claim Rejected", claim);
+    await notifyClaimRejected(claim, claim.driverId, claim.assignedAgent, remarks);
 
     res.json({ success: true, claim });
   } catch (err) {

@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import axios from "axios";
 import { io } from "../server.js";
+import { notifyClaimReassigned } from "../services/notificationService.js";
 
 export const registerAgent = async (req, res) => {
   try {
@@ -471,6 +472,8 @@ export const reassignClaim = async (req, res) => {
         });
       }
     }
+    
+    await notifyClaimReassigned(claim, oldAgent, newAgent, claim.driverId);
 
     res.json({
       success: true,
@@ -586,6 +589,29 @@ export const getAllClaims = async (req, res) => {
     res.json({ success: true, claims });
   } catch (err) {
     console.error("getAllClaims error:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const getClaimDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const claim = await Claim.findById(id)
+      .populate("driverId", "name email phone vehicleNumber")
+      .populate("assignedAgent", "name email phone")
+      .populate({
+        path: "reportId",
+        select: "imageUrl prediction repair_cost status createdAt reportUrl location verification trafficVerification",
+      });
+
+    if (!claim) {
+      return res.status(404).json({ message: "Claim not found" });
+    }
+
+    res.json({ success: true, claim });
+  } catch (err) {
+    console.error("getClaimDetails error:", err);
     res.status(500).json({ message: err.message });
   }
 };

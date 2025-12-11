@@ -175,14 +175,13 @@ const Register = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const sanitizedValue = value.replace(/[<>]/g, ''); // Basic sanitization
+    const sanitizedValue = value.replace(/[<>]/g, '');
     
     setFormData(prev => ({
       ...prev,
       [name]: sanitizedValue
     }));
 
-    // Validate password in real-time
     if (name === 'password') {
       validatePassword(sanitizedValue);
       if (formData.confirmPassword) {
@@ -190,7 +189,6 @@ const Register = () => {
       }
     }
 
-    // Validate confirm password in real-time
     if (name === 'confirmPassword') {
       validateConfirmPassword(formData.password, sanitizedValue);
     }
@@ -199,7 +197,6 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate all password requirements
     const isPasswordValid = validatePassword(formData.password);
     const isConfirmPasswordValid = validateConfirmPassword(formData.password, formData.confirmPassword);
 
@@ -215,10 +212,10 @@ const Register = () => {
 
     setLoading(true);
     const result = await register({
-      name: formData.name.replace(/[<>]/g, ''), // Sanitize name
-      email: formData.email.toLowerCase().trim(), // Sanitize email
-      phone: formData.phone.replace(/[^0-9+\-() ]/g, ''), // Sanitize phone
-      vehicleNumber: formData.vehicleNumber.toUpperCase().replace(/[^A-Z0-9]/g, ''), // Sanitize vehicle number
+      name: formData.name.replace(/[<>]/g, ''),
+      email: formData.email.toLowerCase().trim(),
+      phone: formData.phone.replace(/[^0-9+\-() ]/g, ''), 
+      vehicleNumber: formData.vehicleNumber.toUpperCase().replace(/[^A-Z0-9]/g, ''), 
       password: formData.password,
     });
     setLoading(false);

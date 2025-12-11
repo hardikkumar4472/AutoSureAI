@@ -110,7 +110,7 @@ const TrafficAnalytics = () => {
         }
     };
 
-    // Calculate statistics
+
     const stats = {
         total: reports.length,
         pending: reports.filter(r => r.verification?.status === 'unverified').length,
@@ -121,21 +121,21 @@ const TrafficAnalytics = () => {
         minor: reports.filter(r => r.prediction?.severity === 'minor').length,
     };
 
-    // Prepare data for status bar chart
+
     const statusData = [
         { name: 'Pending', value: stats.pending, color: '#eab308' },
         { name: 'Verified', value: stats.verified, color: '#22c55e' },
         { name: 'Fraudulent', value: stats.fraudulent, color: '#ef4444' },
     ];
 
-    // Prepare data for severity pie chart
+
     const severityData = [
         { name: 'Severe', value: stats.severe, color: '#ef4444' },
         { name: 'Moderate', value: stats.moderate, color: '#f97316' },
         { name: 'Minor', value: stats.minor, color: '#22c55e' },
     ].filter(item => item.value > 0);
 
-    // Prepare data for timeline chart
+
     const getTimelineData = () => {
         if (reports.length === 0) return [];
 

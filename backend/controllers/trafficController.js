@@ -33,7 +33,6 @@ export const listPendingReports = async (req, res) => {
 
 export const getAllReports = async (req, res) => {
   try {
-    // Fetch all reports for analytics without pagination
     const reports = await Accident.find()
       .sort({ createdAt: -1 })
       .populate("userId", "name email")

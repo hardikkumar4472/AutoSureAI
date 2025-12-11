@@ -9,3 +9,5 @@ router.post("/report", auth, upload.single("image"),reportAccident);
 router.get("/", auth, getUserReports);
 
 export default router;
+
+

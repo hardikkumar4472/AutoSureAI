@@ -181,3 +181,4 @@ export const generateAccidentReportPDF = async (accidentData, userData) => {
     }
   });
 };
+

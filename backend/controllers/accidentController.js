@@ -8,6 +8,7 @@ import { uploadToSupabase, uploadPDFToSupabase } from "../utils/uploadSupabase.j
 import { sendAccidentEmail } from "../utils/sendAccidentEmail.js";
 import { generateAccidentReportPDF } from "../utils/generateAccidentReportPdf.js";
 import { io } from "../server.js";
+import { notifyClaimReassigned, notifyClaimCreated, notifyClaimAssigned } from "../services/notificationService.js";
 
 export const reportAccident = async (req, res) => {
   try {
@@ -65,6 +66,10 @@ export const reportAccident = async (req, res) => {
         severity: claim.severity,
         estimatedCost: claim.estimatedCost,
       });
+      
+      const driver = await User.findById(req.user.id);
+      await notifyClaimCreated(claim, driver);
+      await notifyClaimAssigned(claim, agent, driver);
     }
 
     const pdfReport = await generateAccidentReportPDF(accident, req.user);
@@ -183,6 +188,8 @@ export const reassignClaim = async (req, res) => {
       from: oldAgent?._id || null,
       to: newAgentId
     });
+    
+    await notifyClaimReassigned(claim, oldAgent, newAgent, claim.driverId);
 
     res.json({
       success: true,
