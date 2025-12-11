@@ -91,6 +91,9 @@ const NotificationBell = () => {
       setNotifications(response.data.notifications);
     } catch (error) {
       console.error('Error fetching notifications:', error);
+      if (error.response?.status === 404) {
+        console.error('Notification API not found - check backend deployment');
+      }
     } finally {
       setLoading(false);
     }
@@ -102,6 +105,10 @@ const NotificationBell = () => {
       setUnreadCount(response.data.count);
     } catch (error) {
       console.error('Error fetching unread count:', error);
+      if (error.response?.status === 404) {
+        console.error('Notification API not found - check backend deployment');
+        setUnreadCount(0);
+      }
     }
   };
 

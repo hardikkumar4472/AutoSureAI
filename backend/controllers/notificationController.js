@@ -2,6 +2,12 @@ import Notification from "../models/Notification.js";
 
 export const getNotifications = async (req, res) => {
   try {
+    console.log("Fetching notifications for user:", req.user?.id);
+    
+    if (!req.user?.id) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
     const { page = 1, limit = 20, unreadOnly = false } = req.query;
     
     const query = { userId: req.user.id };
@@ -22,6 +28,8 @@ export const getNotifications = async (req, res) => {
       isRead: false 
     });
 
+    console.log(`Found ${notifications.length} notifications, ${unreadCount} unread`);
+
     res.json({
       success: true,
       notifications,
@@ -34,7 +42,7 @@ export const getNotifications = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching notifications:", error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, stack: process.env.NODE_ENV === 'development' ? error.stack : undefined });
   }
 };
 

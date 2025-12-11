@@ -51,6 +51,19 @@ app.use("/api/notifications", notificationRoutes);
 
 app.get("/", (req, res) => res.send("AutoSureAI Backend Running 🚗"));
 
+app.get("/api/health", (req, res) => {
+  res.json({
+    success: true,
+    message: "AutoSureAI API is running",
+    timestamp: new Date().toISOString(),
+    routes: {
+      notifications: "/api/notifications",
+      auth: "/api/auth",
+      accidents: "/api/accidents"
+    }
+  });
+});
+
 const PORT = process.env.PORT || 8000;
 const server = http.createServer(app);
 
