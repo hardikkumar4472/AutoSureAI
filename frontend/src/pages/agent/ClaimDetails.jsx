@@ -9,10 +9,10 @@ import toast from 'react-hot-toast';
 const AgentClaimDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [claim, setClaim] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [claim, setClaim] = useState(null);//saara ccident clams ko store kar raha hain 
+  const [loading, setLoading] = useState(true);//loading ko true kar raha hain 
   const [remarks, setRemarks] = useState('');
-  const [actionLoading, setActionLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);//action ko true kar raha hain 
 
   // Particle effect for background
   useEffect(() => {
