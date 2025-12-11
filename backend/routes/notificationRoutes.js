@@ -22,6 +22,9 @@ router.put("/mark-all-read", protect, markAllAsRead);
 router.delete("/:id", protect, deleteNotification);
 router.delete("/read/all", protect, deleteAllRead);
 router.post("/test", protect, testNotification);
+router.get("/health", (req, res) => {
+  res.json({ success: true, message: "Notification service is running", timestamp: new Date().toISOString() });
+});
 
 // Admin routes
 router.post("/broadcast", adminAuth, sendBroadcast);
