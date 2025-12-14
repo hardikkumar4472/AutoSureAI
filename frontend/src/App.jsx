@@ -37,7 +37,7 @@ import AdminAuditLogs from './pages/admin/AuditLogs';
 import AdminAnalytics from './pages/admin/Analytics';
 import AdminExports from './pages/admin/Exports';
 import Notifications from './pages/Notifications';
-
+import Snowfall from 'react-snowfall';
 import Layout from './components/Layout';
 
 const PrivateRoute = ({ children, allowedRoles = [] }) => {
@@ -363,6 +363,16 @@ function App() {
     <AuthProvider>
       <SocketProvider>
         <Router>
+          <Snowfall
+            snowflakeCount={105}
+            style={{
+              position: 'fixed',
+              width: '100vw',
+              height: '100vh',
+              pointerEvents: 'none',
+              zIndex: 9999,
+            }}
+          />
           <AppRoutes />
           <Toaster position="top-right" />
         </Router>
