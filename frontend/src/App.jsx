@@ -364,7 +364,7 @@ function App() {
       <SocketProvider>
         <Router>
           <Snowfall
-            snowflakeCount={105}
+            snowflakeCount={0}
             style={{
               position: 'fixed',
               width: '100vw',
