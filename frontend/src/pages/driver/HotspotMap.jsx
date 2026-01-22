@@ -142,17 +142,17 @@ const HotspotMap = () => {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 bg-gradient-to-br from-gray-900 to-black text-white">
+    <div className="min-h-screen py-8 px-4 bg-white/10 backdrop-blur-lg shadow-2xl text-white">
       <div className="max-w-7xl mx-auto">
         {}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-red-500/10 rounded-2xl mb-4 backdrop-blur-sm">
             <MapPin className="w-8 h-8 text-red-600 dark:text-red-400" />
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold text-black dark:text-white">
             Accident Hotspot Map
           </h1>
-          <p className="text-lg text-gray-300 mt-2 max-w-3xl mx-auto">
+          <p className="text-lg text-black dark:text-white mt-2 max-w-3xl mx-auto">
             Explore real-time accident hotspots and risk areas worldwide. Stay informed about high-risk locations.
           </p>
         </div>

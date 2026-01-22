@@ -29,20 +29,20 @@ const AdminAnalytics = () => {
   };
 
   const StatCard = ({ title, value, icon: Icon, color, description }) => (
-    <div className="rounded-2xl p-6 border border-white/20 bg-white/10 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 group">
+    <div className="rounded-2xl p-6 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 group">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-300 mb-2">{title}</p>
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">{title}</p>
           {loading ? (
-            <div className="h-8 w-16 bg-white/10 rounded-lg animate-pulse"></div>
+            <div className="h-8 w-16 bg-gray-200 dark:bg-white/10 rounded-lg animate-pulse"></div>
           ) : (
-            <p className="text-3xl font-bold text-white">{value}</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
           )}
           {description && (
-            <p className="text-xs text-gray-400 mt-1">{description}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{description}</p>
           )}
         </div>
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} bg-opacity-10 backdrop-blur-sm border border-white/10`}>
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} bg-opacity-10 backdrop-blur-sm border border-gray-200 dark:border-white/10`}>
           <Icon className={`w-6 h-6 ${color.replace('text-', 'text-')}`} />
         </div>
       </div>
@@ -65,8 +65,8 @@ const AdminAnalytics = () => {
       <div className="min-h-screen flex items-center justify-center bg-transparent">
         <div className="text-center">
           <AlertTriangle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-white mb-2">No Analytics Data</h3>
-          <p className="text-gray-300">Analytics data is not available at the moment.</p>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Analytics Data</h3>
+          <p className="text-gray-600 dark:text-gray-300">Analytics data is not available at the moment.</p>
         </div>
       </div>
     );
@@ -105,10 +105,10 @@ const AdminAnalytics = () => {
                 <TrendingUp className="w-6 h-6 text-purple-600 dark:text-purple-400" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-white to-purple-400 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white bg-gradient-to-r from-gray-900 to-purple-600 dark:from-white dark:to-purple-400 bg-clip-text text-transparent">
                   Analytics Dashboard
                 </h1>
-                <p className="text-lg text-gray-300 font-light">
+                <p className="text-lg text-gray-600 dark:text-gray-300 font-light">
                   Comprehensive system insights and performance metrics
                 </p>
               </div>
@@ -151,10 +151,10 @@ const AdminAnalytics = () => {
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Severity Chart */}
-          <div className="rounded-3xl p-6 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
+          <div className="rounded-3xl p-6 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl shadow-xl">
             <div className="flex items-center space-x-3 mb-6">
               <div className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></div>
-              <h2 className="text-xl font-bold text-white">Accidents by Severity</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Accidents by Severity</h2>
             </div>
             {severityData.length > 0 ? (
               <div className="h-80">
@@ -195,10 +195,10 @@ const AdminAnalytics = () => {
           </div>
 
           {/* Claims Status Chart */}
-          <div className="rounded-3xl p-6 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
+          <div className="rounded-3xl p-6 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl shadow-xl">
             <div className="flex items-center space-x-3 mb-6">
               <div className="w-2 h-8 bg-gradient-to-b from-green-600 to-green-400 rounded-full"></div>
-              <h2 className="text-xl font-bold text-white">Claims by Status</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Claims by Status</h2>
             </div>
             {claimStatusData.length > 0 ? (
               <div className="h-80">
@@ -237,10 +237,10 @@ const AdminAnalytics = () => {
         </div>
 
         {/* Monthly Trend Chart */}
-        <div className="rounded-3xl p-6 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
+        <div className="rounded-3xl p-6 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl shadow-xl">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-2 h-8 bg-gradient-to-b from-purple-600 to-purple-400 rounded-full"></div>
-            <h2 className="text-xl font-bold text-white">Monthly Accident Trend</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Monthly Accident Trend</h2>
           </div>
           {monthlyData.length > 0 ? (
             <div className="h-80">
@@ -277,10 +277,10 @@ const AdminAnalytics = () => {
         </div>
 
         {/* Cost Analysis Chart */}
-        <div className="rounded-3xl p-6 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
+        <div className="rounded-3xl p-6 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl shadow-xl">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-2 h-8 bg-gradient-to-b from-red-600 to-red-400 rounded-full"></div>
-            <h2 className="text-xl font-bold text-white">Average Repair Costs by Severity</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Average Repair Costs by Severity</h2>
           </div>
           {costData.length > 0 ? (
             <div className="h-80">

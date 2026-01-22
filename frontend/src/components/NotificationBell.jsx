@@ -221,14 +221,22 @@ const NotificationBell = () => {
                 {unreadCount} unread
               </p>
             </div>
-            {unreadCount > 0 && (
+            <div className="flex items-center space-x-3">
+              {unreadCount > 0 && (
+                <button
+                  onClick={markAllAsRead}
+                  className="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium"
+                >
+                  Mark all read
+                </button>
+              )}
               <button
-                onClick={markAllAsRead}
-                className="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 font-medium"
+                onClick={() => setIsOpen(false)}
+                className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >
-                Mark all read
+                <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
               </button>
-            )}
+            </div>
           </div>
 
           <div className="overflow-y-auto flex-1">

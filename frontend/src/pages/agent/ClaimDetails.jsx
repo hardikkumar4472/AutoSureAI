@@ -186,10 +186,10 @@ const AgentClaimDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white">
+      <div className="min-h-screen flex items-center justify-center bg-white/10 backdrop-blur-lg shadow-2xl text-black dark:text-white">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-500 mx-auto mb-4"></div>
-          <p className="text-gray-300">Loading claim details...</p>
+          <p className="text-gray-600 dark:text-gray-300">Loading claim details...</p>
         </div>
       </div>
     );
@@ -197,11 +197,11 @@ const AgentClaimDetails = () => {
 
   if (!claim) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white">
+      <div className="min-h-screen flex items-center justify-center bg-white/10 backdrop-blur-lg shadow-2xl text-black dark:text-white">
         <div className="text-center">
           <AlertTriangle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-white mb-2">Claim Not Found</h3>
-          <p className="text-gray-300 mb-6">The requested claim could not be found.</p>
+          <h3 className="text-xl font-semibold text-black dark:text-white mb-2">Claim Not Found</h3>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">The requested claim could not be found.</p>
           <button
             onClick={() => navigate('/agent')}
             className="btn-primary rounded-2xl px-6 py-3 inline-flex items-center space-x-2"
@@ -215,7 +215,7 @@ const AgentClaimDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-8 px-4">
+    <div className="min-h-screen bg-white/10 backdrop-blur-lg shadow-2xl text-black dark:text-white py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <button

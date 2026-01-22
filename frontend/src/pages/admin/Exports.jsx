@@ -121,7 +121,7 @@ const AdminExports = () => {
 
     return (
       <div 
-        className="rounded-2xl p-6 border border-white/20 bg-white/10 backdrop-blur-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group"
+        className="rounded-2xl p-6 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group"
         onClick={() => !isLoading && handleExport(option.id)}
       >
         <div className="flex items-start justify-between mb-4">
@@ -130,18 +130,18 @@ const AdminExports = () => {
           </div>
           <span className={`px-3 py-1 rounded-full text-xs font-medium ${
             option.format === 'PDF' 
-              ? 'bg-red-500/20 text-red-300 border border-red-500/30'
-              : 'bg-green-500/20 text-green-300 border border-green-500/30'
+              ? 'bg-red-500/20 text-red-600 dark:text-red-300 border border-red-500/30'
+              : 'bg-green-500/20 text-green-600 dark:text-green-300 border border-green-500/30'
           }`}>
             {option.format}
           </span>
         </div>
 
-        <h3 className="text-xl font-bold text-white mb-2 transition-colors">
+        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">
           {option.title}
         </h3>
 
-        <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 leading-relaxed">
           {option.description}
         </p>
 
@@ -174,25 +174,25 @@ const AdminExports = () => {
             <div className="flex items-center space-x-4">
               <Link
                 to="/admin"
-                className="group w-10 h-10 bg-white/5 rounded-2xl border border-white/20 flex items-center justify-center hover:bg-white/10 hover:border-indigo-400 transition-all duration-300"
+                className="group w-10 h-10 bg-white dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/20 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-white/10 hover:border-indigo-400 transition-all duration-300"
               >
-                <ArrowLeft className="w-5 h-5 text-gray-300 group-hover:text-indigo-400" />
+                <ArrowLeft className="w-5 h-5 text-gray-400 dark:text-gray-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
               </Link>
               <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center">
                 <Database className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-white to-indigo-400 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white bg-gradient-to-r from-gray-900 to-indigo-600 dark:from-white dark:to-indigo-400 bg-clip-text text-transparent">
                   Data Exports
                 </h1>
-                <p className="text-lg text-gray-300 font-light">
+                <p className="text-lg text-gray-600 dark:text-gray-300 font-light">
                   Export system data for analysis and reporting
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 text-sm text-indigo-400 bg-white/5 px-4 py-2 rounded-2xl border border-indigo-500/20">
+          <div className="flex items-center space-x-2 text-sm text-indigo-600 dark:text-indigo-400 bg-white dark:bg-white/5 px-4 py-2 rounded-2xl border border-indigo-500/20 shadow-sm">
             <Database className="w-4 h-4" />
             <span>Data Management</span>
           </div>
@@ -202,12 +202,12 @@ const AdminExports = () => {
         <div>
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-white">Available Exports</h2>
-              <p className="text-gray-400 mt-1">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Available Exports</h2>
+              <p className="text-gray-500 dark:text-gray-400 mt-1">
                 {exportOptions.length} data formats available for download
               </p>
             </div>
-            <div className="flex items-center space-x-2 text-sm text-gray-400">
+            <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
               <BarChart3 className="w-4 h-4" />
               <span>Real-time data</span>
             </div>

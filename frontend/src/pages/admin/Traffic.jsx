@@ -112,7 +112,7 @@ const AdminTraffic = () => {
   );
 
   const OfficerCard = ({ officer }) => (
-    <div className="rounded-lg p-6 border border-white/20 bg-white/10 backdrop-blur-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2">
+    <div className="rounded-lg p-6 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2">
       <div className="flex items-start justify-between">
         <div className="flex items-center space-x-2">
           <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-2xl flex items-center justify-center">
@@ -120,25 +120,25 @@ const AdminTraffic = () => {
           </div>
           <div className="space-y-2">
             <div className="flex items-center space-x-3">
-              <h3 className="text-xl font-bold text-white">{officer.name}</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">{officer.name}</h3>
               {officer.badgeNumber && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-300 border border-yellow-500/20">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-600 dark:text-yellow-300 border border-yellow-500/20">
                   <BadgeCheck className="w-3 h-3 mr-1" />
                   {officer.badgeNumber}
                 </span>
               )}
             </div>
             <div className="space-y-1">
-              <div className="flex items-center space-x-2 text-gray-300">
+              <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
                 <Mail className="w-4 h-4" />
                 <span className="text-sm">{officer.email}</span>
               </div>
-              <div className="flex items-center space-x-2 text-gray-300">
+              <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
                 <Phone className="w-4 h-4" />
                 <span className="text-sm">{officer.phone || 'Not provided'}</span>
               </div>
               {officer.department && (
-                <div className="flex items-center space-x-2 text-gray-300">
+                <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
                   <User className="w-4 h-4" />
                   <span className="text-sm">{officer.department}</span>
                 </div>
@@ -150,14 +150,14 @@ const AdminTraffic = () => {
         <div className="flex items-center space-x-0">
           <button
             onClick={() => openEditModal(officer)}
-            className="p-2 text-blue-400 hover:bg-blue-500/10 rounded-xl transition-all duration-200 transform hover:scale-110"
+            className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10 rounded-xl transition-all duration-200 transform hover:scale-110"
             title="Edit officer"
           >
             <Edit className="w-4 h-4" />
           </button>
           <button
             onClick={() => handleDelete(officer._id)}
-            className="p-2 text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-200 transform hover:scale-110"
+            className="p-2 text-red-600 dark:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-200 transform hover:scale-110"
             title="Delete officer"
           >
             <Trash2 className="w-4 h-4" />
@@ -165,15 +165,15 @@ const AdminTraffic = () => {
         </div>
       </div>
       
-      <div className="mt-4 pt-4 border-t border-white/10">
+      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-white/10">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-400">
+          <span className="text-gray-500 dark:text-gray-400">
             Joined {new Date(officer.createdAt).toLocaleDateString()}
           </span>
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
             officer.status === 'active' 
-              ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-              : 'bg-white/10 text-gray-300 border border-white/20'
+              ? 'bg-green-500/20 text-green-600 dark:text-green-400 border border-green-500/30'
+              : 'bg-white/10 text-gray-600 dark:text-gray-300 border border-white/20'
           }`}>
             {officer.status || 'active'}
           </span>
@@ -187,7 +187,7 @@ const AdminTraffic = () => {
       <div className="min-h-screen flex items-center justify-center bg-transparent">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-yellow-500 mx-auto mb-4"></div>
-          <p className="text-gray-300">Loading traffic officers...</p>
+          <p className="text-gray-600 dark:text-gray-300">Loading traffic officers...</p>
         </div>
       </div>
     );
@@ -209,17 +209,17 @@ const AdminTraffic = () => {
                 <Shield className="w-6 h-6 text-yellow-400" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
                   Traffic Officers
                 </h1>
-                <p className="text-lg text-gray-300 font-light">
+                <p className="text-lg text-gray-600 dark:text-gray-300 font-light">
                   Manage traffic police officers and verification workflows
                 </p>
               </div>
             </div>
           </div>
           
-          <div className="flex items-center space-x-2 text-sm text-yellow-400 bg-white/5 px-4 py-2 rounded-2xl border border-yellow-500/20 backdrop-blur-sm">
+          <div className="flex items-center space-x-2 text-sm text-yellow-600 dark:text-yellow-400 bg-white dark:bg-white/5 px-4 py-2 rounded-2xl border border-yellow-500/20 backdrop-blur-sm shadow-sm">
             <Shield className="w-4 h-4" />
             <span>Officer Management</span>
           </div>
@@ -262,15 +262,15 @@ const AdminTraffic = () => {
           >
             <div className="text-center">
               <div className="w-12 h-12 bg-yellow-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 border border-yellow-500/30">
-                <UserPlus className="w-6 h-6 text-yellow-400" />
+                <UserPlus className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
               </div>
-              <p className="font-semibold text-white">Add New Officer</p>
-              <p className="text-sm text-gray-400 mt-1">Create new account</p>
+              <p className="font-semibold text-gray-900 dark:text-white">Add New Officer</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Create new account</p>
             </div>
           </button>
         </div>
 
-        <div className="rounded-3xl p-6 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
+        <div className="rounded-3xl p-6 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl shadow-xl">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="relative flex-1 max-w-md">
               <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
@@ -279,7 +279,7 @@ const AdminTraffic = () => {
                 placeholder="Search officers by name, email, or badge number..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-2xl border border-white/20 bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-gray-400 transition-all duration-300"
+                className="w-full pl-10 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-gray-900 dark:text-white placeholder-gray-400 transition-all duration-300"
               />
             </div>
             <div className="flex items-center space-x-3">
@@ -296,21 +296,21 @@ const AdminTraffic = () => {
 
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               Traffic Officers ({filteredOfficers.length})
             </h2>
-            <p className="text-sm text-gray-300">
+            <p className="text-sm text-gray-600 dark:text-gray-300">
               Showing {filteredOfficers.length} of {officers.length} officers
             </p>
           </div>
 
           {filteredOfficers.length === 0 ? (
-            <div className="rounded-3xl p-12 text-center border border-white/20 bg-white/10 backdrop-blur-xl">
+            <div className="rounded-3xl p-12 text-center border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl">
               <Shield className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 {searchTerm ? 'No officers found' : 'No traffic officers'}
               </h3>
-              <p className="text-gray-400 mb-6 max-w-md mx-auto">
+              <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
                 {searchTerm 
                   ? 'No traffic officers match your search criteria. Try adjusting your search terms.'
                   : 'Get started by creating your first traffic officer account to manage accident verifications.'
@@ -338,40 +338,40 @@ const AdminTraffic = () => {
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 border border-white/20 rounded-3xl max-w-md w-full p-8 shadow-2xl">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/20 rounded-3xl max-w-md w-full p-8 shadow-2xl">
             <div className="flex items-center space-x-3 mb-6">
               <div className="w-10 h-10 bg-yellow-500/20 rounded-2xl flex items-center justify-center border border-yellow-500/30">
-                <UserPlus className="w-5 h-5 text-yellow-400" />
+                <UserPlus className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
               </div>
-              <h2 className="text-2xl font-bold text-white">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 {editingOfficer ? 'Edit Traffic Officer' : 'Create Traffic Officer'}
               </h2>
             </div>
             
             <form onSubmit={editingOfficer ? handleUpdate : handleCreate} className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-3">
+                <label className="block text-sm font-semibold text-gray-600 dark:text-gray-300 mb-3">
                   Full Name *
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full pl-4 pr-4 py-3 rounded-2xl border border-white/20 bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-gray-500 transition-all duration-300"
+                  className="w-full pl-4 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
                   placeholder="Enter officer's full name"
                   required
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-3">
+                <label className="block text-sm font-semibold text-gray-600 dark:text-gray-300 mb-3">
                   Email Address *
                 </label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-4 pr-4 py-3 rounded-2xl border border-white/20 bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-gray-500 transition-all duration-300"
+                  className="w-full pl-4 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
                   placeholder="officer@department.gov"
                   required
                 />
@@ -379,41 +379,41 @@ const AdminTraffic = () => {
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-300 mb-3">
+                  <label className="block text-sm font-semibold text-gray-600 dark:text-gray-300 mb-3">
                     Phone Number
                   </label>
                   <input
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full pl-4 pr-4 py-3 rounded-2xl border border-white/20 bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-gray-500 transition-all duration-300"
+                    className="w-full pl-4 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
                     placeholder="+1 (555) 000-0000"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-300 mb-3">
+                  <label className="block text-sm font-semibold text-gray-600 dark:text-gray-300 mb-3">
                     Badge Number
                   </label>
                   <input
                     type="text"
                     value={formData.badgeNumber}
                     onChange={(e) => setFormData({ ...formData, badgeNumber: e.target.value })}
-                    className="w-full pl-4 pr-4 py-3 rounded-2xl border border-white/20 bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-gray-500 transition-all duration-300"
+                    className="w-full pl-4 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
                     placeholder="BADGE-001"
                   />
                 </div>
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-gray-300 mb-3">
+                <label className="block text-sm font-semibold text-gray-600 dark:text-gray-300 mb-3">
                   Department
                 </label>
                 <input
                   type="text"
                   value={formData.department}
                   onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                  className="w-full pl-4 pr-4 py-3 rounded-2xl border border-white/20 bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-white placeholder-gray-500 transition-all duration-300"
+                  className="w-full pl-4 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
                   placeholder="Traffic Division"
                 />
               </div>
@@ -428,7 +428,7 @@ const AdminTraffic = () => {
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="flex-1 btn-secondary rounded-2xl py-4 border border-white/20 text-gray-300 hover:bg-white/5 transition-all duration-300"
+                  className="flex-1 btn-secondary rounded-2xl py-4 border border-gray-200 dark:border-white/20 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-300"
                 >
                   Cancel
                 </button>

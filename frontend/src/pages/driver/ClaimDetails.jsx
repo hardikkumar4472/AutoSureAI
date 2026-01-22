@@ -195,7 +195,7 @@ const ClaimDetails = () => {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 bg-gradient-to-br from-gray-900 to-black text-white">
+    <div className="min-h-screen py-8 px-4 bg-white/10 backdrop-blur-lg shadow-2xl text-black dark:text-white">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <Link

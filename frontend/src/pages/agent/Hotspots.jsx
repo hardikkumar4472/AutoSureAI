@@ -83,7 +83,7 @@ const AgentHotspots = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white">
+            <div className="min-h-screen flex items-center justify-center bg-white/10 backdrop-blur-lg shadow-2xl text-black dark:text-white">
                 <div className="text-center">
                     <Loader className="w-12 h-12 animate-spin text-primary-500 mx-auto mb-4" />
                     <p className="text-gray-300">Analyzing area data...</p>
@@ -93,14 +93,14 @@ const AgentHotspots = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-8 px-4">
+        <div className="min-h-screen bg-white/10 backdrop-blur-lg shadow-2xl text-black dark:text-white py-8 px-4">
             <div className="max-w-7xl mx-auto space-y-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div className="space-y-2">
-                        <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                        <h1 className="text-4xl font-bold text-black dark:text-white">
                             Area Analysis
                         </h1>
-                        <p className="text-lg text-gray-400 font-light">
+                        <p className="text-lg text-gray-600 dark:text-gray-400 font-light">
                             Statistical breakdown of accidents by location
                         </p>
                     </div>

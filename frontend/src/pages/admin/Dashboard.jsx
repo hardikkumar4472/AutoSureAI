@@ -68,20 +68,20 @@ const AdminDashboard = () => {
   };
 
   const StatCard = ({ title, value, icon: Icon, color, description }) => (
-    <div className="rounded-2xl p-6 border border-white/20 bg-white/10 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 group">
+    <div className="rounded-2xl p-6 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 group">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-300 mb-2">{title}</p>
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">{title}</p>
           {loading ? (
-            <div className="h-8 w-16 bg-white/10 rounded-lg animate-pulse"></div>
+            <div className="h-8 w-16 bg-gray-200 dark:bg-white/10 rounded-lg animate-pulse"></div>
           ) : (
-            <p className="text-3xl font-bold text-white">{value}</p>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
           )}
           {description && (
-            <p className="text-xs text-gray-400 mt-1">{description}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{description}</p>
           )}
         </div>
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} bg-opacity-10 backdrop-blur-sm border border-white/10`}>
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} bg-opacity-10 backdrop-blur-sm border border-gray-200 dark:border-white/10`}>
           <Icon className={`w-6 h-6 ${color.replace('text-', 'text-')}`} />
         </div>
       </div>
@@ -91,14 +91,14 @@ const AdminDashboard = () => {
   const QuickActionCard = ({ title, description, icon: Icon, color, link }) => (
     <Link
       to={link}
-      className="group p-6 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 block"
+      className="group p-6 rounded-2xl border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-sm hover:bg-white/90 dark:hover:bg-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 block"
     >
       <div className="text-center">
-        <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl ${color} bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300 mb-4 backdrop-blur-sm border border-white/10`}>
+        <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl ${color} bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300 mb-4 backdrop-blur-sm border border-gray-200 dark:border-white/10`}>
           <Icon className={`w-7 h-7 ${color.replace('border-', 'text-')}`} />
         </div>
-        <h3 className="font-semibold text-white text-lg mb-2">{title}</h3>
-        <p className="text-sm text-gray-300 leading-relaxed">{description}</p>
+        <h3 className="font-semibold text-gray-900 dark:text-white text-lg mb-2">{title}</h3>
+        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{description}</p>
       </div>
     </Link>
   );
@@ -119,17 +119,17 @@ const AdminDashboard = () => {
     };
 
     return (
-      <div className="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-xl transition-colors duration-200 cursor-default border border-transparent hover:border-white/10">
+      <div className="flex items-center space-x-3 p-3 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition-colors duration-200 cursor-default border border-transparent hover:border-gray-200 dark:hover:border-white/10">
         {getActionIcon(activity.action)}
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-white truncate">
+          <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
             {activity.actorId?.name || 'System'}
           </p>
-          <p className="text-xs text-gray-400 truncate">
+          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
             {activity.description || activity.action}
           </p>
         </div>
-        <div className="flex items-center space-x-1 text-xs text-gray-400">
+        <div className="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
           <Clock className="w-3 h-3" />
           <span>{new Date(activity.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
         </div>
@@ -210,17 +210,17 @@ const AdminDashboard = () => {
                 <Settings className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-indigo-400">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-indigo-600 dark:from-white dark:to-indigo-400">
                   Admin Dashboard
                 </h1>
-                <p className="text-lg text-gray-300 font-light">
+                <p className="text-lg text-gray-600 dark:text-gray-300 font-light">
                   Comprehensive system management and oversight
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2 text-sm text-indigo-400 bg-white/5 px-4 py-2 rounded-2xl border border-indigo-500/20 backdrop-blur-sm">
+           <div className="flex items-center space-x-2 text-sm text-indigo-600 dark:text-indigo-400 bg-white/50 dark:bg-white/5 px-4 py-2 rounded-2xl border border-indigo-500/20 backdrop-blur-sm">
             <Eye className="w-4 h-4" />
             <span>System Overview</span>
           </div>
@@ -294,10 +294,10 @@ const AdminDashboard = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
+            <div className="rounded-3xl p-8 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl shadow-xl">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-2 h-8 bg-gradient-to-b from-indigo-600 to-indigo-400 rounded-full"></div>
-                <h2 className="text-2xl font-bold text-white">Quick Actions</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Quick Actions</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {quickActions.map((action) => (
@@ -306,10 +306,10 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
+          <div className="rounded-3xl p-8 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl shadow-xl">
             <div className="flex items-center space-x-3 mb-6">
               <div className="w-2 h-8 bg-gradient-to-b from-purple-600 to-purple-400 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-white">Recent Activity</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Recent Activity</h2>
             </div>
 
             {recentActivity.length === 0 ? (
@@ -336,35 +336,35 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
+        <div className="rounded-3xl p-8 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl shadow-xl">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-2 h-8 bg-gradient-to-b from-green-600 to-green-400 rounded-full"></div>
-            <h2 className="text-2xl font-bold text-white">System Summary</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">System Summary</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="text-center p-4 bg-white/5 rounded-2xl border border-white/10">
-              <Users className="w-8 h-8 text-green-400 mx-auto mb-2" />
-              <p className="font-semibold text-white">{stats.agents}</p>
-              <p className="text-sm text-gray-400">Agents</p>
+            <div className="text-center p-4 bg-white/50 dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/10">
+              <Users className="w-8 h-8 text-green-600 dark:text-green-400 mx-auto mb-2" />
+              <p className="font-semibold text-gray-900 dark:text-white">{stats.agents}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Agents</p>
             </div>
 
-            <div className="text-center p-4 bg-white/5 rounded-2xl border border-white/10">
-              <Shield className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
-              <p className="font-semibold text-white">{stats.traffic}</p>
-              <p className="text-sm text-gray-400">Officers</p>
+            <div className="text-center p-4 bg-white/50 dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/10">
+              <Shield className="w-8 h-8 text-yellow-600 dark:text-yellow-400 mx-auto mb-2" />
+              <p className="font-semibold text-gray-900 dark:text-white">{stats.traffic}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Officers</p>
             </div>
 
-            <div className="text-center p-4 bg-white/5 rounded-2xl border border-white/10">
-              <ClipboardList className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-              <p className="font-semibold text-white">{stats.claims}</p>
-              <p className="text-sm text-gray-400">Claims</p>
+            <div className="text-center p-4 bg-white/50 dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/10">
+              <ClipboardList className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
+              <p className="font-semibold text-gray-900 dark:text-white">{stats.claims}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Claims</p>
             </div>
 
-            <div className="text-center p-4 bg-white/5 rounded-2xl border border-white/10">
-              <TrendingUp className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-              <p className="font-semibold text-white">{stats.accidents}</p>
-              <p className="text-sm text-gray-400">Accidents</p>
+            <div className="text-center p-4 bg-white/50 dark:bg-white/5 rounded-2xl border border-gray-200 dark:border-white/10">
+              <TrendingUp className="w-8 h-8 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
+              <p className="font-semibold text-gray-900 dark:text-white">{stats.accidents}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Accidents</p>
             </div>
           </div>
         </div>
