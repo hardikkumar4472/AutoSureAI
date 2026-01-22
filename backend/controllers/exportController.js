@@ -1,35 +1,47 @@
 import Accident from "../models/Accident.js";
 import Claim from "../models/Claim.js";
-import { Parser } from "json2csv";
+// import { Parser } from "json2csv"; // Removed in favor of Transform
+// import { Transform } from "json2csv"; // Handled in chunk above? No, imports must be top level or carefully managed.
+// Let's just fix imports properly.
+
 import PDFDocument from "pdfkit";
+
+import { Transform } from "json2csv";
+import { pipeline } from "stream/promises";
 
 export const exportAccidentsCSV = async (req, res) => {
   try {
-    const accidents = await Accident.find().populate("userId", "name email vehicleNumber").lean();
     const fields = ["_id", "userId.name", "userId.email", "userId.vehicleNumber", "prediction.severity", "repair_cost.estimated_cost", "location.address", "createdAt"];
-    const parser = new Parser({ fields });
-    const csv = parser.parse(accidents);
+    const opts = { fields };
+    const transform = new Transform(opts);
+
     res.header("Content-Type", "text/csv");
     res.attachment("accidents.csv");
-    return res.send(csv);
+
+    const cursor = Accident.find().populate("userId", "name email vehicleNumber").lean().cursor();
+
+    await pipeline(cursor, transform, res);
   } catch (err) {
     console.error("exportAccidentsCSV error:", err);
-    res.status(500).json({ message: err.message });
+    if (!res.headersSent) res.status(500).json({ message: err.message });
   }
 };
 
 export const exportClaimsCSV = async (req, res) => {
   try {
-    const claims = await Claim.find().populate("driverId", "name email").populate("reportId").lean();
     const fields = ["_id", "driverId.name", "driverId.email", "severity", "estimatedCost", "status", "createdAt"];
-    const parser = new Parser({ fields });
-    const csv = parser.parse(claims);
+    const opts = { fields };
+    const transform = new Transform(opts);
+
     res.header("Content-Type", "text/csv");
     res.attachment("claims.csv");
-    return res.send(csv);
+
+    const cursor = Claim.find().populate("driverId", "name email").populate("reportId").lean().cursor();
+
+    await pipeline(cursor, transform, res);
   } catch (err) {
     console.error("exportClaimsCSV error:", err);
-    res.status(500).json({ message: err.message });
+    if (!res.headersSent) res.status(500).json({ message: err.message });
   }
 };
 

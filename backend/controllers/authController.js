@@ -5,6 +5,7 @@ import User from "../models/User.js";
 import { sendOtpEmail } from "../utils/sendOtpEmail.js";
 import { io } from "../server.js";
 import { sendPasswordResetEmail } from "../utils/sendPasswordResetEmail.js";
+import { emailQueue } from "../config/queue.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -28,7 +29,8 @@ export const registerUser = async (req, res) => {
     user.otpExpires = Date.now() + 10 * 60 * 1000;
     await user.save();
 
-    await sendOtpEmail(email, otp);
+    // await sendOtpEmail(email, otp);
+    await emailQueue.add("send_otp", { type: "otp", email, otp });
 
     res.json({ success: true, message: "OTP sent to email" });
   } catch (err) {
@@ -113,7 +115,8 @@ export const forgotPassword = async (req, res) => {
     user.otpExpires = Date.now() + 10 * 60 * 1000; 
     await user.save();
 
-    await sendPasswordResetEmail(email, otp);
+    // await sendPasswordResetEmail(email, otp);
+    await emailQueue.add("send_password_reset", { type: "password_reset", email, otp });
 
     res.json({
       success: true,
