@@ -29,91 +29,6 @@ const AgentDashboard = () => {
   }, []);
 
   useEffect(() => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const container = document.querySelector('.min-h-screen');
-
-    if (!container) return;
-
-    canvas.style.position = 'fixed';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    canvas.style.pointerEvents = 'none';
-    canvas.style.zIndex = '0';
-    canvas.style.opacity = '0.3';
-
-    container.style.position = 'relative';
-    container.appendChild(canvas);
-
-    const resizeCanvas = () => {
-      canvas.width = container.clientWidth;
-      canvas.height = container.clientHeight;
-    };
-
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    class Particle {
-      constructor() {
-        this.reset();
-      }
-
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 1;
-        this.speed = Math.random() * 0.4 + 0.1;
-        this.opacity = Math.random() * 0.2 + 0.1;
-        this.color = document.documentElement.classList.contains('dark')
-          ? Math.random() > 0.7 ? '#0ea5e9' : '#38bdf8'
-          : Math.random() > 0.7 ? '#0369a1' : '#0ea5e9';
-      }
-
-      update() {
-        this.y += this.speed;
-        if (this.y > canvas.height) {
-          this.reset();
-          this.y = -10;
-        }
-      }
-
-      draw() {
-        if (!ctx) return;
-        ctx.fillStyle = this.color;
-        ctx.globalAlpha = this.opacity;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    const particles = Array.from({ length: 25 }, () => new Particle());
-
-    const animate = () => {
-      if (!ctx) return;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(particle => {
-        particle.update();
-        particle.draw();
-      });
-
-      requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      if (canvas.parentNode) {
-        canvas.parentNode.removeChild(canvas);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     fetchClaims();
 
     if (socket) {
@@ -249,12 +164,12 @@ const AgentDashboard = () => {
   };
 
   const StatCard = ({ title, value, icon: Icon, color, description }) => (
-    <div className="card rounded-2xl p-6 border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-sm hover:shadow-md transition-all duration-300">
+    <div className="card p-6 shadow-sm hover:shadow-md transition-all duration-300 group">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">{title}</p>
           {loading ? (
-            <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700/50 rounded-lg animate-pulse"></div>
           ) : (
             <p className="text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
           )}
@@ -262,7 +177,7 @@ const AgentDashboard = () => {
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{description}</p>
           )}
         </div>
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} bg-opacity-10`}>
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} bg-opacity-10 backdrop-blur-sm`}>
           <Icon className={`w-6 h-6 ${color.replace('text-', 'text-')}`} />
         </div>
       </div>
@@ -271,7 +186,7 @@ const AgentDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-300">Loading your dashboard...</p>
@@ -281,7 +196,7 @@ const AgentDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+    <div className="space-y-8">
       <div className="max-w-7xl mx-auto space-y-8">
         { }
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -294,7 +209,7 @@ const AgentDashboard = () => {
             </p>
           </div>
 
-          <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-4 py-2 rounded-2xl border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 bg-white/10 dark:bg-white/5 px-4 py-2 rounded-2xl border border-white/20 backdrop-blur-sm">
             <Users className="w-4 h-4" />
             <span>Welcome back, Agent</span>
           </div>
@@ -335,10 +250,10 @@ const AgentDashboard = () => {
         { }
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {stats.approved > 0 && (
-            <div className="card rounded-3xl p-6 border border-green-200 dark:border-green-800 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
+            <div className="card p-6 border border-green-500/20 bg-green-500/10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-green-100 dark:bg-green-800/30 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center">
                     <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400" />
                   </div>
                   <div>
@@ -354,10 +269,10 @@ const AgentDashboard = () => {
           )}
 
           {stats.rejected > 0 && (
-            <div className="card rounded-3xl p-6 border border-red-200 dark:border-red-800 bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20">
+            <div className="card p-6 border border-red-500/20 bg-red-500/10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-red-100 dark:bg-red-800/30 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-red-500/10 rounded-xl flex items-center justify-center">
                     <DollarSign className="w-6 h-6 text-red-600 dark:text-red-400" />
                   </div>
                   <div>
@@ -374,7 +289,7 @@ const AgentDashboard = () => {
         </div>
 
         { }
-        <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+        <div className="card p-8 shadow-xl">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
             <div className="flex items-center space-x-3">
               <div className="w-2 h-8 bg-gradient-to-b from-primary-600 to-primary-400 rounded-full"></div>
@@ -391,7 +306,7 @@ const AgentDashboard = () => {
                 <div className="relative sm:w-56" ref={sortRef}>
                   <button
                     onClick={() => setIsSortOpen(!isSortOpen)}
-                    className="w-full flex items-center justify-between pl-4 pr-4 py-3 rounded-2xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    className="w-full flex items-center justify-between pl-4 pr-4 py-3 rounded-2xl border border-white/20 bg-white/5 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 hover:bg-white/10 backdrop-blur-sm"
                   >
                     <div className="flex items-center space-x-2">
                       <ArrowUpDown className="h-5 w-5 text-gray-400" />
@@ -405,7 +320,7 @@ const AgentDashboard = () => {
                     <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${isSortOpen ? 'transform rotate-180' : ''}`} />
                   </button>
 
-                  <div className={`absolute z-10 mt-2 w-full bg-white dark:bg-gray-700 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-600 overflow-hidden transition-all duration-200 origin-top ${isSortOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
+                  <div className={`absolute z-10 mt-2 w-full bg-white/10 dark:bg-black/80 rounded-2xl shadow-xl border border-white/20 overflow-hidden transition-all duration-200 origin-top backdrop-blur-xl ${isSortOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
                     <div className="p-1 space-y-1">
                       {[
                         { value: 'latest', label: 'Latest First' },
@@ -420,8 +335,8 @@ const AgentDashboard = () => {
                             setIsSortOpen(false);
                           }}
                           className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium transition-colors duration-200 ${sortBy === option.value
-                            ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
-                            : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600'
+                            ? 'bg-primary-500/20 text-primary-700 dark:text-primary-300'
+                            : 'text-gray-700 dark:text-gray-200 hover:bg-white/10 dark:hover:bg-white/10'
                             }`}
                         >
                           <span>{option.label}</span>
@@ -443,7 +358,7 @@ const AgentDashboard = () => {
                     placeholder="Search by driver name or email..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 rounded-2xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                    className="w-full pl-11 pr-4 py-3 rounded-2xl border border-white/20 bg-white/5 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
                   />
                   {searchQuery && (
                     <button
@@ -484,7 +399,7 @@ const AgentDashboard = () => {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-200 dark:border-gray-700">
+                  <tr className="border-b border-white/20">
                     <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Driver</th>
                     <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Severity</th>
                     <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Est. Cost</th>
@@ -498,7 +413,7 @@ const AgentDashboard = () => {
                   {filteredClaims.map((claim) => (
                     <tr
                       key={claim._id}
-                      className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
+                      className="border-b border-white/10 hover:bg-white/10 dark:hover:bg-white/5 transition-colors duration-200"
                     >
                       <td className="py-4 px-6">
                         <div>

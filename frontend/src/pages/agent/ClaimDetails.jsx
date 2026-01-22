@@ -186,10 +186,10 @@ const AgentClaimDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Loading claim details...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-500 mx-auto mb-4"></div>
+          <p className="text-gray-300">Loading claim details...</p>
         </div>
       </div>
     );
@@ -197,11 +197,11 @@ const AgentClaimDetails = () => {
 
   if (!claim) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white">
         <div className="text-center">
           <AlertTriangle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Claim Not Found</h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">The requested claim could not be found.</p>
+          <h3 className="text-xl font-semibold text-white mb-2">Claim Not Found</h3>
+          <p className="text-gray-300 mb-6">The requested claim could not be found.</p>
           <button
             onClick={() => navigate('/agent')}
             className="btn-primary rounded-2xl px-6 py-3 inline-flex items-center space-x-2"
@@ -215,12 +215,12 @@ const AgentClaimDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => navigate('/agent')}
-            className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors duration-200 bg-white dark:bg-gray-800 px-4 py-2 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700"
+            className="inline-flex items-center space-x-2 text-primary-400 hover:text-primary-300 transition-colors duration-200 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-2xl shadow-sm border border-white/20 backdrop-blur-sm"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Back to Dashboard</span>
@@ -235,7 +235,7 @@ const AgentClaimDetails = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+            <div className="card rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-8 bg-gradient-to-b from-primary-600 to-primary-400 rounded-full"></div>
@@ -252,14 +252,14 @@ const AgentClaimDetails = () => {
                   />
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-200 dark:border-blue-800">
+                    <div className="text-center p-4 bg-blue-500/10 rounded-2xl border border-blue-500/20 backdrop-blur-sm">
                       <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">Severity</p>
                       <p className={`text-lg font-bold capitalize px-3 py-1 rounded-xl ${getSeverityColor(claim.reportId.prediction?.severity)}`}>
                         {claim.reportId.prediction?.severity || 'N/A'}
                       </p>
                     </div>
 
-                    <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-200 dark:border-green-800">
+                    <div className="text-center p-4 bg-green-500/10 rounded-2xl border border-green-500/20 backdrop-blur-sm">
                       <p className="text-sm font-medium text-green-600 dark:text-green-400 mb-2">Confidence</p>
                       <p className="text-lg font-bold text-gray-900 dark:text-white">
                         {claim.reportId.prediction?.confidence
@@ -268,7 +268,7 @@ const AgentClaimDetails = () => {
                       </p>
                     </div>
 
-                    <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-2xl border border-purple-200 dark:border-purple-800">
+                    <div className="text-center p-4 bg-purple-500/10 rounded-2xl border border-purple-500/20 backdrop-blur-sm">
                       <p className="text-sm font-medium text-purple-600 dark:text-purple-400 mb-2">Est. Cost</p>
                       <p className="text-lg font-bold text-gray-900 dark:text-white">
                         ${claim.estimatedCost?.toLocaleString() || 'N/A'}
@@ -277,7 +277,7 @@ const AgentClaimDetails = () => {
                   </div>
 
                   {claim.reportId.reportUrl && (
-                    <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-200 dark:border-blue-800">
+                    <div className="p-4 bg-blue-500/10 rounded-2xl border border-blue-500/20 backdrop-blur-sm">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -298,9 +298,9 @@ const AgentClaimDetails = () => {
               )}
 
               <div className="space-y-6">
-                <div className="p-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-2xl border border-gray-200 dark:border-gray-600">
+                <div className="p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
                   <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/30 rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-primary-500/10 rounded-xl flex items-center justify-center">
                       <User className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Driver Information</h3>
@@ -330,7 +330,7 @@ const AgentClaimDetails = () => {
                 </div>
 
                 {claim.reportId?.location && (
-                  <div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-200 dark:border-blue-800">
+                  <div className="p-6 bg-blue-500/10 rounded-2xl border border-blue-500/20 backdrop-blur-sm">
                     <div className="flex items-center space-x-3 mb-4">
                       <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                       <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200">Accident Location</h3>
@@ -340,7 +340,7 @@ const AgentClaimDetails = () => {
                 )}
 
                 {claim.reportId?.verification && (
-                  <div className="p-6 bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl border border-yellow-200 dark:border-yellow-800">
+                  <div className="p-6 bg-yellow-500/10 rounded-2xl border border-yellow-500/20 backdrop-blur-sm">
                     <div className="flex items-center space-x-3 mb-4">
                       <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                       <h3 className="text-lg font-semibold text-yellow-800 dark:text-yellow-200">Traffic Verification</h3>
@@ -361,7 +361,7 @@ const AgentClaimDetails = () => {
             </div>
 
             {claim.status === 'in_review' && (
-              <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+              <div className="card rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
                 <ChatWindow claimId={id} />
               </div>
             )}
@@ -369,7 +369,7 @@ const AgentClaimDetails = () => {
 
           <div className="space-y-8 lg:sticky lg:top-8 lg:h-fit">
             {claim.status === 'in_review' && (
-              <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+              <div className="card rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
                 <div className="flex items-center space-x-3 mb-6">
                   <div className="w-2 h-8 bg-gradient-to-b from-green-600 to-green-400 rounded-full"></div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Review Claim</h2>
@@ -382,7 +382,7 @@ const AgentClaimDetails = () => {
                   <textarea
                     value={remarks}
                     onChange={(e) => setRemarks(e.target.value)}
-                    className="input-field rounded-2xl border-gray-300 dark:border-gray-600 focus:border-primary-500 focus:ring-primary-500 transition-all duration-200"
+                    className="input-field rounded-2xl border-white/20 bg-white/5 focus:border-primary-500 focus:ring-primary-500 transition-all duration-200 text-white placeholder-gray-400"
                     rows={6}
                     placeholder="Provide detailed remarks about your decision..."
                     required
@@ -441,9 +441,9 @@ const AgentClaimDetails = () => {
             )}
 
             {claim.status === 'settled' && claim.settlementInfo && (
-              <div className="card rounded-3xl p-8 border border-green-200 dark:border-green-700 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 shadow-xl">
+              <div className="card rounded-3xl p-8 border border-green-500/20 bg-green-500/10 backdrop-blur-xl shadow-xl">
                 <div className="flex items-center space-x-3 mb-6">
-                  <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-2xl flex items-center justify-center">
                     <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
                   </div>
                   <div>
@@ -453,14 +453,14 @@ const AgentClaimDetails = () => {
                 </div>
 
                 <div className="space-y-4">
-                  <div className="p-4 bg-white dark:bg-gray-800 rounded-2xl">
+                  <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Settlement Amount</p>
                     <p className="text-2xl font-bold text-gray-900 dark:text-white">
                       ${claim.settlementInfo.amount?.toLocaleString()}
                     </p>
                   </div>
 
-                  <div className="p-4 bg-white dark:bg-gray-800 rounded-2xl">
+                  <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Payment Method</p>
                     <p className="font-semibold text-gray-900 dark:text-white capitalize">
                       {claim.settlementInfo.method?.replace('_', ' ')}
@@ -468,7 +468,7 @@ const AgentClaimDetails = () => {
                   </div>
 
                   {claim.settlementInfo.reference && (
-                    <div className="p-4 bg-white dark:bg-gray-800 rounded-2xl">
+                    <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
                       <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Reference</p>
                       <p className="font-mono text-sm text-gray-900 dark:text-white">
                         {claim.settlementInfo.reference}
@@ -477,7 +477,7 @@ const AgentClaimDetails = () => {
                   )}
 
                   {claim.settlementInfo.notes && (
-                    <div className="p-4 bg-white dark:bg-gray-800 rounded-2xl">
+                    <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
                       <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Notes</p>
                       <p className="text-sm text-gray-900 dark:text-white">
                         {claim.settlementInfo.notes}
@@ -485,7 +485,7 @@ const AgentClaimDetails = () => {
                     </div>
                   )}
 
-                  <div className="p-4 bg-white dark:bg-gray-800 rounded-2xl">
+                  <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
                     <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Settled At</p>
                     <p className="text-sm text-gray-900 dark:text-white">
                       {format(new Date(claim.settlementInfo.settledAt), 'PPp')}
@@ -495,19 +495,19 @@ const AgentClaimDetails = () => {
               </div>
             )}
 
-            <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+            <div className="card rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></div>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Claim Information</h2>
               </div>
 
               <div className="space-y-4">
-                <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
+                <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Claim ID</p>
                   <p className="font-mono text-sm text-gray-900 dark:text-white break-all">{claim._id}</p>
                 </div>
 
-                <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-2xl">
+                <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Created At</p>
                   <p className="font-semibold text-gray-900 dark:text-white">
                     {format(new Date(claim.createdAt), 'PPp')}
@@ -515,7 +515,7 @@ const AgentClaimDetails = () => {
                 </div>
 
                 {claim.remarks && (
-                  <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-2xl border border-yellow-200 dark:border-yellow-800">
+                  <div className="p-4 bg-yellow-500/10 rounded-2xl border border-yellow-500/20 backdrop-blur-sm">
                     <p className="text-sm text-yellow-700 dark:text-yellow-300 font-medium mb-1">Previous Remarks</p>
                     <p className="text-yellow-600 dark:text-yellow-400">{claim.remarks}</p>
                   </div>

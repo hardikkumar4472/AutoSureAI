@@ -258,13 +258,13 @@ const TrafficReportDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-8 px-4">
       <div className="max-w-7xl mx-auto">
         {}
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => navigate("/traffic")}
-            className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors duration-200 bg-white dark:bg-gray-800 px-4 py-2 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700"
+            className="inline-flex items-center space-x-2 text-primary-400 hover:text-primary-300 transition-colors duration-200 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-2xl shadow-sm border border-white/20 backdrop-blur-sm"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Back to Dashboard</span>
@@ -285,7 +285,7 @@ const TrafficReportDetails = () => {
           {}
           <div className="lg:col-span-2 space-y-8">
             {}
-            <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+            <div className="card rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></div>
@@ -305,7 +305,7 @@ const TrafficReportDetails = () => {
 
                 {}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                  <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-200 dark:border-blue-800">
+                  <div className="text-center p-4 bg-blue-500/10 rounded-2xl border border-blue-500/20 backdrop-blur-sm">
                     <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-2">
                       Severity Level
                     </p>
@@ -318,7 +318,7 @@ const TrafficReportDetails = () => {
                     </p>
                   </div>
 
-                  <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-200 dark:border-green-800">
+                  <div className="text-center p-4 bg-green-500/10 rounded-2xl border border-green-500/20 backdrop-blur-sm">
                     <p className="text-sm font-medium text-green-600 dark:text-green-400 mb-2">
                       AI Confidence
                     </p>
@@ -329,7 +329,7 @@ const TrafficReportDetails = () => {
                     </p>
                   </div>
 
-                  <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-2xl border border-purple-200 dark:border-purple-800">
+                  <div className="text-center p-4 bg-purple-500/10 rounded-2xl border border-purple-500/20 backdrop-blur-sm">
                     <p className="text-sm font-medium text-purple-600 dark:text-purple-400 mb-2">
                       Est. Damage
                     </p>
@@ -343,7 +343,7 @@ const TrafficReportDetails = () => {
 
                 {}
                 {report.reportUrl && (
-                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-200 dark:border-blue-800">
+                  <div className="p-4 bg-blue-500/10 rounded-2xl border border-blue-500/20 backdrop-blur-sm">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -367,9 +367,9 @@ const TrafficReportDetails = () => {
               {}
               <div className="space-y-6">
                 {}
-                <div className="p-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-2xl border border-gray-200 dark:border-gray-600">
+                <div className="p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
                   <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center">
                       <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -418,7 +418,7 @@ const TrafficReportDetails = () => {
 
                 {}
                 {report.location && (
-                  <div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-200 dark:border-blue-800">
+                  <div className="p-6 bg-blue-500/10 rounded-2xl border border-blue-500/20 backdrop-blur-sm">
                     <div className="flex items-center space-x-3 mb-4">
                       <MapPin className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                       <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200">
@@ -438,7 +438,7 @@ const TrafficReportDetails = () => {
                 )}
 
                 {}
-                <div className="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-2xl border border-gray-200 dark:border-gray-600">
+                <div className="p-6 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
                   <div className="flex items-center space-x-3 mb-4">
                     <Calendar className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -463,7 +463,7 @@ const TrafficReportDetails = () => {
           <div className="space-y-8">
             {}
             {report.verification?.status === "unverified" && (
-              <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+              <div className="card rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
                 <div className="flex items-center space-x-3 mb-6">
                   <div className="w-2 h-8 bg-gradient-to-b from-green-600 to-green-400 rounded-full"></div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -483,10 +483,10 @@ const TrafficReportDetails = () => {
                         status: e.target.value,
                       })
                     }
-                    className="input-field rounded-2xl border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 transition-all duration-200"
+                    className="input-field rounded-2xl border-white/20 bg-white/5 focus:border-blue-500 focus:ring-blue-500 transition-all duration-200 text-white"
                   >
-                    <option value="fraudulent"> Mark as Fraudulent </option>
-                    <option value="verified"> Verify as Genuine</option>
+                    <option value="fraudulent" className="bg-gray-900 text-white"> Mark as Fraudulent </option>
+                    <option value="verified" className="bg-gray-900 text-white"> Verify as Genuine</option>
                     
                   </select>
                 </div>
@@ -503,7 +503,7 @@ const TrafficReportDetails = () => {
                         remarks: e.target.value,
                       })
                     }
-                    className="input-field rounded-2xl border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 transition-all duration-200"
+                    className="input-field rounded-2xl border-white/20 bg-white/5 focus:border-blue-500 focus:ring-blue-500 transition-all duration-200 text-white placeholder-gray-400"
                     rows={3}
                     placeholder="Enter detailed police remarks and observations..."
                     required
@@ -538,14 +538,14 @@ const TrafficReportDetails = () => {
 
             {}
             {report.verification?.status !== "unverified" && (
-              <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+              <div className="card rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
                 <div className="flex items-center space-x-3 mb-6">
                   <Shield className="w-5 h-5 text-green-600 dark:text-green-400" />
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                     Verification Status
                   </h2>
                 </div>
-                <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-200 dark:border-green-800">
+                <div className="p-6 bg-green-500/10 rounded-2xl border border-green-500/20 backdrop-blur-sm">
                   <p className="font-semibold text-green-700 dark:text-green-300 text-lg mb-2 capitalize">
                     {report.verification.status}
                   </p>
@@ -565,7 +565,7 @@ const TrafficReportDetails = () => {
             )}
 
             {}
-            <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+            <div className="card rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-2 h-8 bg-gradient-to-b from-red-600 to-red-400 rounded-full"></div>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
@@ -576,7 +576,7 @@ const TrafficReportDetails = () => {
 
               {report.trafficVerification?.firNumber ? (
                 <div className="space-y-4">
-                  <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-200 dark:border-red-800">
+                  <div className="p-4 bg-red-500/10 rounded-2xl border border-red-500/20 backdrop-blur-sm">
                     <p className="text-sm font-medium text-red-600 dark:text-red-400 mb-1">
                       FIR Number
                     </p>
@@ -584,7 +584,7 @@ const TrafficReportDetails = () => {
                       {report.trafficVerification.firNumber}
                     </p>
                   </div>
-                  <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-200 dark:border-red-800">
+                  <div className="p-4 bg-red-500/10 rounded-2xl border border-red-500/20 backdrop-blur-sm">
                     <p className="text-sm font-medium text-red-600 dark:text-red-400 mb-1">
                       Police Station
                     </p>
@@ -618,7 +618,7 @@ const TrafficReportDetails = () => {
                       onChange={(e) =>
                         setFirData({ ...firData, firNumber: e.target.value })
                       }
-                      className="input-field rounded-2xl border-gray-300 dark:border-gray-600 focus:border-red-500 focus:ring-red-500 transition-all duration-200"
+                      className="input-field rounded-2xl border-white/20 bg-white/5 focus:border-red-500 focus:ring-red-500 transition-all duration-200 text-white placeholder-gray-400"
                       placeholder="Enter official FIR number"
                       required
                     />
@@ -637,7 +637,7 @@ const TrafficReportDetails = () => {
                           policeStation: e.target.value,
                         })
                       }
-                      className="input-field rounded-2xl border-gray-300 dark:border-gray-600 focus:border-red-500 focus:ring-red-500 transition-all duration-200"
+                      className="input-field rounded-2xl border-white/20 bg-white/5 focus:border-red-500 focus:ring-red-500 transition-all duration-200 text-white placeholder-gray-400"
                       placeholder="Enter police station name"
                       required
                     />

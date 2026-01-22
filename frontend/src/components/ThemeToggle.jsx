@@ -26,15 +26,15 @@ const ThemeToggle = ({ showLabel = true, className = '' }) => {
         onClick={toggleTheme}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className={`relative w-12 h-12 rounded-2xl border border-gray-300 dark:border-gray-600 transition-all duration-300 hover:shadow-lg hover:scale-105 bg-white dark:bg-gray-800 flex items-center justify-center group ${className}`}
+        className={`relative w-12 h-12 rounded-2xl border border-gray-300 dark:border-gray-600 transition-all duration-300 hover:shadow-lg hover:scale-105 bg-white dark:bg-gray-800 flex items-center justify-center group overflow-hidden ${className}`}
         aria-label="Toggle theme"
       >
         <Sun className="w-5 h-5 text-yellow-500 transition-all duration-300 absolute opacity-0 rotate-0 scale-50 group-hover:opacity-100 group-hover:rotate-90 group-hover:scale-100" />
         <Moon className="w-5 h-5 text-indigo-400 transition-all duration-300 absolute opacity-0 -rotate-90 scale-50 group-hover:opacity-100 group-hover:rotate-0 group-hover:scale-100" />
         <CurrentIcon className={`w-5 h-5 ${currentTheme?.color} transition-all duration-300 absolute opacity-100 rotate-0 scale-100 group-hover:opacity-0 group-hover:rotate-90 group-hover:scale-50`} />
 
-        {}
-        <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r from-yellow-400/20 to-indigo-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+        {/* Hover Gradient Effect */}
+        <div className={`absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-indigo-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
           theme === 'dark' ? 'opacity-20' : 'opacity-0'
         }`} />
       </button>

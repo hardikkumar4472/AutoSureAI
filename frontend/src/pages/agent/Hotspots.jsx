@@ -83,44 +83,44 @@ const AgentHotspots = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-red-50 dark:from-gray-900 dark:to-gray-800">
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white">
                 <div className="text-center">
-                    <Loader className="w-12 h-12 animate-spin text-primary-600 mx-auto mb-4" />
-                    <p className="text-gray-600 dark:text-gray-300">Analyzing area data...</p>
+                    <Loader className="w-12 h-12 animate-spin text-primary-500 mx-auto mb-4" />
+                    <p className="text-gray-300">Analyzing area data...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white py-8 px-4">
             <div className="max-w-7xl mx-auto space-y-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div className="space-y-2">
-                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white bg-gradient-to-r from-gray-900 to-red-700 dark:from-white dark:to-red-400 bg-clip-text text-transparent">
+                        <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
                             Area Analysis
                         </h1>
-                        <p className="text-lg text-gray-600 dark:text-gray-300 font-light">
+                        <p className="text-lg text-gray-400 font-light">
                             Statistical breakdown of accidents by location
                         </p>
                     </div>
                 </div>
 
                 {mostFrequent && (
-                    <div className="card rounded-3xl p-6 border border-red-200 dark:border-red-800 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 shadow-lg">
+                    <div className="rounded-3xl p-6 border border-red-500/20 bg-red-500/10 backdrop-blur-xl shadow-lg">
                         <div className="flex items-center space-x-4">
-                            <div className="w-16 h-16 bg-red-100 dark:bg-red-800/30 rounded-2xl flex items-center justify-center flex-shrink-0">
-                                <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
+                            <div className="w-16 h-16 bg-red-500/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                <AlertTriangle className="w-8 h-8 text-red-400" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-red-800 dark:text-red-200">High Risk Zone: {mostFrequent.name}</h3>
-                                <p className="text-red-700 dark:text-red-300 mt-1">
+                                <h3 className="text-xl font-bold text-red-200">High Risk Zone: {mostFrequent.name}</h3>
+                                <p className="text-red-300 mt-1">
                                     {mostFrequent.count} accidents recorded in this area
                                 </p>
                                 <div className="flex space-x-4 mt-2 text-sm">
-                                    <span className="text-red-600 font-semibold">Severe: {mostFrequent.severity.severe}</span>
-                                    <span className="text-orange-600 font-semibold">Moderate: {mostFrequent.severity.moderate}</span>
-                                    <span className="text-green-600 font-semibold">Minor: {mostFrequent.severity.minor}</span>
+                                    <span className="text-red-400 font-semibold">Severe: {mostFrequent.severity.severe}</span>
+                                    <span className="text-orange-400 font-semibold">Moderate: {mostFrequent.severity.moderate}</span>
+                                    <span className="text-green-400 font-semibold">Minor: {mostFrequent.severity.minor}</span>
                                 </div>
                             </div>
                         </div>
@@ -128,17 +128,17 @@ const AgentHotspots = () => {
                 )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="card rounded-3xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                            <MapPin className="w-5 h-5 mr-2 text-primary-500" />
+                    <div className="rounded-3xl p-6 border border-white/20 bg-white/5 backdrop-blur-xl shadow-xl">
+                        <h3 className="text-xl font-bold text-white mb-6 flex items-center">
+                            <MapPin className="w-5 h-5 mr-2 text-primary-400" />
                             Top Accident Prone Areas
                         </h3>
                         <div className="h-[400px]">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={areaData} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
-                                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#374151" opacity={0.1} />
-                                    <XAxis type="number" />
-                                    <YAxis dataKey="name" type="category" width={100} tick={{ fontSize: 12 }} />
+                                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#ffffff" opacity={0.1} />
+                                    <XAxis type="number" axisLine={{ stroke: '#4b5563' }} tick={{ fill: '#d1d5db' }} tickLine={{ stroke: '#4b5563' }} />
+                                    <YAxis dataKey="name" type="category" width={100} tick={{ fill: '#d1d5db', fontSize: 12 }} axisLine={{ stroke: '#4b5563' }} tickLine={{ stroke: '#4b5563' }} />
                                     <Tooltip
                                         contentStyle={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#fff' }}
                                         itemStyle={{ color: '#fff' }}
@@ -168,9 +168,9 @@ const AgentHotspots = () => {
                     </div>
 
                     {mostFrequent && (
-                        <div className="card rounded-3xl p-6 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                                <AlertCircle className="w-5 h-5 mr-2 text-primary-500" />
+                        <div className="rounded-3xl p-6 border border-white/20 bg-white/5 backdrop-blur-xl shadow-xl">
+                            <h3 className="text-xl font-bold text-white mb-6 flex items-center">
+                                <AlertCircle className="w-5 h-5 mr-2 text-primary-400" />
                                 Severity Distribution ({mostFrequent.name})
                             </h3>
                             <div className="h-[400px]">
@@ -201,7 +201,7 @@ const AgentHotspots = () => {
                                             contentStyle={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#fff' }}
                                             itemStyle={{ color: '#fff' }}
                                         />
-                                        <Legend verticalAlign="bottom" height={36} />
+                                        <Legend verticalAlign="bottom" height={36} wrapperStyle={{ color: '#d1d5db' }} />
                                     </PieChart>
                                 </ResponsiveContainer>
                             </div>

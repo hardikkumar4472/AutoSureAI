@@ -69,7 +69,7 @@ const DriverDashboard = () => {
   }, [claimsWithAgents, selectedClaimId]);
 
   const StatCard = ({ title, value, icon: Icon, color, loading }) => (
-    <div className="card rounded-2xl p-6 border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-sm hover:shadow-md transition-all duration-300">
+    <div className="card p-6 shadow-sm hover:shadow-md transition-all duration-300 group">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">{title}</p>
@@ -89,7 +89,7 @@ const DriverDashboard = () => {
   const QuickActionCard = ({ to, icon: Icon, title, description, borderColor, hoverColor }) => (
     <Link
       to={to}
-      className="group p-6 border-2 border-gray-200 dark:border-gray-700 rounded-2xl bg-white dark:bg-gray-800 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+      className="group p-6 card hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 block"
     >
       <div className="text-center">
         <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl ${borderColor} bg-opacity-10 group-hover:bg-opacity-20 transition-all duration-300 mb-4`}>
@@ -155,7 +155,7 @@ const DriverDashboard = () => {
       </div>
 
       {}
-      <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+      <div className="card p-8">
         <div className="flex items-center space-x-3 mb-6">
           <div className="w-2 h-8 bg-gradient-to-b from-primary-600 to-primary-400 rounded-full"></div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Quick Actions</h2>
@@ -189,7 +189,7 @@ const DriverDashboard = () => {
       </div>
 
       {}
-      <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+      <div className="card p-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center">
@@ -244,7 +244,7 @@ const DriverDashboard = () => {
 
             {selectedClaim && (
               <>
-                <div className="p-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-2xl border border-gray-200 dark:border-gray-600 space-y-4">
+                <div className="p-6 bg-white/5 dark:bg-white/5 rounded-2xl border border-white/10 space-y-4 backdrop-blur-md">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Assigned Agent</p>
@@ -277,7 +277,7 @@ const DriverDashboard = () => {
                 {chatAllowed ? (
                   <ChatWindow claimId={selectedClaimId} />
                 ) : (
-                  <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-2xl text-center">
+                  <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-2xl text-center backdrop-blur-sm">
                     <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 inline-block mr-2" />
                     <span className="text-yellow-700 dark:text-yellow-300 text-sm">
                       Chat is only available for claims that are pending review.

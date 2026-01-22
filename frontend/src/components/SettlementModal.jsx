@@ -44,8 +44,8 @@ const SettlementModal = ({ isOpen, onClose, claim, onSettled }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-md">
+      <div className="bg-gray-900 border border-white/20 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-gradient-to-r from-green-600 to-emerald-600 p-6 rounded-t-3xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -59,7 +59,7 @@ const SettlementModal = ({ isOpen, onClose, claim, onSettled }) => {
             </div>
             <button
               onClick={onClose}
-              className="text-white hover:bg-white/20 p-2 rounded-xl transition-colors duration-200"
+              className="text-white hover:bg-white/10 p-2 rounded-xl transition-colors duration-200"
             >
               <X className="w-6 h-6" />
             </button>
@@ -67,30 +67,26 @@ const SettlementModal = ({ isOpen, onClose, claim, onSettled }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-200 dark:border-blue-800">
-            <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-3">Claim Information</h3>
+          <div className="p-4 bg-blue-500/10 rounded-2xl border border-blue-500/20">
+            <h3 className="font-semibold text-blue-200 mb-3">Claim Information</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-gray-600 dark:text-gray-400">Claim ID</p>
-                <p className="font-mono text-gray-900 dark:text-white">#{claim?._id.slice(-8).toUpperCase()}</p>
+                <p className="text-gray-400">Driver</p>
+                <p className="font-semibold text-white">{claim?.driverId?.name}</p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400">Driver</p>
-                <p className="font-semibold text-gray-900 dark:text-white">{claim?.driverId?.name}</p>
+                <p className="text-gray-400">Estimated Cost</p>
+                <p className="font-semibold text-white">${claim?.estimatedCost?.toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400">Estimated Cost</p>
-                <p className="font-semibold text-gray-900 dark:text-white">${claim?.estimatedCost?.toLocaleString()}</p>
-              </div>
-              <div>
-                <p className="text-gray-600 dark:text-gray-400">Status</p>
-                <p className="font-semibold text-green-600 dark:text-green-400 capitalize">{claim?.status}</p>
+                <p className="text-gray-400">Status</p>
+                <p className="font-semibold text-green-400 capitalize">{claim?.status}</p>
               </div>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-semibold text-gray-300 mb-2">
               Settlement Amount *
             </label>
             <div className="relative">
@@ -103,7 +99,7 @@ const SettlementModal = ({ isOpen, onClose, claim, onSettled }) => {
                 min="0"
                 step="0.01"
                 required
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                className="w-full pl-10 pr-4 py-3 border border-white/20 rounded-2xl bg-white/5 text-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
                 placeholder="Enter settlement amount"
               />
             </div>
@@ -113,7 +109,7 @@ const SettlementModal = ({ isOpen, onClose, claim, onSettled }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-semibold text-gray-300 mb-2">
               Payment Method *
             </label>
             <div className="relative">
@@ -123,18 +119,18 @@ const SettlementModal = ({ isOpen, onClose, claim, onSettled }) => {
                 value={formData.method}
                 onChange={handleChange}
                 required
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 appearance-none"
+                className="w-full pl-10 pr-4 py-3 border border-white/20 rounded-2xl bg-white/5 text-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 appearance-none"
               >
-                <option value="bank_transfer">Bank Transfer</option>
-                <option value="cheque">Cheque</option>
-                <option value="cash">Cash</option>
-                <option value="other">Other</option>
+                <option value="bank_transfer" className="bg-gray-900 text-white">Bank Transfer</option>
+                <option value="cheque" className="bg-gray-900 text-white">Cheque</option>
+                <option value="cash" className="bg-gray-900 text-white">Cash</option>
+                <option value="other" className="bg-gray-900 text-white">Other</option>
               </select>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-semibold text-gray-300 mb-2">
               Transaction Reference
             </label>
             <div className="relative">
@@ -144,17 +140,17 @@ const SettlementModal = ({ isOpen, onClose, claim, onSettled }) => {
                 name="reference"
                 value={formData.reference}
                 onChange={handleChange}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                className="w-full pl-10 pr-4 py-3 border border-white/20 rounded-2xl bg-white/5 text-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
                 placeholder="e.g., Transaction ID, Cheque Number"
               />
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-xs text-gray-400 mt-1">
               Optional reference number for tracking
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-semibold text-gray-300 mb-2">
               Settlement Notes
             </label>
             <textarea
@@ -162,7 +158,7 @@ const SettlementModal = ({ isOpen, onClose, claim, onSettled }) => {
               value={formData.notes}
               onChange={handleChange}
               rows={4}
-              className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+              className="w-full px-4 py-3 border border-white/20 rounded-2xl bg-white/5 text-white focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 placeholder-gray-500"
               placeholder="Add any additional notes about the settlement..."
             />
           </div>
@@ -172,7 +168,7 @@ const SettlementModal = ({ isOpen, onClose, claim, onSettled }) => {
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-2xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 disabled:opacity-50"
+              className="flex-1 px-6 py-3 border border-white/20 text-gray-300 rounded-2xl font-semibold hover:bg-white/5 transition-all duration-200 disabled:opacity-50"
             >
               Cancel
             </button>

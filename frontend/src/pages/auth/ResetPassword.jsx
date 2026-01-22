@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Lock, Car, Check, X } from 'lucide-react';
 import ThemeToggle from '../../components/ThemeToggle';
+import HomeImage from '../../Assets/Home.png';
+import DarkImage from '../../Assets/dark.jpeg';
+import { motion } from 'framer-motion';
 
 const ResetPassword = () => {
   const [formData, setFormData] = useState({
@@ -22,135 +25,6 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email || '';
-
-  useEffect(() => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const container = document.querySelector('.min-h-screen');
-
-    canvas.style.position = 'absolute';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    canvas.style.pointerEvents = 'none';
-    canvas.style.zIndex = '0';
-
-    container.style.position = 'relative';
-    container.appendChild(canvas);
-
-    const resizeCanvas = () => {
-      canvas.width = container.clientWidth;
-      canvas.height = container.clientHeight;
-    };
-
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    class Particle {
-      constructor() {
-        this.reset();
-      }
-
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speed = Math.random() * 1 + 0.5;
-        this.opacity = Math.random() * 0.5 + 0.2;
-
-        this.color = document.documentElement.classList.contains('dark') 
-          ? Math.random() > 0.7 ? '#60a5fa' : '#93c5fd' 
-          : Math.random() > 0.7 ? '#2563eb' : '#3b82f6';
-      }
-
-      update() {
-        this.y += this.speed;
-        if (this.y > canvas.height) {
-          this.reset();
-          this.y = -10;
-        }
-      }
-
-      draw() {
-        if (!ctx) return;
-        ctx.fillStyle = this.color;
-        ctx.globalAlpha = this.opacity;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    class CarParticle {
-      constructor() {
-        this.reset();
-      }
-
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 1;
-        this.speedX = (Math.random() - 0.5) * 2;
-        this.speedY = (Math.random() - 0.5) * 2;
-        this.opacity = Math.random() * 0.8 + 0.2;
-        this.color = document.documentElement.classList.contains('dark')
-          ? '#fbbf24'
-          : '#dc2626';
-        this.life = 100;
-      }
-
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        this.life--;
-        this.opacity = this.life / 100 * 0.8;
-
-        if (this.life <= 0 || this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-          this.reset();
-        }
-      }
-
-      draw() {
-        if (!ctx) return;
-        ctx.fillStyle = this.color;
-        ctx.globalAlpha = this.opacity;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    const particles = Array.from({ length: 50 }, () => new Particle());
-    const carParticles = Array.from({ length: 20 }, () => new CarParticle());
-
-    const animate = () => {
-      if (!ctx) return;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach(particle => {
-        particle.update();
-        particle.draw();
-      });
-
-      carParticles.forEach(particle => {
-        particle.update();
-        particle.draw();
-      });
-
-      requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      if (canvas.parentNode) {
-        canvas.parentNode.removeChild(canvas);
-      }
-    };
-  }, []);
 
   const validatePassword = (password) => {
     const errors = {
@@ -180,7 +54,6 @@ const ResetPassword = () => {
       ...prev,
       [name]: sanitizedValue
     }));
-
 
     if (name === 'newPassword') {
       validatePassword(sanitizedValue);
@@ -226,53 +99,49 @@ const ResetPassword = () => {
   };
 
   const PasswordRequirement = ({ met, text }) => (
-    <div className={`flex items-center space-x-2 text-sm transition-colors duration-200 ${
-      met ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'
+    <div className={`flex items-center space-x-2 text-xs transition-colors duration-200 ${
+      met ? 'text-green-400' : 'text-gray-400'
     }`}>
       {met ? (
-        <Check className="w-4 h-4" />
+        <Check className="w-3 h-3" />
       ) : (
-        <X className="w-4 h-4" />
+        <X className="w-3 h-3" />
       )}
       <span>{text}</span>
     </div>
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-950 px-4 transition-colors overflow-hidden">
-      {}
-      <div className="absolute top-4 right-4 z-10">
-        <ThemeToggle />
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden py-4 px-4 sm:px-6">
+      
+      {/* Background Image */}
+      <div className="fixed inset-0 z-0">
+          <img src={HomeImage} alt="Background Light" className="w-full h-full object-cover object-center dark:hidden" />
+          <img src={DarkImage} alt="Background Dark" className="w-full h-full object-cover object-center hidden dark:block" />
+          <div className="absolute inset-0 bg-black/50" />
       </div>
 
-      {}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {}
-        <div className="absolute -left-20 top-1/4 animate-float-car-1">
-          <Car className="w-8 h-8 text-primary-400 dark:text-primary-600 opacity-60" />
-        </div>
-
-        {}
-        <div className="absolute -right-20 top-1/2 animate-float-car-2">
-          <Car className="w-6 h-6 text-primary-300 dark:text-primary-500 opacity-40" />
-        </div>
-
-        {}
-        <div className="absolute -left-16 bottom-1/3 animate-float-car-3">
-          <Car className="w-10 h-10 text-primary-500 dark:text-primary-400 opacity-50" />
-        </div>
+      <div className="absolute top-6 right-6 z-20">
+        <ThemeToggle 
+           showLabel={false} 
+           className="!bg-white/10 !dark:bg-black/30 !border-white/20 !rounded-full !w-11 !h-11 hover:!scale-110 text-white" 
+        />
       </div>
 
-      <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-800 relative z-10">
-        {}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="relative z-10 w-full max-w-md p-8 rounded-3xl backdrop-blur-lg border border-white/10 shadow-2xl"
+      >
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-600 rounded-full mb-4 animate-pulse">
-            <Lock className="w-8 h-8 text-white animate-bounce" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-full mb-4 shadow-lg shadow-indigo-500/30">
+            <Lock className="w-7 h-7 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white animate-pulse">Reset Password</h1>
-          <p className="text-gray-600 dark:text-gray-300 mt-2">Enter OTP and new password</p>
+          <h1 className="text-3xl font-bold text-white tracking-tight">Reset Password</h1>
+          <p className="text-gray-300 mt-2">Enter OTP and new password</p>
           {email && (
-            <p className="text-sm text-primary-600 dark:text-primary-400 mt-2 font-medium">
+            <p className="text-sm text-indigo-400 mt-2 font-medium bg-indigo-500/10 py-1 px-3 rounded-full inline-block border border-indigo-500/20">
               {email}
             </p>
           )}
@@ -280,7 +149,7 @@ const ResetPassword = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               OTP
             </label>
             <input
@@ -288,7 +157,7 @@ const ResetPassword = () => {
               name="otp"
               value={formData.otp}
               onChange={handleChange}
-              className="input-field text-center text-xl tracking-widest rounded-full"
+              className="w-full px-4 py-3 text-center text-xl tracking-widest rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
               placeholder="000000"
               maxLength={6}
               required
@@ -296,7 +165,7 @@ const ResetPassword = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               New Password
             </label>
             <input
@@ -304,10 +173,10 @@ const ResetPassword = () => {
               name="newPassword"
               value={formData.newPassword}
               onChange={handleChange}
-              className={`input-field rounded-full ${
+              className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all ${
                 formData.newPassword && !Object.values(passwordErrors).every(Boolean) 
-                  ? 'border-yellow-500 focus:border-yellow-500' 
-                  : ''
+                  ? 'border-yellow-500/50' 
+                  : 'border-white/10'
               }`}
               placeholder="Enter new password"
               required
@@ -315,32 +184,34 @@ const ResetPassword = () => {
             />
             
             {formData.newPassword && (
-              <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-2">
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <div className="mt-3 p-3 bg-white/5 rounded-xl border border-white/5 space-y-2">
+                <p className="text-xs font-medium text-gray-300 mb-2">
                   Password must contain:
                 </p>
-                <PasswordRequirement 
-                  met={passwordErrors.minLength} 
-                  text="At least 6 characters" 
-                />
-                <PasswordRequirement 
-                  met={passwordErrors.hasUppercase} 
-                  text="At least one uppercase letter (A-Z)" 
-                />
-                <PasswordRequirement 
-                  met={passwordErrors.hasLowercase} 
-                  text="At least one lowercase letter (a-z)" 
-                />
-                <PasswordRequirement 
-                  met={passwordErrors.hasNumber} 
-                  text="At least one number (0-9)" 
-                />
+                <div className="grid grid-cols-2 gap-2">
+                  <PasswordRequirement 
+                    met={passwordErrors.minLength} 
+                    text="6+ chars" 
+                  />
+                  <PasswordRequirement 
+                    met={passwordErrors.hasUppercase} 
+                    text="Uppercase" 
+                  />
+                  <PasswordRequirement 
+                    met={passwordErrors.hasLowercase} 
+                    text="Lowercase" 
+                  />
+                  <PasswordRequirement 
+                    met={passwordErrors.hasNumber} 
+                    text="Number" 
+                  />
+                </div>
               </div>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Confirm Password
             </label>
             <input
@@ -348,14 +219,14 @@ const ResetPassword = () => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className={`input-field rounded-full ${
-                confirmPasswordError ? 'border-red-500 focus:border-red-500' : ''
+              className={`w-full px-4 py-3 rounded-xl bg-white/5 border text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all ${
+                confirmPasswordError ? 'border-red-500/50' : 'border-white/10'
               }`}
               placeholder="Confirm new password"
               required
             />
             {confirmPasswordError && (
-              <p className="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center">
+              <p className="mt-2 text-sm text-red-400 flex items-center">
                 <X className="w-4 h-4 mr-1" />
                 {confirmPasswordError}
               </p>
@@ -365,11 +236,11 @@ const ResetPassword = () => {
           <button
             type="submit"
             disabled={loading || !Object.values(passwordErrors).every(Boolean) || confirmPasswordError}
-            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed rounded-3xl transform transition-transform hover:scale-105 active:scale-95"
+            className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/30 focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed mt-4"
           >
             {loading ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
@@ -380,41 +251,7 @@ const ResetPassword = () => {
             )}
           </button>
         </form>
-      </div>
-
-      <style jsx>{`
-        @keyframes float-car-1 {
-          0% { transform: translateX(-100px) translateY(0px); }
-          50% { transform: translateX(calc(100vw + 100px)) translateY(-20px); }
-          100% { transform: translateX(calc(100vw + 100px)) translateY(0px); }
-        }
-
-        @keyframes float-car-2 {
-          0% { transform: translateX(calc(100vw + 100px)) translateY(0px); }
-          50% { transform: translateX(-100px) translateY(20px); }
-          100% { transform: translateX(-100px) translateY(0px); }
-        }
-
-        @keyframes float-car-3 {
-          0% { transform: translateX(-100px) translateY(0px) rotate(0deg); }
-          25% { transform: translateX(25vw) translateY(-15px) rotate(5deg); }
-          50% { transform: translateX(50vw) translateY(0px) rotate(0deg); }
-          75% { transform: translateX(75vw) translateY(15px) rotate(-5deg); }
-          100% { transform: translateX(calc(100vw + 100px)) translateY(0px) rotate(0deg); }
-        }
-
-        .animate-float-car-1 {
-          animation: float-car-1 20s linear infinite;
-        }
-
-        .animate-float-car-2 {
-          animation: float-car-2 25s linear infinite;
-        }
-
-        .animate-float-car-3 {
-          animation: float-car-3 30s linear infinite;
-        }
-      `}</style>
+      </motion.div>
     </div>
   );
 };

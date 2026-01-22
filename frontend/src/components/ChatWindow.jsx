@@ -183,7 +183,7 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
     if (isSystem) {
       return (
         <div className="flex justify-center my-2">
-          <div className="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-2xl max-w-md">
+          <div className="bg-white/10 dark:bg-white/5 px-4 py-2 rounded-2xl max-w-md backdrop-blur-sm border border-white/10">
             <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
               {message.message}
             </p>
@@ -212,8 +212,8 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
           <div
             className={`relative px-4 py-3 rounded-3xl ${
               isOwn
-                ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-br-md'
-                : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 rounded-bl-md'
+                ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-br-md shadow-lg shadow-blue-500/20'
+                : 'bg-white/10 dark:bg-white/5 text-gray-900 dark:text-white border border-white/10 dark:border-white/10 rounded-bl-md backdrop-blur-md'
             } shadow-sm group-hover:shadow-md transition-all duration-200`}
           >
             {}
@@ -242,7 +242,7 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
 
   const DateHeader = ({ date }) => (
     <div className="flex justify-center my-6">
-      <div className="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-2xl">
+      <div className="bg-white/10 dark:bg-white/5 px-4 py-2 rounded-2xl backdrop-blur-sm border border-white/10">
         <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
           {date}
         </span>
@@ -252,7 +252,7 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
 
   if (loading) {
     return (
-      <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-xl">
+      <div className="flex flex-col h-[600px] bg-white/10 dark:bg-black/40 rounded-3xl border border-white/20 shadow-xl backdrop-blur-xl">
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -264,9 +264,9 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
   }
 
   return (
-    <div className="flex flex-col h-[600px] bg-white dark:bg-gray-800 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden">
+    <div className="flex flex-col h-[600px] bg-white/10 dark:bg-black/40 rounded-3xl border border-white/20 shadow-xl overflow-hidden backdrop-blur-xl">
       {}
-      <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-gray-800">
+      <div className="flex items-center justify-between p-6 border-b border-white/10 bg-white/5 dark:bg-white/5 backdrop-blur-sm">
         <div className="flex items-center space-x-3">
           <div className="relative">
             <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
@@ -287,7 +287,7 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
           {onClose && (
             <button
               onClick={onClose}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-2xl transition-all duration-200"
+              className="p-2 text-gray-600 dark:text-gray-400 hover:bg-white/10 dark:hover:bg-white/10 rounded-2xl transition-all duration-200"
             >
               ×
             </button>
@@ -296,10 +296,10 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
       </div>
 
       {}
-      <div className="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900/50">
+      <div className="flex-1 overflow-y-auto p-6 bg-transparent">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-3xl flex items-center justify-center mb-4">
+            <div className="w-24 h-24 bg-blue-500/10 rounded-3xl flex items-center justify-center mb-4 backdrop-blur-sm">
               <User className="w-10 h-10 text-blue-600 dark:text-blue-400" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
@@ -324,13 +324,13 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
       </div>
 
       {}
-      <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <div className="p-6 border-t border-white/10 bg-white/5 dark:bg-white/5 backdrop-blur-md">
         <form onSubmit={sendMessage} className="flex items-end space-x-3">
           {}
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="p-3 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-2xl transition-all duration-200 flex-shrink-0"
+            className="p-3 text-gray-600 dark:text-gray-400 hover:bg-white/10 dark:hover:bg-white/10 rounded-2xl transition-all duration-200 flex-shrink-0"
           >
             <Paperclip className="w-5 h-5" />
           </button>
@@ -350,7 +350,7 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Type your message..."
               rows={1}
-              className="w-full px-4 py-3 pr-12 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 resize-none transition-all duration-300"
+              className="w-full px-4 py-3 pr-12 rounded-2xl border border-white/10 bg-white/5 dark:bg-black/20 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
               style={{ minHeight: '48px', maxHeight: '120px' }}
               onInput={(e) => {
                 e.target.style.height = 'auto';
@@ -382,7 +382,7 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
         </form>
 
         {}
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+        <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
           {/* <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400"> */}
             {/* <span>Press Enter to send</span>
             <span>•</span>

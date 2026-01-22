@@ -142,20 +142,20 @@ const AdminAuditLogs = () => {
   };
 
   const StatCard = ({ title, value, icon: Icon, color, description }) => (
-    <div className="card rounded-2xl p-6 border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-sm hover:shadow-md transition-all duration-300">
+    <div className="rounded-2xl p-6 border border-white/20 bg-white/10 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">{title}</p>
+          <p className="text-sm font-medium text-gray-300 mb-2">{title}</p>
           {loading ? (
-            <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            <div className="h-8 w-16 bg-white/10 rounded-lg animate-pulse"></div>
           ) : (
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
+            <p className="text-3xl font-bold text-white">{value}</p>
           )}
           {description && (
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{description}</p>
+            <p className="text-xs text-gray-400 mt-1">{description}</p>
           )}
         </div>
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} bg-opacity-10`}>
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} bg-opacity-10 backdrop-blur-sm border border-white/10`}>
           <Icon className={`w-6 h-6 ${color.replace('text-', 'text-')}`} />
         </div>
       </div>
@@ -164,10 +164,10 @@ const AdminAuditLogs = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-red-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen flex items-center justify-center bg-transparent">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Loading audit logs...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-red-500 mx-auto mb-4"></div>
+          <p className="text-gray-300">Loading audit logs...</p>
         </div>
       </div>
     );
@@ -183,7 +183,7 @@ const AdminAuditLogs = () => {
   }).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+    <div className="min-h-screen bg-transparent py-8 px-4">
       <div className="max-w-7xl mx-auto space-y-8">
         {}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -193,10 +193,10 @@ const AdminAuditLogs = () => {
                 <Shield className="w-6 h-6 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-gray-900 dark:text-white bg-gradient-to-r from-gray-900 to-red-700 dark:from-white dark:to-red-400 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-gray-900 to-red-700 dark:from-white dark:to-red-400 bg-clip-text text-transparent">
                   System Audit Logs
                 </h1>
-                <p className="text-lg text-gray-600 dark:text-gray-300 font-light">
+                <p className="text-lg text-gray-300 font-light">
                   Comprehensive security and activity monitoring
                 </p>
               </div>
@@ -218,44 +218,44 @@ const AdminAuditLogs = () => {
             title="Total Logs"
             value={totalLogs}
             icon={FileText}
-            color="text-red-600 dark:text-red-400"
+            color="text-red-400"
             description="All system activities"
           />
           <StatCard
             title="Today's Activities"
             value={todayLogs}
             icon={Activity}
-            color="text-blue-600 dark:text-blue-400"
+            color="text-blue-400"
             description="Actions in last 24h"
           />
           <StatCard
             title="Admin Actions"
             value={adminActions}
             icon={User}
-            color="text-purple-600 dark:text-purple-400"
+            color="text-purple-400"
             description="Administrator activities"
           />
           <StatCard
             title="Agent Actions"
             value={agentActions}
             icon={Shield}
-            color="text-green-600 dark:text-green-400"
+            color="text-green-400"
             description="Insurance agent activities"
           />
         </div>
 
         {}
-        <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+        <div className="rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-2 h-8 bg-gradient-to-b from-red-600 to-red-400 rounded-full"></div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">System Activity Log</h2>
+            <h2 className="text-2xl font-bold text-white">System Activity Log</h2>
           </div>
 
           {logs.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="w-20 h-20 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Audit Logs Found</h3>
-              <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto">
+              <h3 className="text-xl font-semibold text-white mb-2">No Audit Logs Found</h3>
+              <p className="text-gray-400 max-w-md mx-auto">
                 System activity logs will appear here as users interact with the platform.
               </p>
             </div>
@@ -263,16 +263,16 @@ const AdminAuditLogs = () => {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-200 dark:border-gray-700">
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Action</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Actor</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Description</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Timestamp</th>
+                  <tr className="border-b border-white/10">
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-white">Action</th>
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-white">Actor</th>
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-white">Description</th>
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-white">Timestamp</th>
                   </tr>
                 </thead>
                 <tbody>
                   {logs.map((log) => (
-                    <tr key={log._id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
+                    <tr key={log._id} className="border-b border-white/5 hover:bg-white/5 transition-colors duration-200">
                       <td className="py-4 px-6">
                         <div className="flex items-center space-x-3">
                           <span className="text-lg">{getActionIcon(log.action)}</span>
@@ -283,15 +283,15 @@ const AdminAuditLogs = () => {
                       </td>
                       <td className="py-4 px-6">
                         <div>
-                          <p className="font-semibold text-gray-900 dark:text-white">{log.actorId?.name || 'System'}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{log.actorId?.role || 'Automated'}</p>
+                          <p className="font-semibold text-white">{log.actorId?.name || 'System'}</p>
+                          <p className="text-xs text-gray-400 capitalize">{log.actorId?.role || 'Automated'}</p>
                         </div>
                       </td>
                       <td className="py-4 px-6">
-                        <p className="text-sm text-gray-700 dark:text-gray-300 max-w-md">{log.description || 'No description'}</p>
+                        <p className="text-sm text-gray-300 max-w-md">{log.description || 'No description'}</p>
                       </td>
                       <td className="py-4 px-6">
-                        <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                        <div className="flex items-center space-x-2 text-sm text-gray-400">
                           <Clock className="w-4 h-4" />
                           <span>
                             {log?.createdAt && !isNaN(new Date(log.createdAt))

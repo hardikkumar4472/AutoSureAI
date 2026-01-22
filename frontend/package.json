@@ -10,8 +10,11 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@react-three/drei": "^9.96.1",
+    "@react-three/fiber": "^8.15.16",
     "axios": "^1.6.2",
     "date-fns": "^2.30.0",
+    "framer-motion": "^12.28.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.294.0",
     "react": "^18.2.0",
@@ -21,7 +24,8 @@
     "react-router-dom": "^6.20.0",
     "react-snowfall": "^2.4.0",
     "recharts": "^2.10.3",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "three": "^0.160.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

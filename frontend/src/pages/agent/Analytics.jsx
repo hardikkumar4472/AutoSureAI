@@ -12,88 +12,7 @@ const AgentAnalytics = () => {
     const { socket } = useSocket();
 
     useEffect(() => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const container = document.querySelector('.min-h-screen');
-
-        if (!container) return;
-
-        canvas.style.position = 'fixed';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.pointerEvents = 'none';
-        canvas.style.zIndex = '0';
-        canvas.style.opacity = '0.3';
-
-        container.style.position = 'relative';
-        container.appendChild(canvas);
-
-        const resizeCanvas = () => {
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
-        };
-
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        class Particle {
-            constructor() {
-                this.reset();
-            }
-
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 1;
-                this.speed = Math.random() * 0.4 + 0.1;
-                this.opacity = Math.random() * 0.2 + 0.1;
-                this.color = document.documentElement.classList.contains('dark')
-                    ? Math.random() > 0.7 ? '#0ea5e9' : '#38bdf8'
-                    : Math.random() > 0.7 ? '#0369a1' : '#0ea5e9';
-            }
-
-            update() {
-                this.y += this.speed;
-                if (this.y > canvas.height) {
-                    this.reset();
-                    this.y = -10;
-                }
-            }
-
-            draw() {
-                if (!ctx) return;
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = this.opacity;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        const particles = Array.from({ length: 25 }, () => new Particle());
-
-        const animate = () => {
-            if (!ctx) return;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
-
-            requestAnimationFrame(animate);
-        };
-
-        animate();
-
-        return () => {
-            window.removeEventListener('resize', resizeCanvas);
-            if (canvas.parentNode) {
-                canvas.parentNode.removeChild(canvas);
-            }
-        };
+        // Particle animation removed
     }, []);
 
     useEffect(() => {
@@ -193,12 +112,12 @@ const AgentAnalytics = () => {
     const costData = getCostData();
 
     const StatCard = ({ title, value, icon: Icon, color, description, prefix = '' }) => (
-        <div className="card rounded-2xl p-6 border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="card p-6 shadow-sm hover:shadow-md transition-all duration-300 group">
             <div className="flex items-center justify-between">
                 <div>
                     <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">{title}</p>
                     {loading ? (
-                        <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                        <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700/50 rounded-lg animate-pulse"></div>
                     ) : (
                         <p className="text-3xl font-bold text-gray-900 dark:text-white">
                             {prefix}{typeof value === 'number' && prefix === '$' ? value.toLocaleString() : value}
@@ -208,7 +127,7 @@ const AgentAnalytics = () => {
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{description}</p>
                     )}
                 </div>
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} bg-opacity-10`}>
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} bg-opacity-10 backdrop-blur-sm`}>
                     <Icon className={`w-6 h-6 ${color.replace('text-', 'text-')}`} />
                 </div>
             </div>
@@ -218,7 +137,7 @@ const AgentAnalytics = () => {
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+                <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-4 rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
                     <p className="font-semibold text-gray-900 dark:text-white mb-2">{label}</p>
                     {payload.map((entry, index) => (
                         <p key={index} className="text-sm" style={{ color: entry.color }}>
@@ -234,7 +153,7 @@ const AgentAnalytics = () => {
     const CustomPieTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+                <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-4 rounded-xl shadow-lg border border-gray-200/50 dark:border-gray-700/50">
                     <p className="font-semibold text-gray-900 dark:text-white">{payload[0].name}</p>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
                         Count: {payload[0].value}
@@ -250,7 +169,7 @@ const AgentAnalytics = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+            <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
                     <p className="text-gray-600 dark:text-gray-300">Loading analytics...</p>
@@ -260,7 +179,7 @@ const AgentAnalytics = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+        <div className="space-y-8">
             <div className="max-w-7xl mx-auto space-y-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <div className="space-y-2">
@@ -272,7 +191,7 @@ const AgentAnalytics = () => {
                         </p>
                     </div>
 
-                    <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-4 py-2 rounded-2xl border border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 bg-white/50 dark:bg-gray-800/50 px-4 py-2 rounded-2xl border border-gray-200 dark:border-gray-700 backdrop-blur-sm">
                         <Activity className="w-4 h-4" />
                         <span>Real-time Data</span>
                     </div>
@@ -326,17 +245,17 @@ const AgentAnalytics = () => {
                 </div>
 
                 {claims.length === 0 ? (
-                    <div className="card rounded-3xl p-12 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl text-center">
+                    <div className="card p-12 text-center text-gray-600 dark:text-gray-300">
                         <ClipboardList className="w-20 h-20 text-gray-400 mx-auto mb-4" />
                         <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Data Available</h3>
-                        <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto">
+                        <p className="max-w-md mx-auto">
                             You don't have any assigned claims yet. Analytics will appear here once claims are assigned to you.
                         </p>
                     </div>
                 ) : (
                     <>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+                            <div className="card p-8 shadow-xl">
                                 <div className="flex items-center space-x-3 mb-6">
                                     <div className="w-2 h-8 bg-gradient-to-b from-primary-600 to-primary-400 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Claims by Status</h2>
@@ -378,7 +297,7 @@ const AgentAnalytics = () => {
                                 </ResponsiveContainer>
                             </div>
 
-                            <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+                            <div className="card p-8 shadow-xl">
                                 <div className="flex items-center space-x-3 mb-6">
                                     <div className="w-2 h-8 bg-gradient-to-b from-primary-600 to-primary-400 rounded-full"></div>
                                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Status Distribution</h2>
@@ -405,7 +324,7 @@ const AgentAnalytics = () => {
                             </div>
 
                             {timelineData.length > 0 && (
-                                <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+                                <div className="card p-8 shadow-xl">
                                     <div className="flex items-center space-x-3 mb-6">
                                         <div className="w-2 h-8 bg-gradient-to-b from-primary-600 to-primary-400 rounded-full"></div>
                                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Claims Timeline</h2>
@@ -433,7 +352,7 @@ const AgentAnalytics = () => {
                             )}
 
                             {costData.length > 0 && (
-                                <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+                                <div className="card p-8 shadow-xl">
                                     <div className="flex items-center space-x-3 mb-6">
                                         <div className="w-2 h-8 bg-gradient-to-b from-primary-600 to-primary-400 rounded-full"></div>
                                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Cost Analysis</h2>

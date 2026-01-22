@@ -198,20 +198,20 @@ const AdminClaims = () => {
   };
 
   const StatCard = ({ title, value, icon: Icon, color, description }) => (
-    <div className="card rounded-2xl p-6 border border-gray-200 dark:border-gray-700 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 shadow-sm hover:shadow-md transition-all duration-300">
+    <div className="rounded-2xl p-6 border border-white/20 bg-white/10 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">{title}</p>
+          <p className="text-sm font-medium text-gray-300 mb-2">{title}</p>
           {loading ? (
-            <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            <div className="h-8 w-16 bg-white/10 rounded-lg animate-pulse"></div>
           ) : (
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">{value}</p>
+            <p className="text-3xl font-bold text-white">{value}</p>
           )}
           {description && (
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{description}</p>
+            <p className="text-xs text-gray-400 mt-1">{description}</p>
           )}
         </div>
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} bg-opacity-10`}>
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color} bg-opacity-10 backdrop-blur-sm border border-white/10`}>
           <Icon className={`w-6 h-6 ${color.replace('text-', 'text-')}`} />
         </div>
       </div>
@@ -220,17 +220,17 @@ const AdminClaims = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="min-h-screen flex items-center justify-center bg-transparent">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Loading claims management...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-500 mx-auto mb-4"></div>
+          <p className="text-gray-300">Loading claims management...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
+    <div className="min-h-screen bg-transparent py-8 px-4">
       <div className="max-w-7xl mx-auto space-y-8">
         {}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -240,10 +240,10 @@ const AdminClaims = () => {
                 <ClipboardList className="w-6 h-6 text-purple-600 dark:text-purple-400" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-gray-900 dark:text-white bg-gradient-to-r from-gray-900 to-purple-700 dark:from-white dark:to-purple-400 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-400">
                   Claims Management
                 </h1>
-                <p className="text-lg text-gray-600 dark:text-gray-300 font-light">
+                <p className="text-lg text-gray-300 font-light">
                   Oversee and manage all insurance claims across the system
                 </p>
               </div>
@@ -272,21 +272,21 @@ const AdminClaims = () => {
             title="Pending Review"
             value={stats.pending}
             icon={Shield}
-            color="text-yellow-600 dark:text-yellow-400"
+            color="text-yellow-400"
             description="Awaiting processing"
           />
           <StatCard
             title="Approved"
             value={stats.approved}
             icon={UserCheck}
-            color="text-green-600 dark:text-green-400"
+            color="text-green-400"
             description="Successfully processed"
           />
           <StatCard
             title="Rejected"
             value={stats.rejected}
             icon={FileText}
-            color="text-red-600 dark:text-red-400"
+            color="text-red-400"
             description="Not approved"
           />
           {/* <StatCard
@@ -299,27 +299,27 @@ const AdminClaims = () => {
         </div>
 
         {}
-        <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+        <div className="rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-2 h-8 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Claim Reassignment</h2>
+            <h2 className="text-2xl font-bold text-white">Claim Reassignment</h2>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {}
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                <label className="block text-sm font-semibold text-gray-300 mb-3">
                   Select Claim to Reassign
                 </label>
                 <select
                   value={selectedClaimId}
                   onChange={(e) => setSelectedClaimId(e.target.value)}
-                  className="input-field rounded-2xl border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 transition-all duration-200"
+                  className="input-field rounded-2xl border-white/20 bg-white/5 text-white focus:border-purple-500 focus:ring-purple-500 transition-all duration-200"
                 >
                   <option value="">Choose a claim...</option>
                   {claims.map((claim) => (
-                    <option key={claim._id} value={claim._id}>
+                    <option key={claim._id} value={claim._id} className="bg-gray-900 text-white">
                       #{claim._id.slice(-6).toUpperCase()} • {claim.driverId?.name || 'No driver'} • {claim.status}
                     </option>
                   ))}
@@ -327,17 +327,17 @@ const AdminClaims = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                <label className="block text-sm font-semibold text-gray-300 mb-3">
                   Select New Agent
                 </label>
                 <select
                   value={newAgentId}
                   onChange={(e) => setNewAgentId(e.target.value)}
-                  className="input-field rounded-2xl border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500 transition-all duration-200"
+                  className="input-field rounded-2xl border-white/20 bg-white/5 text-white focus:border-purple-500 focus:ring-purple-500 transition-all duration-200"
                 >
                   <option value="">Select an agent...</option>
                   {agents.map((agent) => (
-                    <option key={agent._id} value={agent._id}>
+                    <option key={agent._id} value={agent._id} className="bg-gray-900 text-white">
                       {agent.name} • {agent.currentLoad || 0} active claims
                     </option>
                   ))}
@@ -356,17 +356,17 @@ const AdminClaims = () => {
 
             {}
             {activeClaim && (
-              <div className="p-6 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-blue-900/20 rounded-2xl border border-blue-200 dark:border-blue-800">
+              <div className="p-6 bg-gradient-to-r from-white/5 to-purple-500/5 rounded-2xl border border-white/10 backdrop-blur-md">
                 <div className="flex items-center space-x-3 mb-4">
-                  <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200">Selected Claim Details</h3>
+                  <Shield className="w-5 h-5 text-purple-400" />
+                  <h3 className="text-lg font-semibold text-purple-200">Selected Claim Details</h3>
                 </div>
 
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Claim ID</p>
-                      <p className="font-mono text-sm text-gray-900 dark:text-white">{activeClaim._id}</p>
+                      <p className="text-sm text-gray-400 mb-1">Claim ID</p>
+                      <p className="font-mono text-sm text-white">{activeClaim._id}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Status</p>
@@ -377,26 +377,26 @@ const AdminClaims = () => {
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Driver Information</p>
-                    <p className="font-semibold text-gray-900 dark:text-white">{activeClaim.driverId?.name}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">{activeClaim.driverId?.email}</p>
+                    <p className="text-sm text-gray-400 mb-1">Driver Information</p>
+                    <p className="font-semibold text-white">{activeClaim.driverId?.name}</p>
+                    <p className="text-sm text-gray-300">{activeClaim.driverId?.email}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Current Agent</p>
+                    <p className="text-sm text-gray-400 mb-1">Current Agent</p>
                     {activeClaim.assignedAgent ? (
                       <div>
-                        <p className="font-semibold text-gray-900 dark:text-white">{activeClaim.assignedAgent.name}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{activeClaim.assignedAgent.email}</p>
+                        <p className="font-semibold text-white">{activeClaim.assignedAgent.name}</p>
+                        <p className="text-sm text-gray-300">{activeClaim.assignedAgent.email}</p>
                       </div>
                     ) : (
-                      <p className="text-sm text-yellow-600 dark:text-yellow-400 font-medium">Unassigned</p>
+                      <p className="text-sm text-yellow-400 font-medium">Unassigned</p>
                     )}
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Created Date</p>
-                    <p className="text-sm text-gray-900 dark:text-white">{format(new Date(activeClaim.createdAt), 'PPp')}</p>
+                    <p className="text-sm text-gray-400 mb-1">Created Date</p>
+                    <p className="text-sm text-white">{format(new Date(activeClaim.createdAt), 'PPp')}</p>
                   </div>
                 </div>
               </div>
@@ -405,11 +405,11 @@ const AdminClaims = () => {
         </div>
 
         {}
-        <div className="card rounded-3xl p-8 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl">
+        <div className="rounded-3xl p-8 border border-white/20 bg-white/10 backdrop-blur-xl shadow-xl">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
             <div className="flex items-center space-x-3">
               <div className="w-2 h-8 bg-gradient-to-b from-purple-600 to-purple-400 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">All Claims</h2>
+              <h2 className="text-2xl font-bold text-white">All Claims</h2>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -421,7 +421,7 @@ const AdminClaims = () => {
                   placeholder="Search claims..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                  className="pl-10 pr-4 py-2 border border-white/20 rounded-2xl bg-white/5 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                 />
               </div>
 
@@ -431,14 +431,14 @@ const AdminClaims = () => {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="pl-10 pr-8 py-2 border border-gray-300 dark:border-gray-600 rounded-2xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 appearance-none"
+                  className="pl-10 pr-8 py-2 border border-white/20 rounded-2xl bg-white/5 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 appearance-none"
                 >
-                  <option value="all">All Status</option>
-                  <option value="pending">Pending</option>
-                  <option value="in_review">In Review</option>
-                  <option value="approved">Approved</option>
-                  <option value="rejected">Rejected</option>
-                  <option value="settled">Settled</option>
+                  <option value="all" className="bg-gray-900 text-white">All Status</option>
+                  <option value="pending" className="bg-gray-900 text-white">Pending</option>
+                  <option value="in_review" className="bg-gray-900 text-white">In Review</option>
+                  <option value="approved" className="bg-gray-900 text-white">Approved</option>
+                  <option value="rejected" className="bg-gray-900 text-white">Rejected</option>
+                  <option value="settled" className="bg-gray-900 text-white">Settled</option>
                 </select>
               </div>
             </div>
@@ -447,8 +447,8 @@ const AdminClaims = () => {
           {filteredClaims.length === 0 ? (
             <div className="text-center py-12">
               <ClipboardList className="w-20 h-20 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Claims Found</h3>
-              <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto">
+              <h3 className="text-xl font-semibold text-white mb-2">No Claims Found</h3>
+              <p className="text-gray-400 max-w-md mx-auto">
                 {claims.length === 0 
                   ? "No claims have been submitted yet. Claims will appear here once drivers report accidents."
                   : "No claims match your current search criteria. Try adjusting your filters."
@@ -459,37 +459,37 @@ const AdminClaims = () => {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-200 dark:border-gray-700">
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Claim Details</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Driver</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Severity</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Status</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Agent</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Report</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Created</th>
-                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Actions</th>
+                  <tr className="border-b border-white/10">
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-white">Claim Details</th>
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-white">Driver</th>
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-white">Severity</th>
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-white">Status</th>
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-white">Agent</th>
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-white">Report</th>
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-white">Created</th>
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-white">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredClaims.map((claim) => (
                     <tr 
                       key={claim._id} 
-                      className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
+                      className="border-b border-white/5 hover:bg-white/5 transition-colors duration-200"
                     >
                       <td className="py-4 px-6">
                         <div>
-                          <p className="font-semibold text-gray-900 dark:text-white">
+                          <p className="font-semibold text-white">
                             #{claim._id.slice(-6).toUpperCase()}
                           </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                          <p className="text-xs text-gray-400">
                             Est. Cost: ${claim.estimatedCost?.toLocaleString() || 'N/A'}
                           </p>
                         </div>
                       </td>
                       <td className="py-4 px-6">
                         <div>
-                          <p className="font-medium text-gray-900 dark:text-white">{claim.driverId?.name || 'N/A'}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{claim.driverId?.email || ''}</p>
+                          <p className="font-medium text-white">{claim.driverId?.name || 'N/A'}</p>
+                          <p className="text-xs text-gray-400">{claim.driverId?.email || ''}</p>
                         </div>
                       </td>
                       <td className="py-4 px-6">
@@ -505,11 +505,11 @@ const AdminClaims = () => {
                       <td className="py-4 px-6">
                         {claim.assignedAgent ? (
                           <div>
-                            <p className="font-medium text-gray-900 dark:text-white">{claim.assignedAgent.name}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">{claim.assignedAgent.email}</p>
+                            <p className="font-medium text-white">{claim.assignedAgent.name}</p>
+                            <p className="text-xs text-gray-400">{claim.assignedAgent.email}</p>
                           </div>
                         ) : (
-                          <span className="text-sm text-yellow-600 dark:text-yellow-400 font-medium">Unassigned</span>
+                          <span className="text-sm text-yellow-400 font-medium">Unassigned</span>
                         )}
                       </td>
                       <td className="py-4 px-6">
@@ -518,22 +518,22 @@ const AdminClaims = () => {
                             href={claim.reportId.reportUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium transition-colors duration-200"
+                            className="inline-flex items-center space-x-2 text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors duration-200"
                           >
                             <FileText className="w-4 h-4" />
                             <span>View PDF</span>
                           </a>
                         ) : (
-                          <span className="text-sm text-gray-400 dark:text-gray-500">No report</span>
+                          <span className="text-sm text-gray-500">No report</span>
                         )}
                       </td>
-                      <td className="py-4 px-6 text-sm text-gray-600 dark:text-gray-400">
+                      <td className="py-4 px-6 text-sm text-gray-400">
                         {format(new Date(claim.createdAt), 'MMM dd, yyyy')}
                       </td>
                       <td className="py-4 px-6">
                         <button
                           onClick={() => navigate(`/admin/claims/${claim._id}`)}
-                          className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-sm font-medium transition-colors duration-200 bg-primary-50 dark:bg-primary-900/20 px-3 py-2 rounded-xl hover:bg-primary-100 dark:hover:bg-primary-900/30"
+                          className="inline-flex items-center space-x-2 text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors duration-200 bg-purple-500/10 px-3 py-2 rounded-xl hover:bg-purple-500/20"
                         >
                           <Eye className="w-4 h-4" />
                           <span>View</span>
@@ -547,8 +547,8 @@ const AdminClaims = () => {
           )}
 
           {}
-          <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+          <div className="mt-6 pt-4 border-t border-white/10">
+            <p className="text-sm text-gray-400">
               Showing {filteredClaims.length} of {claims.length} claims
               {searchTerm && ` • Filtered by "${searchTerm}"`}
               {statusFilter !== 'all' && ` • Status: ${statusFilter}`}
