@@ -6,6 +6,7 @@ import { uploadToSupabase } from "../utils/uploadSupabase.js";
 import fs from "fs";
 import bcrypt from "bcryptjs/dist/bcrypt.js";
 import jwt from "jsonwebtoken"
+import { clearPattern } from "../config/redis.js";
 
 export const listPendingReports = async (req, res) => {
   try {
@@ -94,6 +95,7 @@ export const verifyReport = async (req, res) => {
       reportId: acc._id,
       verification: acc.verification
     });
+    await clearPattern("traffic_reports_*");
 
     res.json({ success: true, report: acc });
   } catch (err) {

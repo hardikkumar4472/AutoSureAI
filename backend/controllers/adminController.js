@@ -6,6 +6,7 @@ import crypto from "crypto";
 import axios from "axios";
 import { io } from "../server.js";
 import { notifyClaimReassigned } from "../services/notificationService.js";
+import { clearPattern } from "../config/redis.js";
 
 export const registerAgent = async (req, res) => {
   try {
@@ -400,6 +401,9 @@ export const registerTraffic = async (req, res) => {
       message: "Traffic officer registered successfully. Login details emailed.",
       traffic,
     });
+
+    // Invalidate Admin Traffic Cache
+    await clearPattern("admin_traffic_*");
   } catch (err) {
     console.error("registerTraffic error:", err);
     res.status(500).json({ message: err.message });
@@ -510,6 +514,9 @@ export const deleteTraffic = async (req, res) => {
     if (!officer)
       return res.status(404).json({ message: "Traffic officer not found" });
 
+    // Invalidate Admin Traffic Cache
+    await clearPattern("admin_traffic_*");
+
     res.json({ success: true, message: "Traffic officer deleted successfully" });
   } catch (err) {
     console.error("deleteTraffic error:", err);
@@ -542,6 +549,9 @@ export const updateTraffic = async (req, res) => {
 
     if (!officer)
       return res.status(404).json({ message: "Traffic officer not found" });
+
+    // Invalidate Admin Traffic Cache
+    await clearPattern("admin_traffic_*");
 
     res.json({ success: true, officer });
   } catch (err) {

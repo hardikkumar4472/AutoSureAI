@@ -5,6 +5,7 @@ import { Car } from 'lucide-react';
 import ThemeToggle from '../../components/ThemeToggle';
 import HomeImage from '../../Assets/Home.png';
 import DarkImage from '../../Assets/dark.jpeg';
+import Logo from '../../Assets/AutoSureAI_Logo_New.png';
 import { motion } from 'framer-motion';
 
 const Login = () => {
@@ -59,8 +60,8 @@ const Login = () => {
         className="relative z-10 w-full max-w-md p-8 rounded-3xl backdrop-blur-lg border border-white/10 shadow-2xl mx-4"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-full mb-4 shadow-lg shadow-indigo-500/30">
-            <Car className="w-8 h-8 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-2xl mb-4 shadow-lg shadow-indigo-500/30 overflow-hidden">
+            <img src={Logo} alt="AutoSureAI Logo" className="w-full h-full object-contain p-2" />
           </div>
           <h1 className="text-3xl font-bold text-white tracking-tight">Welcome Back</h1>
           <p className="text-gray-300 mt-2">Sign in to AutoSureAI</p>

@@ -23,6 +23,10 @@ const TrafficDashboard = () => {
   const fetchReports = async () => {
     try {
       const response = await api.get(`/traffic/reports/pending?page=${page}&limit=${limit}`);
+      const cacheStatus = response.headers['x-cache'];
+      if (cacheStatus === 'HIT') {
+        toast.success('⚡ Data loaded from Cache (Instant)', { id: 'cache-hit' });
+      }
       setReports(response.data.reports || []);
       setTotal(response.data.total || 0);
     } catch (error) {

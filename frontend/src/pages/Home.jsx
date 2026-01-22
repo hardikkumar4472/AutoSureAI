@@ -1,10 +1,45 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useRef } from 'react';
+import ThreeDBackground from '../components/ThreeDBackground';
 import ThemeToggle from '../components/ThemeToggle';
-import { motion, AnimatePresence } from 'framer-motion';
-import HomeImage from '../Assets/Home.png';
-import DarkImage from '../Assets/dark.jpeg';
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import Logo from '../Assets/AutoSureAI_Logo_New.png';
 import { User, X, Github, Linkedin, Mail } from 'lucide-react';
+
+const TiltCard = ({ children }) => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const rotateX = useTransform(y, [-300, 300], [15, -15]);
+  const rotateY = useTransform(x, [-300, 300], [-15, 15]);
+
+  function handleMouse(event) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    x.set(event.clientX - rect.left - rect.width / 2);
+    y.set(event.clientY - rect.top - rect.height / 2);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
+  return (
+    <motion.div
+      style={{
+        rotateX: rotateX,
+        rotateY: rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      onMouseMove={handleMouse}
+      onMouseLeave={handleMouseLeave}
+      className="relative w-full max-w-4xl mx-auto"
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 const Home = () => {
   const [showDevModal, setShowDevModal] = useState(false);
@@ -13,19 +48,16 @@ const Home = () => {
     <div className="relative min-h-screen text-gray-900 dark:text-white overflow-hidden selection:bg-indigo-500 selection:text-white">
       
       {/* Background Image */}
-      <div className="fixed inset-0 z-0">
-         <img src={HomeImage} alt="Background Light" className="w-full h-full object-cover object-center dark:hidden" />
-         <img src={DarkImage} alt="Background Dark" className="w-full h-full object-cover object-center hidden dark:block" />
-         <div className="absolute inset-0 bg-black/40" /> {/* Overlay for readability */}
-      </div>
+      {/* 3D Background */}
+      <ThreeDBackground />
 
       {/* Content Overlay - Single Screen Layout */}
       <div className="relative z-10 flex flex-col h-screen overflow-hidden w-full">
         
         {/* Header */}
         <header className="flex-shrink-0 px-6 py-4 flex items-center justify-between max-w-7xl mx-auto w-full">
-          <div className="flex items-center gap-2 backdrop-blur-md bg-white/10 dark:bg-black/30 px-4 py-2 rounded-full border border-white/20 shadow-lg">
-            <div className="w-3 h-3 rounded-full bg-indigo-500 animate-pulse" />
+          <div className="flex items-center gap-3 backdrop-blur-md bg-white/10 dark:bg-black/30 px-4 py-2 rounded-full border border-white/20 shadow-lg">
+            <img src={Logo} alt="AutoSureAI" className="w-8 h-8 object-contain bg-white rounded-full p-1" />
             <span className="font-bold tracking-tight text-lg text-white">AutoSureAI</span>
           </div>
 
@@ -45,15 +77,12 @@ const Home = () => {
         </header>
 
         {/* Main Content Area - Fully Centered */}
-        <main className="flex-grow flex flex-col items-center justify-center px-6 text-center max-w-7xl mx-auto w-full h-full">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-6 flex flex-col items-center justify-center h-full pb-10"
-          >
+        <main 
+          className="flex-grow flex flex-col items-center justify-center px-6 text-center max-w-7xl mx-auto w-full h-full perspective-1000"
+        >
+          <TiltCard>
             {/* Hero Section */}
-            <div className="space-y-4">
+            <div className="space-y-6 p-8 md:p-12 rounded-3xl backdrop-blur-sm shadow-2xl border border-white/10 bg-black/20">
                <div className="inline-block">
                 <span className="px-3 py-1 rounded-full text-xs font-medium bg-indigo-500/20 backdrop-blur-md border border-indigo-400/30 text-indigo-100 shadow-sm">
                   Next-Gen Insurance Platform
@@ -88,19 +117,16 @@ const Home = () => {
                 { title: "Unified Workflow", desc: "Seamless coordination between drivers, agents, and traffic police." },
                 { title: "Real-time Analytics", desc: "Live dashboards tracking claim status and settlement efficiency." }
               ].map((item, idx) => (
-                <motion.div
+                <div
                   key={idx}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2 + (idx * 0.1) }}
-                  className="p-5 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 hover:bg-black/50 transition-colors text-left"
+                  className="p-5 rounded-2xl bg-black/40 backdrop-blur-md border border-white/10 hover:bg-black/50 transition-colors text-left transform duration-300 hover:scale-105"
                 >
                   <h3 className="text-sm font-bold text-white mb-1">{item.title}</h3>
                   <p className="text-xs text-gray-300 leading-snug">{item.desc}</p>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </TiltCard>
         </main>
 
         {/* Footer */}

@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import api from '../../utils/api';
 import toast from 'react-hot-toast';
+import Loader from '../../components/Loader';
+import Skeleton, { SkeletonCard } from '../../components/Skeleton';
 
 const AdminTraffic = () => {
   const [officers, setOfficers] = useState([]);
@@ -39,6 +41,9 @@ const AdminTraffic = () => {
   const fetchOfficers = async () => {
     try {
       const response = await api.get('/admin/traffic');
+      if (response.headers['x-cache'] === 'HIT') {
+        toast.success('⚡ Officers loaded from Cache', { id: 'cache-hit' });
+      }
       setOfficers(response.data.officers || []);
     } catch (error) {
       console.error('Error fetching officers:', error);
@@ -181,18 +186,6 @@ const AdminTraffic = () => {
       </div>
     </div>
   );
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-transparent">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-yellow-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">Loading traffic officers...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-transparent py-8 px-4">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -230,7 +223,9 @@ const AdminTraffic = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-yellow-400">Total Officers</p>
-                <p className="text-3xl font-bold text-yellow-300">{officers.length}</p>
+                <p className="text-3xl font-bold text-yellow-300">
+                  {loading ? <Skeleton width={50} height={36} /> : officers.length}
+                </p>
               </div>
               <Shield className="w-8 h-8 text-yellow-400" />
             </div>
@@ -240,7 +235,9 @@ const AdminTraffic = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-green-400">Active</p>
-                <p className="text-3xl font-bold text-green-300">{officers.length}</p>
+                <p className="text-3xl font-bold text-green-300">
+                  {loading ? <Skeleton width={50} height={36} /> : officers.length}
+                </p>
               </div>
               <BadgeCheck className="w-8 h-8 text-green-400" />
             </div>
@@ -297,14 +294,20 @@ const AdminTraffic = () => {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Traffic Officers ({filteredOfficers.length})
+              Traffic Officers ({loading ? <Skeleton width={30} height={20} className="inline-block" /> : filteredOfficers.length})
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              Showing {filteredOfficers.length} of {officers.length} officers
+              Showing {loading ? <Skeleton width={20} height={16} className="inline-block" /> : filteredOfficers.length} of {loading ? <Skeleton width={20} height={16} className="inline-block" /> : officers.length} officers
             </p>
           </div>
 
-          {filteredOfficers.length === 0 ? (
+          {loading ? (
+             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <SkeletonCard key={i} />
+                ))}
+             </div>
+          ) : filteredOfficers.length === 0 ? (
             <div className="rounded-3xl p-12 text-center border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl">
               <Shield className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">

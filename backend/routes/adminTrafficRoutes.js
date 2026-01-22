@@ -4,9 +4,11 @@ import { adminAuth } from "../middleware/adminAuth.js";
 import { listTraffic, updateTraffic, deleteTraffic } from "../controllers/adminController.js";
 import { logAction } from "../middleware/logAction.js";
 
+import { cache } from "../middleware/cacheMiddleware.js";
+
 const router = express.Router();
 
-router.get("/traffic", adminAuth, listTraffic);
+router.get("/traffic", adminAuth, cache("admin_traffic", 3600), listTraffic);
 router.put("/traffic/:id", adminAuth, logAction("ADMIN_UPDATE_TRAFFIC", (req) => `Updated traffic ${req.params.id}`), updateTraffic);
 router.delete("/traffic/:id", adminAuth, logAction("ADMIN_DELETE_TRAFFIC", (req) => `Deleted traffic ${req.params.id}`), deleteTraffic);
 

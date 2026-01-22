@@ -27,7 +27,9 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  exposedHeaders: ["X-Cache"]
+}));
 app.use(express.json());
 
 app.use(helmet());

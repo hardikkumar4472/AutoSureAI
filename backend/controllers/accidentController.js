@@ -9,6 +9,7 @@ import { sendAccidentEmail } from "../utils/sendAccidentEmail.js";
 import { generateAccidentReportPDF } from "../utils/generateAccidentReportPdf.js";
 import { io } from "../server.js";
 import { notifyClaimReassigned, notifyClaimCreated, notifyClaimAssigned } from "../services/notificationService.js";
+import { clearPattern } from "../config/redis.js";
 
 export const reportAccident = async (req, res) => {
   try {
@@ -77,6 +78,8 @@ export const reportAccident = async (req, res) => {
     const pdfUrl = await uploadPDFToSupabase(pdfReport.path, `${pdfReport.reportId}.pdf`);
     accident.reportUrl = pdfUrl;
     await accident.save();
+
+    await clearPattern("traffic_reports_*");
 
     await sendAccidentEmail(req.user.email, data, pdfReport.path);
 
