@@ -4,7 +4,7 @@ import axios from "axios";
 export const validateCarImage = async (imageUrl, apiKey) => {
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     // Fetch image from Supabase URL
     const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
