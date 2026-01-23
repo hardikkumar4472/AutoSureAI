@@ -112,10 +112,36 @@ const DriverDashboard = () => {
           <p className="text-lg text-gray-600 dark:text-gray-300 font-light">
             Manage your accident reports and track claims in real-time
           </p>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {user?.isAdmin && (
+               <Link
+                 to="/admin"
+                 className="px-4 py-2 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+               >
+                 Go to Admin Dashboard
+               </Link>
+            )}
+            {user?.isAgent && (
+               <Link
+                 to="/agent"
+                 className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+               >
+                 Go to Agent Dashboard
+               </Link>
+            )}
+            {user?.isTraffic && (
+               <Link
+                 to="/traffic"
+                 className="px-4 py-2 text-sm bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition"
+               >
+                 Go to Traffic Dashboard
+               </Link>
+            )}
+          </div>
         </div>
         <Link
           to="/report-accident"
-          className="btn-primary flex items-center space-x-3 rounded-2xl px-6 py-3 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+          className="btn-primary flex items-center space-x-3 rounded-2xl px-4 py-2 sm:px-6 sm:py-3 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-sm sm:text-base whitespace-nowrap"
         >
           <PlusCircle className="w-5 h-5" />
           <span>Report Accident</span>

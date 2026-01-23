@@ -7,9 +7,10 @@ import { notifyClaimApproved, notifyClaimRejected } from "../services/notificati
 
 export const getAssignedClaims = async (req, res) => {
   try {
-    const agentId = req.user.id;
-    const claims = await Claim.find({ assignedAgent: agentId })
+    // Show ALL claims for a common dashboard, not just assigned ones
+    const claims = await Claim.find({})
       .populate("driverId", "name email phone")
+      .populate("assignedAgent", "name email")
       .populate({
         path: "reportId",
         select: "imageUrl prediction repair_cost status createdAt reportUrl location verification trafficVerification",
@@ -90,10 +91,10 @@ export const rejectClaim = async (req, res) => {
 
 export const refreshAssignedClaims = async (req, res) => {
   try {
-    const agentId = req.user.id;
-
-    const claims = await Claim.find({ assignedAgent: agentId })
+    // Show ALL claims for a common dashboard
+    const claims = await Claim.find({})
       .populate("driverId", "name email phone vehicleNumber")
+      .populate("assignedAgent", "name email")
       .populate({
         path: "reportId",
         select: "imageUrl prediction repair_cost status createdAt reportUrl location verification trafficVerification",
@@ -102,7 +103,7 @@ export const refreshAssignedClaims = async (req, res) => {
 
     res.json({
       success: true,
-      message: "Assigned claims refreshed successfully",
+      message: "Claims refreshed successfully",
       claims
     });
 

@@ -5,12 +5,10 @@ export const agentAuth = async (req, res, next) => {
   try {
 
     const authHeader = req.headers.authorization;
-    if (!authHeader)
-      return res.status(401).json({ message: "No token provided" });
+    const token = req.cookies.token || (authHeader && authHeader.split(" ")[1]);
 
-    const token = authHeader.split(" ")[1];
     if (!token)
-      return res.status(401).json({ message: "Invalid token format" });
+      return res.status(401).json({ message: "No token provided" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (!decoded)
@@ -20,13 +18,14 @@ export const agentAuth = async (req, res, next) => {
     if (!user)
       return res.status(401).json({ message: "User not found" });
 
-    if (user.role !== "agent")
+    if (user.role !== "agent" && !user.isAgent)
       return res.status(403).json({ message: "Access denied. Agents only." });
 
     req.user = {
       id: user._id.toString(),
       email: user.email,
-      role: user.role
+      role: user.role,
+      isAgent: user.isAgent
     };
 
     next();

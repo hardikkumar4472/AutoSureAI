@@ -12,6 +12,7 @@ import {
 import api from "../../utils/api";
 import { getCurrentLocation } from "../../utils/locationService";
 import toast from "react-hot-toast";
+import DummyPaymentModal from "../../components/DummyPaymentModal";
 
 const ReportAccident = () => {
   const [formData, setFormData] = useState({
@@ -25,6 +26,7 @@ const ReportAccident = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [gettingLocation, setGettingLocation] = useState(false);
   const [locationSource, setLocationSource] = useState(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -95,6 +97,12 @@ const ReportAccident = () => {
       return;
     }
 
+    // Trigger payment modal first
+    setShowPaymentModal(true);
+  };
+
+  const processSubmission = async () => {
+    setShowPaymentModal(false);
     setLoading(true);
     try {
       const formDataToSend = new FormData();
@@ -126,6 +134,12 @@ const ReportAccident = () => {
 
   return (
     <div className="py-8 px-4 transition-colors">
+      <DummyPaymentModal 
+        isOpen={showPaymentModal} 
+        onClose={() => setShowPaymentModal(false)}
+        onSuccess={processSubmission}
+        amount={1000}
+      />
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-red-500/10 rounded-2xl mb-4 backdrop-blur-sm">

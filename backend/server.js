@@ -23,13 +23,43 @@ import trafficRoutes from "./routes/trafficRoutes.js";
 import claimRoutes from "./routes/claimRoutes.js";
 import helmet from "helmet";
 
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import MongoStore from "connect-mongo";
+import passport from "passport";
+import "./config/passport.js";
+
 dotenv.config();
 connectDB();
 
 const app = express();
+
 app.use(cors({
+  origin: ["http://localhost:5173", "http://localhost:3000", "https://autosureml.onrender.com", "https://autosureai.onrender.com"], 
+  credentials: true,
   exposedHeaders: ["X-Cache"]
 }));
+
+app.use(cookieParser());
+
+app.use(session({
+    secret: process.env.SESSION_SECRET ,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        collectionName: "sessions"
+    }),
+    cookie: {
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 // 1 day
+    }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.json());
 
 app.use(helmet());

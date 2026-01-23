@@ -21,10 +21,8 @@ const NotificationBell = () => {
 
   useEffect(() => {
     if (socket) {
-      console.log('Setting up notification listener');
       
       const handleNewNotification = (data) => {
-        console.log('Received new notification:', data);
         setNotifications(prev => [data.notification, ...prev]);
         setUnreadCount(prev => prev + 1);
         toast.custom((t) => (
@@ -62,7 +60,6 @@ const NotificationBell = () => {
         socket.off('new_notification', handleNewNotification);
       };
     } else {
-      console.log('Socket not available in NotificationBell');
     }
   }, [socket]);
 

@@ -1,447 +1,248 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Shield, 
-  ArrowLeft, 
-  Search, 
-  Filter,
-  UserPlus,
-  BadgeCheck,
-  MoreVertical,
-  Mail,
-  Phone,
-  User
-} from 'lucide-react';
+import { Search, Shield, UserPlus, BadgeCheck, X, Mail, Phone, User, Star } from 'lucide-react';
 import api from '../../utils/api';
 import toast from 'react-hot-toast';
-import Loader from '../../components/Loader';
-import Skeleton, { SkeletonCard } from '../../components/Skeleton';
 
 const AdminTraffic = () => {
   const [officers, setOfficers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [editingOfficer, setEditingOfficer] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    badgeNumber: '',
-    department: '',
-  });
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
-    fetchOfficers();
+    fetchData();
   }, []);
 
-  const fetchOfficers = async () => {
+  const fetchData = async () => {
     try {
-      const response = await api.get('/admin/traffic');
-      if (response.headers['x-cache'] === 'HIT') {
-        toast.success('⚡ Officers loaded from Cache', { id: 'cache-hit' });
-      }
-      setOfficers(response.data.officers || []);
+      setLoading(true);
+      const [trafficRes, usersRes] = await Promise.all([
+        api.get('/admin/traffic'),
+        api.get('/admin/users')
+      ]);
+      // Assuming traffic endpoint returns users with isTraffic: true
+      setOfficers(trafficRes.data.officers || []);
+      setAllUsers(usersRes.data.users || []);
     } catch (error) {
-      console.error('Error fetching officers:', error);
-      toast.error('Failed to load traffic officers');
+      console.error('Error fetching data:', error);
+      toast.error('Failed to load data');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCreate = async (e) => {
-    e.preventDefault();
+  const handleToggleRole = async (userId, field, value) => {
     try {
-      await api.post('/admin/create-traffic', formData);
-      toast.success('Traffic officer created successfully!');
-      setShowModal(false);
-      setFormData({ name: '', email: '', phone: '', badgeNumber: '', department: '' });
-      fetchOfficers();
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to create traffic officer');
-    }
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      await api.put(`/admin/traffic/${editingOfficer._id}`, formData);
-      toast.success('Traffic officer updated successfully!');
-      setShowModal(false);
-      setEditingOfficer(null);
-      setFormData({ name: '', email: '', phone: '', badgeNumber: '', department: '' });
-      fetchOfficers();
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to update traffic officer');
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this traffic officer?')) return;
-    
-    try {
-      await api.delete(`/admin/traffic/${id}`);
-      toast.success('Traffic officer deleted successfully!');
-      fetchOfficers();
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to delete traffic officer');
-    }
-  };
-
-  const openEditModal = (officer) => {
-    setEditingOfficer(officer);
-    setFormData({
-      name: officer.name || '',
-      email: officer.email || '',
-      phone: officer.phone || '',
-      badgeNumber: officer.badgeNumber || '',
-      department: officer.department || '',
-    });
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-    setEditingOfficer(null);
-    setFormData({ name: '', email: '', phone: '', badgeNumber: '', department: '' });
-  };
-
-  const filteredOfficers = officers.filter(officer =>
-    officer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    officer.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    officer.badgeNumber?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const OfficerCard = ({ officer }) => (
-    <div className="rounded-lg p-6 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2">
-      <div className="flex items-start justify-between">
-        <div className="flex items-center space-x-2">
-          <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-2xl flex items-center justify-center">
-            <Shield className="w-8 h-8 text-white" />
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center space-x-3">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">{officer.name}</h3>
-              {officer.badgeNumber && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-600 dark:text-yellow-300 border border-yellow-500/20">
-                  <BadgeCheck className="w-3 h-3 mr-1" />
-                  {officer.badgeNumber}
-                </span>
-              )}
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
-                <Mail className="w-4 h-4" />
-                <span className="text-sm">{officer.email}</span>
-              </div>
-              <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
-                <Phone className="w-4 h-4" />
-                <span className="text-sm">{officer.phone || 'Not provided'}</span>
-              </div>
-              {officer.department && (
-                <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
-                  <User className="w-4 h-4" />
-                  <span className="text-sm">{officer.department}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex items-center space-x-0">
-          <button
-            onClick={() => openEditModal(officer)}
-            className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-500/10 rounded-xl transition-all duration-200 transform hover:scale-110"
-            title="Edit officer"
-          >
-            <Edit className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => handleDelete(officer._id)}
-            className="p-2 text-red-600 dark:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-200 transform hover:scale-110"
-            title="Delete officer"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
+      // Find the user to get current roles
+      const user = allUsers.find(u => u._id === userId);
+      const roles = {
+        isAdmin: field === 'isAdmin' ? value : user?.isAdmin,
+        isAgent: field === 'isAgent' ? value : user?.isAgent,
+        isTraffic: field === 'isTraffic' ? value : user?.isTraffic,
+      };
       
-      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-white/10">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-500 dark:text-gray-400">
-            Joined {new Date(officer.createdAt).toLocaleDateString()}
-          </span>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-            officer.status === 'active' 
-              ? 'bg-green-500/20 text-green-600 dark:text-green-400 border border-green-500/30'
-              : 'bg-white/10 text-gray-600 dark:text-gray-300 border border-white/20'
-          }`}>
-            {officer.status || 'active'}
-          </span>
-        </div>
+      // Determine the primary 'role' string for compatibility
+      let primaryRole = 'driver';
+      if (roles.isAdmin) primaryRole = 'admin';
+      else if (roles.isAgent) primaryRole = 'agent';
+      else if (roles.isTraffic) primaryRole = 'traffic';
+
+      await api.put(`/admin/user/${userId}/role`, { 
+        [field]: value,
+        role: primaryRole
+      });
+      
+      toast.success('Permissions updated successfully');
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to update roles');
+    }
+  };
+
+  const filteredUsers = searchTerm ? allUsers.filter(user => 
+    user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user._id.toLowerCase().includes(searchTerm.toLowerCase())
+  ).slice(0, 5) : [];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-yellow-500"></div>
       </div>
-    </div>
-  );
+    );
+  }
+
   return (
     <div className="min-h-screen bg-transparent py-8 px-4">
       <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div className="space-y-2">
-            <div className="flex items-center space-x-4">
-              <Link
-                to="/admin/dashboard"
-                className="group w-10 h-10 bg-white/10 rounded-2xl border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-300"
-              >
-                <ArrowLeft className="w-5 h-5 text-gray-300 group-hover:text-white" />
-              </Link>
-              <div className="w-12 h-12 bg-yellow-500/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-yellow-500/30">
-                <Shield className="w-6 h-6 text-yellow-400" />
+           <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-2xl flex items-center justify-center border border-yellow-500/20">
+                <Shield className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-gray-900 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-yellow-600 dark:from-white dark:to-yellow-400">
                   Traffic Officers
                 </h1>
                 <p className="text-lg text-gray-600 dark:text-gray-300 font-light">
-                  Manage traffic police officers and verification workflows
+                  Search and verify traffic police officer accounts
                 </p>
               </div>
             </div>
-          </div>
-          
-          <div className="flex items-center space-x-2 text-sm text-yellow-600 dark:text-yellow-400 bg-white dark:bg-white/5 px-4 py-2 rounded-2xl border border-yellow-500/20 backdrop-blur-sm shadow-sm">
-            <Shield className="w-4 h-4" />
-            <span>Officer Management</span>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="rounded-2xl p-6 border border-yellow-500/20 bg-yellow-500/10 backdrop-blur-xl">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-yellow-400">Total Officers</p>
-                <p className="text-3xl font-bold text-yellow-300">
-                  {loading ? <Skeleton width={50} height={36} /> : officers.length}
-                </p>
-              </div>
-              <Shield className="w-8 h-8 text-yellow-400" />
-            </div>
-          </div>
-
-          <div className="rounded-2xl p-6 border border-green-500/20 bg-green-500/10 backdrop-blur-xl">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-green-400">Active</p>
-                <p className="text-3xl font-bold text-green-300">
-                  {loading ? <Skeleton width={50} height={36} /> : officers.length}
-                </p>
-              </div>
-              <BadgeCheck className="w-8 h-8 text-green-400" />
-            </div>
-          </div>
-
-          <div className="rounded-2xl p-6 border border-blue-500/20 bg-blue-500/10 backdrop-blur-xl">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-blue-400">This Month</p>
-                <p className="text-3xl font-bold text-blue-300">+0</p>
-              </div>
-              <UserPlus className="w-8 h-8 text-blue-400" />
-            </div>
-          </div>
-
-          <button
-            onClick={() => setShowModal(true)}
-            className="rounded-2xl p-6 border-2 border-dashed border-white/20 bg-white/5 hover:bg-white/10 hover:border-yellow-500/50 hover:shadow-lg transition-all duration-300 group backdrop-blur-sm"
-          >
-            <div className="text-center">
-              <div className="w-12 h-12 bg-yellow-500/20 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300 border border-yellow-500/30">
-                <UserPlus className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
-              </div>
-              <p className="font-semibold text-gray-900 dark:text-white">Add New Officer</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Create new account</p>
-            </div>
-          </button>
-        </div>
-
-        <div className="rounded-3xl p-6 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl shadow-xl">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="relative flex-1 max-w-md">
-              <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+            <div className="relative w-full max-w-md">
+            <div className="relative group">
+              <Search className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2 group-focus-within:text-yellow-500 transition-colors" />
               <input
                 type="text"
-                placeholder="Search officers by name, email, or badge number..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-gray-900 dark:text-white placeholder-gray-400 transition-all duration-300"
+                onFocus={() => setIsSearching(true)}
+                className="w-full pl-12 pr-10 py-4 bg-white/80 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none transition-all duration-300 shadow-sm"
+                placeholder="Search user to promote to Traffic..."
               />
-            </div>
-            <div className="flex items-center space-x-3">
-              <button className="flex items-center space-x-2 px-4 py-3 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 text-white transition-all duration-300">
-                <Filter className="w-4 h-4" />
-                <span className="text-sm font-medium">Filter</span>
-              </button>
-              <button className="flex items-center space-x-2 px-4 py-3 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 text-white transition-all duration-300">
-                <span className="text-sm font-medium">Sort</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Traffic Officers ({loading ? <Skeleton width={30} height={20} className="inline-block" /> : filteredOfficers.length})
-            </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              Showing {loading ? <Skeleton width={20} height={16} className="inline-block" /> : filteredOfficers.length} of {loading ? <Skeleton width={20} height={16} className="inline-block" /> : officers.length} officers
-            </p>
-          </div>
-
-          {loading ? (
-             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <SkeletonCard key={i} />
-                ))}
-             </div>
-          ) : filteredOfficers.length === 0 ? (
-            <div className="rounded-3xl p-12 text-center border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl">
-              <Shield className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                {searchTerm ? 'No officers found' : 'No traffic officers'}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-                {searchTerm 
-                  ? 'No traffic officers match your search criteria. Try adjusting your search terms.'
-                  : 'Get started by creating your first traffic officer account to manage accident verifications.'
-                }
-              </p>
-              {!searchTerm && (
-                <button
-                  onClick={() => setShowModal(true)}
-                  className="btn-primary flex items-center space-x-2 mx-auto rounded-2xl px-6 py-3 bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-700 hover:to-amber-700 text-white shadow-lg"
-                >
-                  <UserPlus className="w-5 h-5" />
-                  <span>Create First Officer</span>
+              {searchTerm && (
+                <button onClick={() => setSearchTerm('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                  <X className="w-4 h-4" />
                 </button>
               )}
             </div>
+
+            {/* Search Results Dropdown */}
+            {isSearching && searchTerm && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-gray-100 dark:border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2">
+                <div className="p-2 border-b border-gray-50 dark:border-white/5 flex justify-between items-center bg-gray-50/50 dark:bg-white/5">
+                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wider px-2">Matched Users</span>
+                  <button onClick={() => setIsSearching(false)} className="text-[10px] bg-gray-200 dark:bg-white/10 px-2 py-0.5 rounded text-gray-600 dark:text-gray-400">ESC</button>
+                </div>
+                {filteredUsers.length > 0 ? (
+                  <div className="divide-y divide-gray-50 dark:divide-white/5 max-h-[400px] overflow-y-auto">
+                    {filteredUsers.map(user => (
+                      <div key={user._id} className="p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                              {user.name?.charAt(0)}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-gray-900 dark:text-white text-sm">{user.name}</p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleToggleRole(user._id, 'isTraffic', !user.isTraffic)}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 ${
+                                user.isTraffic 
+                                  ? 'bg-yellow-100 text-yellow-700 border-yellow-200 border shadow-sm' 
+                                  : 'bg-gray-100 text-gray-600 border border-gray-200 hover:border-yellow-300'
+                              }`}
+                            >
+                              {user.isTraffic ? '✓ Traffic' : '+ Traffic'}
+                            </button>
+                            <button
+                              onClick={() => handleToggleRole(user._id, 'isAgent', !user.isAgent)}
+                              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 ${
+                                user.isAgent 
+                                  ? 'bg-green-100 text-green-700 border-green-200 border shadow-sm' 
+                                  : 'bg-gray-100 text-gray-600 border border-gray-200 hover:border-green-300'
+                              }`}
+                            >
+                              {user.isAgent ? '✓ Agent' : '+ Agent'}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-gray-500 text-sm italic">No users match "{searchTerm}"</div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Officers Grid */}
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Active Traffic Officers ({officers.length})</h2>
+          </div>
+
+          {officers.length === 0 ? (
+             <div className="rounded-3xl p-12 text-center border-2 border-dashed border-gray-100 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-xl">
+              <Shield className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Officers Assigned</h3>
+              <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+                Search for a user above and toggle the "Traffic" button to promote them to an officer role.
+              </p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredOfficers.map((officer) => (
-                <OfficerCard key={officer._id} officer={officer} />
+              {officers.map((officer) => (
+                <div key={officer._id} className="rounded-2xl p-6 border border-gray-200 dark:border-white/10 bg-white/80 dark:bg-white/5 backdrop-blur-xl hover:shadow-xl transition-all duration-300 group relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                     <button 
+                        onClick={() => handleToggleRole(officer._id, 'isTraffic', false)}
+                        className="p-2 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all"
+                        title="Remove Role"
+                     >
+                        <X className="w-4 h-4" />
+                     </button>
+                  </div>
+                  
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div className="w-14 h-14 bg-gradient-to-br from-yellow-400 to-amber-600 rounded-2xl flex items-center justify-center shadow-lg transform group-hover:rotate-6 transition-transform">
+                      <Shield className="w-7 h-7 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 dark:text-white text-lg">{officer.name}</h3>
+                      <div className="flex items-center text-xs text-yellow-600 dark:text-yellow-400 font-bold tracking-wider uppercase">
+                        <BadgeCheck className="w-3 h-3 mr-1" />
+                        Verified Officer
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3 text-sm text-gray-600 dark:text-gray-300">
+                      <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-white/5 flex items-center justify-center">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      <span className="truncate">{officer.email}</span>
+                    </div>
+                    <div className="flex items-center space-x-3 text-sm text-gray-600 dark:text-gray-300">
+                      <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-white/5 flex items-center justify-center">
+                        <Phone className="w-4 h-4" />
+                      </div>
+                      <span>{officer.phone || 'Phone not provided'}</span>
+                    </div>
+                    <div className="flex items-center space-x-3 text-sm text-gray-600 dark:text-gray-300">
+                      <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-white/5 flex items-center justify-center">
+                        <User className="w-4 h-4" />
+                      </div>
+                      <span className="font-mono text-[10px]">{officer._id}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-gray-100 dark:border-white/5 flex justify-between items-center">
+                    <span className="text-xs text-gray-400">Joined {new Date(officer.createdAt).toLocaleDateString()}</span>
+                    <div className="flex gap-1">
+                       {officer.isAdmin && <span className="bg-purple-500/10 text-purple-600 text-[9px] font-bold px-2 py-0.5 rounded border border-purple-500/20">ADMIN</span>}
+                       {officer.isAgent && <span className="bg-green-500/10 text-green-600 text-[9px] font-bold px-2 py-0.5 rounded border border-green-500/20">AGENT</span>}
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           )}
         </div>
       </div>
-
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/20 rounded-3xl max-w-md w-full p-8 shadow-2xl">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-yellow-500/20 rounded-2xl flex items-center justify-center border border-yellow-500/30">
-                <UserPlus className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                {editingOfficer ? 'Edit Traffic Officer' : 'Create Traffic Officer'}
-              </h2>
-            </div>
-            
-            <form onSubmit={editingOfficer ? handleUpdate : handleCreate} className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-600 dark:text-gray-300 mb-3">
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full pl-4 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
-                  placeholder="Enter officer's full name"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-semibold text-gray-600 dark:text-gray-300 mb-3">
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-4 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
-                  placeholder="officer@department.gov"
-                  required
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-600 dark:text-gray-300 mb-3">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full pl-4 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
-                    placeholder="+1 (555) 000-0000"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-semibold text-gray-600 dark:text-gray-300 mb-3">
-                    Badge Number
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.badgeNumber}
-                    onChange={(e) => setFormData({ ...formData, badgeNumber: e.target.value })}
-                    className="w-full pl-4 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
-                    placeholder="BADGE-001"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-semibold text-gray-600 dark:text-gray-300 mb-3">
-                  Department
-                </label>
-                <input
-                  type="text"
-                  value={formData.department}
-                  onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                  className="w-full pl-4 pr-4 py-3 rounded-2xl border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
-                  placeholder="Traffic Division"
-                />
-              </div>
-              
-              <div className="flex space-x-4 pt-4">
-                <button
-                  type="submit"
-                  className="flex-1 btn-primary rounded-2xl py-4 bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-700 hover:to-amber-700 transform hover:scale-105 transition-all duration-300"
-                >
-                  {editingOfficer ? 'Update Officer' : 'Create Officer'}
-                </button>
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="flex-1 btn-secondary rounded-2xl py-4 border border-gray-200 dark:border-white/20 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-300"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default AdminTraffic;  
+export default AdminTraffic;

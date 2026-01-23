@@ -40,10 +40,9 @@ const HotspotMap = ({ className }) => {
   const fetchHotspots = async () => {
     try {
       setError(null);
-      console.log("Fetching hotspots from:", "/admin/hotspots/hotspots");
+
 
       const res = await api.get("/admin/hotspots/hotspots?precision=3&minCount=1");
-      console.log("Hotspots API response:", res.data);
 
       if (res.data && res.data.success && res.data.features) {
 
@@ -56,7 +55,6 @@ const HotspotMap = ({ className }) => {
           !isNaN(feature.geometry.coordinates[1])
         );
 
-        console.log(`Filtered ${validHotspots.length} valid hotspots from ${res.data.features.length} total`);
 
         if (validHotspots.length === 0) {
           throw new Error("No valid hotspot coordinates found in response");
@@ -69,7 +67,6 @@ const HotspotMap = ({ className }) => {
       }
     } catch (err) {
       console.error("Error fetching hotspots:", err);
-      console.error("Error details:", err.response?.data);
 
       setHotspots(mockHotspots);
       setUsingMockData(true);
@@ -223,7 +220,6 @@ const HotspotMap = ({ className }) => {
                 const properties = feature.properties;
 
                 if (!coordinates || coordinates[0] === null || coordinates[1] === null) {
-                  console.warn('Skipping invalid coordinates:', coordinates);
                   return null;
                 }
 

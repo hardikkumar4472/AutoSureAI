@@ -13,6 +13,12 @@ const AdminBroadcast = () => {
   });
   const [loading, setLoading] = useState(false);
   const [characterCount, setCharacterCount] = useState(0);
+  const [activeTab, setActiveTab] = useState('global'); // 'global' or 'direct'
+  const [directMailData, setDirectMailData] = useState({
+    userId: '',
+    subject: '',
+    message: ''
+  });
 
   const roles = [
     { value: 'driver', label: 'Drivers', icon: Users, color: 'text-blue-600', count: 1250},
@@ -74,6 +80,25 @@ const AdminBroadcast = () => {
       setCharacterCount(0);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to send broadcast');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDirectMailSubmit = async (e) => {
+    e.preventDefault();
+    if (!directMailData.userId || !directMailData.subject || !directMailData.message) {
+      toast.error('Please fill all fields');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await api.post('/admin/direct-mail', directMailData);
+      toast.success('Direct mail sent successfully');
+      setDirectMailData({ userId: '', subject: '', message: '' });
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to send direct mail');
     } finally {
       setLoading(false);
     }
@@ -160,125 +185,216 @@ const AdminBroadcast = () => {
           </div>
         </div>
 
+        {/* Tab Switcher */}
+        <div className="flex p-1 bg-gray-100 dark:bg-white/5 rounded-2xl w-full sm:w-fit">
+          <button
+            onClick={() => setActiveTab('global')}
+            className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+              activeTab === 'global'
+                ? 'bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-sm'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+            }`}
+          >
+            Global Broadcast
+          </button>
+          <button
+            onClick={() => setActiveTab('direct')}
+            className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+              activeTab === 'direct'
+                ? 'bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-sm'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+            }`}
+          >
+            Direct Mail
+          </button>
+        </div>
+
         {}
         <div className="rounded-3xl p-8 border border-gray-200 dark:border-white/20 bg-white/80 dark:bg-white/10 backdrop-blur-xl shadow-xl">
-          <form onSubmit={handleSubmit} className="space-y-8">
-            {}
-            <div>
-              <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
-                Subject *
-              </label>
-              <input
-                type="text"
-                value={formData.subject}
-                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                className="input-field rounded-2xl px-4 py-3 text-lg border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-500"
-                placeholder="Enter a clear and concise subject line..."
-                required
-              />
-            </div>
-
-            {}
-            <div>
-              <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
-                Priority Level
-              </label>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {priorities.map((priority) => (
-                  <button
-                    key={priority.value}
-                    type="button"
-                    onClick={() => setFormData({ ...formData, priority: priority.value })}
-                    className={`p-3 rounded-2xl border transition-all duration-300 ${
-                      formData.priority === priority.value
-                        ? `${priority.bgColor} border-current scale-105 shadow-md`
-                        : 'border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 hover:border-gray-300 dark:hover:border-white/40'
-                    }`}
-                  >
-                    <span className={`text-sm font-medium ${
-                      formData.priority === priority.value ? priority.color : 'text-gray-500 dark:text-gray-400'
-                    }`}>
-                      {priority.label}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <label className="block text-sm font-semibold text-gray-900 dark:text-white">
-                  Recipients *
+          {activeTab === 'global' ? (
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Subject */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                  Subject *
                 </label>
-                {/* <span className="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
-                  {getSelectedRecipientsCount().toLocaleString()} users selected
-                </span> */}
+                <input
+                  type="text"
+                  value={formData.subject}
+                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                  className="input-field rounded-2xl px-4 py-3 text-lg border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 placeholder-gray-400 dark:placeholder-gray-500"
+                  placeholder="Enter a clear and concise subject line..."
+                  required
+                />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {roles.map((role) => (
-                  <RoleCard
-                    key={role.value}
-                    role={role}
-                    selected={formData.roles.includes(role.value)}
-                    onChange={handleRoleChange}
-                  />
-                ))}
-              </div>
-            </div>
 
-            {}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <label className="block text-sm font-semibold text-gray-900 dark:text-white">
-                  Message *
+              {/* Priority */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                  Priority Level
                 </label>
-                <span className={`text-sm font-medium ${
-                  characterCount > 0 ? 'text-gray-600 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'
-                }`}>
-                  {characterCount} characters
-                </span>
-              </div>
-              <textarea
-                value={formData.message}
-                onChange={handleMessageChange}
-                className="input-field rounded-2xl px-4 py-4 border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 resize-none placeholder-gray-400 dark:placeholder-gray-500"
-                rows={12}
-                placeholder="Write your broadcast message here... Be clear and concise to ensure your message is understood by all recipients."
-                required
-              />
-            </div>
-
-            {}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-6 border-t border-gray-200 dark:border-white/10">
-              <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400">
-                <div className="flex items-center space-x-2">
-                  <span>Priority:</span>
-                  <PriorityBadge priority={formData.priority} />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {priorities.map((priority) => (
+                    <button
+                      key={priority.value}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, priority: priority.value })}
+                      className={`p-3 rounded-2xl border transition-all duration-300 ${
+                        formData.priority === priority.value
+                          ? `${priority.bgColor} border-current scale-105 shadow-md`
+                          : 'border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 hover:border-gray-300 dark:hover:border-white/40'
+                      }`}
+                    >
+                      <span className={`text-sm font-medium ${
+                        formData.priority === priority.value ? priority.color : 'text-gray-500 dark:text-gray-400'
+                      }`}>
+                        {priority.label}
+                      </span>
+                    </button>
+                  ))}
                 </div>
-                <span>•</span>
-                <span>{formData.roles.length} recipient groups</span>
               </div>
 
-              <button
-                type="submit"
-                disabled={loading || formData.roles.length === 0 || !formData.subject || !formData.message}
-                className="btn-primary flex items-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed rounded-2xl px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                {loading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Sending Broadcast...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5" />
-                    <span>Send Broadcast</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
+              {/* Recipients */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white">
+                    Recipients *
+                  </label>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {roles.map((role) => (
+                    <RoleCard
+                      key={role.value}
+                      role={role}
+                      selected={formData.roles.includes(role.value)}
+                      onChange={handleRoleChange}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Message */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white">
+                    Message *
+                  </label>
+                  <span className={`text-sm font-medium ${
+                    characterCount > 0 ? 'text-gray-600 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'
+                  }`}>
+                    {characterCount} characters
+                  </span>
+                </div>
+                <textarea
+                  value={formData.message}
+                  onChange={handleMessageChange}
+                  className="input-field rounded-2xl px-4 py-4 border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 resize-none placeholder-gray-400 dark:placeholder-gray-500"
+                  rows={12}
+                  placeholder="Write your broadcast message here... Be clear and concise to ensure your message is understood by all recipients."
+                  required
+                />
+              </div>
+
+              {/* Submit Section */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-6 border-t border-gray-200 dark:border-white/10">
+                <div className="flex items-center space-x-3 text-sm text-gray-500 dark:text-gray-400">
+                  <div className="flex items-center space-x-2">
+                    <span>Priority:</span>
+                    <PriorityBadge priority={formData.priority} />
+                  </div>
+                  <span>•</span>
+                  <span>{formData.roles.length} recipient groups</span>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading || formData.roles.length === 0 || !formData.subject || !formData.message}
+                  className="btn-primary flex items-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed rounded-2xl px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Sending Broadcast...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      <span>Send Broadcast</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleDirectMailSubmit} className="space-y-8">
+              {/* Recipient User ID */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                  Recipient User ID *
+                </label>
+                <input
+                  type="text"
+                  value={directMailData.userId}
+                  onChange={(e) => setDirectMailData({ ...directMailData, userId: e.target.value })}
+                  className="input-field rounded-2xl px-4 py-3 border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300"
+                  placeholder="Enter the user's unique ID..."
+                  required
+                />
+                <p className="mt-2 text-xs text-gray-500">You can find User IDs in the User Management section.</p>
+              </div>
+
+              {/* Subject */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                  Subject *
+                </label>
+                <input
+                  type="text"
+                  value={directMailData.subject}
+                  onChange={(e) => setDirectMailData({ ...directMailData, subject: e.target.value })}
+                  className="input-field rounded-2xl px-4 py-3 border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300"
+                  placeholder="Email or message subject..."
+                  required
+                />
+              </div>
+
+              {/* Message */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-3">
+                  Message Body *
+                </label>
+                <textarea
+                  value={directMailData.message}
+                  onChange={(e) => setDirectMailData({ ...directMailData, message: e.target.value })}
+                  className="input-field rounded-2xl px-4 py-4 border border-gray-200 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 resize-none"
+                  rows={10}
+                  placeholder="Write your private message here..."
+                  required
+                />
+              </div>
+
+              <div className="pt-6 border-t border-gray-200 dark:border-white/10 flex justify-end">
+                <button
+                  type="submit"
+                  disabled={loading || !directMailData.userId || !directMailData.subject || !directMailData.message}
+                  className="btn-primary flex items-center space-x-3 disabled:opacity-50 rounded-2xl px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-300 shadow-lg"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Sending Mail...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      <span>Send Direct Mail</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
 
         {}

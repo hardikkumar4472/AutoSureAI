@@ -17,14 +17,31 @@ export const SocketProvider = ({ children }) => {
   const { user, isAuthenticated } = useAuth();
 
   useEffect(() => {
-    if (isAuthenticated && user) {
+    const userId = user?._id || user?.id;
+
+    if (isAuthenticated && userId) {
+      // Prevent reconnecting if we already have a socket for this user (optimization)
+      if (socket?.connected && socket.userId === userId) {
+         return; 
+      }
+
+      
       const newSocket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:8000', {
         transports: ['websocket'],
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        withCredentials: true,
       });
 
+      // Tag socket with userId to track it
+      newSocket.userId = userId;
+
       newSocket.on('connect', () => {
-        console.log('Socket connected:', newSocket.id);
-        newSocket.emit('join', user.id);
+        newSocket.emit('join', userId);
+      });
+
+      newSocket.on('connect_error', (err) => {
+        console.error("Socket connection error:", err.message);
       });
 
       setSocket(newSocket);
@@ -33,7 +50,7 @@ export const SocketProvider = ({ children }) => {
         newSocket.close();
       };
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user?._id, user?.id]);
 
   return (
     <SocketContext.Provider value={{ socket }}>

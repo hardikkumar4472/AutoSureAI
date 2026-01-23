@@ -2,9 +2,11 @@ import AuditLog from "../models/AuditLogs.js";
 
 export const getAuditLogs = async (req, res) => {
   try {
+    const limit = parseInt(req.query.limit) || 100;
     const logs = await AuditLog.find()
       .populate("actorId", "name email role")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .limit(limit);
 
     res.json({ success: true, logs });
   } catch (err) {

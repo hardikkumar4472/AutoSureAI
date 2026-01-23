@@ -205,7 +205,7 @@ const AgentDashboard = () => {
               Agent Dashboard
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300 font-light">
-              Manage and review assigned insurance claims efficiently
+              Manage and review all insurance claims efficiently
             </p>
           </div>
 
@@ -293,7 +293,7 @@ const AgentDashboard = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
             <div className="flex items-center space-x-3">
               <div className="w-2 h-8 bg-gradient-to-b from-primary-600 to-primary-400 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Assigned Claims</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">All Claims</h2>
               {searchQuery && (
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   ({filteredClaims.length} of {claims.length} results)
@@ -404,6 +404,7 @@ const AgentDashboard = () => {
                     <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Severity</th>
                     <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Est. Cost</th>
                     <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Status</th>
+                    <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Assigned To</th>
                     <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Report</th>
                     <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Date</th>
                     <th className="text-left py-4 px-6 text-sm font-semibold text-gray-700 dark:text-gray-300">Action</th>
@@ -435,6 +436,11 @@ const AgentDashboard = () => {
                         <span className={`px-3 py-1 rounded-2xl text-xs font-semibold capitalize ${getStatusColor(claim.status)}`}>
                           {claim.status}
                         </span>
+                      </td>
+                      <td className="py-4 px-6">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                            {claim.assignedAgent?.name || 'Unassigned'}
+                        </p>
                       </td>
                       <td className="py-4 px-6">
                         {claim.reportId?.reportUrl ? (

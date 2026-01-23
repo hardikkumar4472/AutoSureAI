@@ -1,8 +1,9 @@
 import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import ThreeDBackground from '../components/ThreeDBackground';
 import ThemeToggle from '../components/ThemeToggle';
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform, useScroll, useSpring } from 'framer-motion';
 import Logo from '../Assets/AutoSureAI_Logo_New.png';
 import { User, X, Github, Linkedin, Mail, MapPin, Navigation, AlertTriangle, ChevronDown, Loader, Camera } from 'lucide-react';
 import HotspotMap from './driver/HotspotMap';
@@ -44,12 +45,19 @@ const TiltCard = ({ children }) => {
 };
 
 const Home = () => {
+  const { user, logout } = useAuth();
 
   const [showDevModal, setShowDevModal] = useState(false);
   const [address, setAddress] = useState('');
   const [isLocating, setIsLocating] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -90,6 +98,10 @@ const Home = () => {
 
   return (
     <div className="relative min-h-screen text-gray-900 dark:text-white overflow-x-hidden selection:bg-indigo-500 selection:text-white">
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 z-[100] origin-left"
+        style={{ scaleX }}
+      />
       
       {/* Background Image */}
       {/* 3D Background */}
@@ -101,23 +113,55 @@ const Home = () => {
       <div className="relative z-10 flex flex-col w-full">
         
         {/* Header */}
-        <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 flex items-center justify-between max-w-7xl mx-auto w-full transition-all duration-300">
-          <div className="flex items-center gap-3 backdrop-blur-md bg-white/10 dark:bg-black/30 px-4 py-2 rounded-full border border-white/20 shadow-lg">
-            <img src={Logo} alt="AutoSureAI" className="w-8 h-8 object-contain bg-white rounded-full p-1" />
-            <span className="font-bold tracking-tight text-lg text-white">AutoSureAI</span>
+        <header className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-6 py-4 flex items-center justify-between max-w-7xl mx-auto w-full transition-all duration-300">
+          <div className="flex items-center gap-2 sm:gap-3 backdrop-blur-md bg-white/10 dark:bg-black/30 px-3 sm:px-4 py-2 rounded-full border border-white/20 shadow-lg">
+            <img src={Logo} alt="AutoSureAI" className="w-6 h-6 sm:w-8 sm:h-8 object-contain bg-white rounded-full p-0.5 sm:p-1" />
+            <span className="font-bold tracking-tight text-sm sm:text-lg text-white hidden xs:inline-block">AutoSureAI</span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
+             {user ? (
+               <>
+                 <Link
+                   to="/dashboard"
+                   className="backdrop-blur-md bg-indigo-500 px-3 sm:px-4 py-2 rounded-full border border-indigo-400 shadow-lg hover:scale-105 transition-transform text-white text-xs sm:text-sm font-medium hover:bg-indigo-600 whitespace-nowrap"
+                 >
+                   Dashboard
+                 </Link>
+                 <button
+                   onClick={logout}
+                   className="backdrop-blur-md bg-red-500/80 px-3 sm:px-4 py-2 rounded-full border border-red-400 shadow-lg hover:scale-105 transition-transform text-white text-xs sm:text-sm font-medium hover:bg-red-600 whitespace-nowrap"
+                 >
+                   Logout
+                 </button>
+               </>
+             ) : (
+               <>
+                 <Link 
+                   to="/login" 
+                   className="text-white text-xs sm:text-sm font-medium hover:text-indigo-300 transition-colors px-1 sm:px-2 whitespace-nowrap"
+                 >
+                   Log In
+                 </Link>
+                 <Link 
+                   to="/register" 
+                   className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold shadow-lg transition-transform hover:scale-105 whitespace-nowrap"
+                 >
+                   Sign Up
+                 </Link>
+               </>
+             )}
+
              <button 
                onClick={() => setShowDevModal(true)}
-               className="backdrop-blur-md bg-white/10 dark:bg-black/30 px-4 py-2 rounded-full border border-white/20 shadow-lg hover:scale-105 transition-transform flex items-center gap-2 text-white text-sm font-medium hover:bg-white/20 cursor-pointer"
+               className="backdrop-blur-md bg-white/10 dark:bg-black/30 p-2 sm:px-4 sm:py-2 rounded-full border border-white/20 shadow-lg hover:scale-105 transition-transform flex items-center gap-2 text-white text-sm font-medium hover:bg-white/20 cursor-pointer"
              >
-               <User className="w-4 h-4" />
-               <span className="hidden sm:inline">About Developer</span>
+               <User className="w-4 h-4 sm:w-4 sm:h-4" />
+               <span className="hidden md:inline">About Developer</span>
              </button>
              <ThemeToggle 
                showLabel={false} 
-               className="!bg-white/10 !dark:bg-black/30 !border-white/20 !rounded-full !w-11 !h-11 hover:!scale-110" 
+               className="!bg-white/10 !dark:bg-black/30 !border-white/20 !rounded-full !w-10 !h-10 sm:!w-11 sm:!h-11 hover:!scale-110 flex-shrink-0" 
              />
           </div>
         </header>
@@ -150,7 +194,7 @@ const Home = () => {
                 <div className="flex flex-row gap-4 justify-center items-center pt-2">
                   <button 
                     onClick={scrollToContent} 
-                    className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-base rounded-full shadow-lg hover:-translate-y-1 transition-all duration-300 min-w-[160px] flex items-center justify-center gap-2"
+                    className="px-6 py-2.5 sm:px-8 sm:py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm sm:text-base rounded-full shadow-lg hover:-translate-y-1 transition-all duration-300 min-w-[140px] sm:min-w-[160px] flex items-center justify-center gap-2"
                   >
                     <span>Let's Try</span>
                     <ChevronDown className="w-5 h-5 animate-bounce" />
@@ -288,7 +332,7 @@ const Home = () => {
 
                   <button 
                     type="submit" 
-                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-red-500 hover:to-red-400 text-white font-bold rounded-xl shadow-lg hover:shadow-red-500/25 transform transition-all duration-200 flex items-center justify-center gap-2"
+                    className="w-full py-3.5 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-red-500 hover:to-red-400 text-white font-bold rounded-xl shadow-lg hover:shadow-red-500/25 transform transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
                   >
                     <span>Get AI based analysis now</span>
                   </button>

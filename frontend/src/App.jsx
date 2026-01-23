@@ -30,6 +30,7 @@ import TrafficAnalytics from './pages/traffic/Analytics';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminAgents from './pages/admin/Agents';
 import AdminTraffic from './pages/admin/Traffic';
+import AdminUsers from './pages/admin/Users';
 import AdminClaims from './pages/admin/Claims';
 import AdminClaimDetails from './pages/admin/ClaimDetails';
 import AdminBroadcast from './pages/admin/Broadcast';
@@ -52,8 +53,19 @@ const PrivateRoute = ({ children, allowedRoles = [] }) => {
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
-  if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
-    return <Navigate to="/unauthorized" replace />;
+  if (allowedRoles.length > 0) {
+    // Check if user has ANY of the allowed roles via flags or legacy role field
+    const hasPermission = allowedRoles.some(role => {
+      if (role === 'admin') return user?.isAdmin || user?.role === 'admin';
+      if (role === 'agent') return user?.isAgent || user?.role === 'agent';
+      if (role === 'traffic') return user?.isTraffic || user?.role === 'traffic';
+      if (role === 'driver') return true; 
+      return user?.role === role;
+    });
+
+    if (!hasPermission) {
+      return <Navigate to="/unauthorized" replace />;
+    }
   }
 
   return children;
@@ -107,7 +119,7 @@ const NotFound = () => {
 };
 
 const AppRoutes = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, loading } = useAuth();
 
   const getDashboardPath = () => {
     switch (user?.role) {
@@ -129,19 +141,21 @@ const AppRoutes = () => {
       <Route
         path="/"
         element={
-          !isAuthenticated ? (
-            <Home />
+          loading ? (
+             <div className="min-h-screen flex items-center justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+            </div>
           ) : (
-            <Navigate to={getDashboardPath()} replace />
+            <Home />
           )
         }
       />
 
-      <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" replace />} />
-      <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/" replace />} />
-      <Route path="/verify-otp" element={!isAuthenticated ? <VerifyOtp /> : <Navigate to="/" replace />} />
-      <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPassword /> : <Navigate to="/" replace />} />
-      <Route path="/reset-password" element={!isAuthenticated ? <ResetPassword /> : <Navigate to="/" replace />} />
+      <Route path="/login" element={loading ? null : !isAuthenticated ? <Login /> : <Navigate to={getDashboardPath()} replace />} />
+      <Route path="/register" element={loading ? null : !isAuthenticated ? <Register /> : <Navigate to={getDashboardPath()} replace />} />
+      <Route path="/verify-otp" element={loading ? null : !isAuthenticated ? <VerifyOtp /> : <Navigate to={getDashboardPath()} replace />} />
+      <Route path="/forgot-password" element={loading ? null : !isAuthenticated ? <ForgotPassword /> : <Navigate to={getDashboardPath()} replace />} />
+      <Route path="/reset-password" element={loading ? null : !isAuthenticated ? <ResetPassword /> : <Navigate to={getDashboardPath()} replace />} />
 
       <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/404" element={<NotFound />} />
@@ -295,6 +309,15 @@ const AppRoutes = () => {
         element={
           <PrivateRoute allowedRoles={['admin']}>
             <Layout><AdminTraffic /></Layout>
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/users"
+        element={
+          <PrivateRoute allowedRoles={['admin']}>
+            <Layout><AdminUsers /></Layout>
           </PrivateRoute>
         }
       />

@@ -3,8 +3,11 @@ import User from "../models/User.js";
 
  async function protect(req, res, next) {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) return res.status(401).json({ message: "Unauthorized" });
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+    if (!token) {
+        console.log("❌ No token found in cookies or header");
+        return res.status(401).json({ message: "Unauthorized - No Token" });
+    }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id).select("-password");
@@ -18,6 +21,10 @@ import User from "../models/User.js";
       vehicleNumber: user.vehicleNumber,
       isVerified: user.isVerified,
       createdAt: user.createdAt,
+      role: user.role,
+      isAdmin: user.isAdmin,
+      isAgent: user.isAgent,
+      isTraffic: user.isTraffic
     };
 
     next();

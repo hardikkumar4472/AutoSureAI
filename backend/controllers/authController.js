@@ -8,6 +8,26 @@ import { sendPasswordResetEmail } from "../utils/sendPasswordResetEmail.js";
 import { emailQueue } from "../config/queue.js";
 
 import { handleMongoError } from "../utils/errorHandler.js";
+export const googleCallback = async (req, res) => {
+  try {
+    const user = req.user;
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      path: "/"
+    });
+
+    // Redirect to frontend dashboard or home
+    res.redirect(`${process.env.FRONTEND_URL || "http://localhost:5173"}/dashboard`);
+  } catch (err) {
+    console.error("Google Callback Error:", err);
+    res.redirect(`${process.env.FRONTEND_URL || "http://localhost:5173"}/login?error=auth_failed`);
+  }
+};
 
 export const registerUser = async (req, res) => {
   try {
@@ -77,16 +97,53 @@ export const initiateLogin = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
+    // Store token in cookie
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000, 
+        path: "/"
+    });
+
     res.json({
       success: true,
       message: "Login successful",
-      token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+      token, 
+      user: { 
+        id: user._id, 
+        name: user.name, 
+        email: user.email, 
+        role: user.role,
+        isAdmin: user.isAdmin,
+        isAgent: user.isAgent,
+        isTraffic: user.isTraffic
+      }
     });
   } catch (err) {
     console.error("initiateLogin error:", err);
     res.status(500).json({ message: err.message });
   }
+};
+
+export const logoutUser = async (req, res) => {
+    try {
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+            path: "/"
+        });
+        
+        // Also destroy session if using express-session
+        if (req.session) {
+            req.session.destroy();
+        }
+
+        res.json({ success: true, message: "Logged out successfully" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
 
 export const getUserProfile = async (req, res) => {

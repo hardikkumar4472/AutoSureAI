@@ -116,7 +116,6 @@ const ChatWindow = ({ claimId, onClose, title = "Chat with Agent" }) => {
     const file = e.target.files[0];
     if (file) {
 
-      console.log('File selected:', file);
 
     }
   };

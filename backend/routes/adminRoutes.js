@@ -1,7 +1,20 @@
 
 import express from "express";
 import { adminAuth } from "../middleware/adminAuth.js";
-import { registerAgent, listAgents, updateAgent, deleteAgent, getAllClaims, getClaimDetails } from "../controllers/adminController.js";
+import { 
+  registerAgent, 
+  listAgents, 
+  updateAgent, 
+  deleteAgent, 
+  getAllClaims, 
+  getClaimDetails,
+  listUsers,
+  deleteUser,
+  deleteClaim,
+  sendDirectMail,
+  updateUserRole,
+  getDashboardOverview
+} from "../controllers/adminController.js";
 import { reassignClaim } from "../controllers/adminController.js";
 import { adminLogin } from "../controllers/adminController.js";
 import { registerTraffic } from "../controllers/adminController.js";
@@ -16,6 +29,12 @@ router.put("/agent/:id", adminAuth, updateAgent);
 router.delete("/agent/:id", adminAuth, deleteAgent);
 router.get("/claims", adminAuth, getAllClaims);
 router.get("/claim/:id", adminAuth, getClaimDetails);
+router.delete("/claim/:id", adminAuth, deleteClaim);
+router.get("/users", adminAuth, listUsers);
+router.delete("/user/:id", adminAuth, deleteUser);
+router.post("/direct-mail", adminAuth, sendDirectMail);
+router.put("/user/:id/role", adminAuth, updateUserRole);
+router.get("/overview", adminAuth, getDashboardOverview);
 router.post("/login", adminLogin);
 router.post("/create-traffic",registerTraffic,adminAuth);
 

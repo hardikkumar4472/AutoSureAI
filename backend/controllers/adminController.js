@@ -622,3 +622,181 @@ export const getClaimDetails = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const listUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password").sort({ createdAt: -1 }).lean();
+    const usersWithCounts = await Promise.all(users.map(async (user) => {
+      let claimCount = 0;
+      if (user.role === 'driver') {
+        claimCount = await Claim.countDocuments({ driverId: user._id });
+      } else if (user.role === 'agent') {
+        claimCount = await Claim.countDocuments({ assignedAgent: user._id });
+      }
+      return { ...user, claimCount };
+    }));
+
+    res.json({ success: true, users: usersWithCounts });
+  } catch (err) {
+    console.error("listUsers error:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // Don't allow admin to delete themselves
+    if (id === req.user.id.toString()) {
+      return res.status(400).json({ message: "You cannot delete your own admin account" });
+    }
+    const user = await User.findByIdAndDelete(id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json({ success: true, message: "User deleted successfully" });
+  } catch (err) {
+    console.error("deleteUser error:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const deleteClaim = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const claim = await Claim.findByIdAndDelete(id);
+    if (!claim) return res.status(404).json({ message: "Claim not found" });
+    res.json({ success: true, message: "Claim deleted successfully" });
+  } catch (err) {
+    console.error("deleteClaim error:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const sendDirectMail = async (req, res) => {
+  try {
+    const { userId, subject, message } = req.body;
+    if (!userId || !subject || !message) {
+      return res.status(400).json({ message: "User ID, subject, and message are required" });
+    }
+
+    const recipient = await User.findById(userId);
+    if (!recipient) {
+      return res.status(404).json({ message: "Recipient not found" });
+    }
+
+    // Send in-app notification
+    const { createNotification } = await import("../services/notificationService.js");
+    await createNotification({
+      userId: recipient._id,
+      type: "system_announcement",
+      title: subject,
+      message,
+      priority: "high"
+    });
+
+    // Send email via Brevo if API key is present
+    if (process.env.BREVO_API_KEY) {
+      const { sendBroadcastEmail } = await import("../utils/sendBrodcastEmail.js");
+      await sendBroadcastEmail([recipient.email], subject, message);
+    }
+
+    res.json({ success: true, message: `Direct mail sent to ${recipient.name}` });
+  } catch (err) {
+    console.error("sendDirectMail error:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const updateUserRole = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isAdmin, isAgent, isTraffic, role } = req.body;
+
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (isAdmin !== undefined) user.isAdmin = isAdmin;
+    if (isAgent !== undefined) user.isAgent = isAgent;
+    if (isTraffic !== undefined) user.isTraffic = isTraffic;
+
+    // Sync role based on flags if any flag was updated
+    if (isAdmin !== undefined || isAgent !== undefined || isTraffic !== undefined) {
+      if (user.isAdmin) user.role = "admin";
+      else if (user.isAgent) user.role = "agent";
+      else if (user.isTraffic) user.role = "traffic";
+      else user.role = "driver";
+    } else if (role !== undefined) {
+      // If role was explicitly provided, update it and potentially flags
+      user.role = role;
+      if (role === "admin") user.isAdmin = true;
+      if (role === "agent") user.isAgent = true;
+      if (role === "traffic") user.isTraffic = true;
+    }
+
+    await user.save();
+    res.json({ success: true, message: "User roles updated successfully", user });
+  } catch (err) {
+    console.error("updateUserRole error:", err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const getDashboardOverview = async (req, res) => {
+  try {
+    const [
+      totalUsers,
+      totalAgents,
+      totalTraffic,
+      totalAdmins,
+      totalClaims,
+      claimsByStatus,
+      recentClaims
+    ] = await Promise.all([
+      User.countDocuments({}),
+      User.countDocuments({ isAgent: true }),
+      User.countDocuments({ isTraffic: true }),
+      User.countDocuments({ isAdmin: true }),
+      Claim.countDocuments({}),
+      Claim.aggregate([
+        { $group: { _id: "$status", count: { $sum: 1 } } }
+      ]),
+      Claim.find()
+        .populate("driverId", "name avatar")
+        .sort({ createdAt: -1 })
+        .limit(5)
+    ]);
+
+    // Format claimsByStatus into a more usable object
+    const statusCounts = {
+      pending: 0,
+      in_review: 0,
+      approved: 0,
+      rejected: 0,
+      settled: 0
+    };
+    claimsByStatus.forEach(item => {
+      if (statusCounts[item._id] !== undefined) {
+        statusCounts[item._id] = item.count;
+      }
+    });
+
+    res.json({
+      success: true,
+      stats: {
+        users: {
+          total: totalUsers,
+          agents: totalAgents,
+          traffic: totalTraffic,
+          admins: totalAdmins
+        },
+        claims: {
+          total: totalClaims,
+          byStatus: statusCounts
+        }
+      },
+      recentClaims
+    });
+  } catch (err) {
+    console.error("getDashboardOverview error:", err);
+    res.status(500).json({ message: err.message });
+  }
+};

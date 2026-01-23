@@ -94,15 +94,20 @@ const Layout = ({ children }) => {
     { path: '/admin/claims', label: 'Claims', icon: ClipboardList, description: 'Claims Management' },
     { path: '/admin/agents', label: 'Agents', icon: Users, description: 'Manage agents' },
     { path: '/admin/traffic', label: 'Traffic', icon: Shield, description: 'Traffic Officers' },
+    { path: '/admin/users', label: 'Users', icon: Users, description: 'Manage all users' },
     { path: '/admin/broadcast', label: 'Broadcast', icon: MessageSquare, description: 'Announcements' },
     { path: '/admin/audit-logs', label: 'Audit', icon: AlertCircle, description: 'Audit Logs' },
     { path: '/admin/exports', label: 'Exports', icon: Database, description: 'Data Exports' },
   ];
 
   const getNavItems = () => {
-    if (isAdmin) return adminNavItems;
-    if (isAgent) return agentNavItems;
-    if (isTraffic) return trafficNavItems;
+    const path = location.pathname;
+    
+    if (path.startsWith('/admin')) return adminNavItems;
+    if (path.startsWith('/agent')) return agentNavItems;
+    if (path.startsWith('/traffic')) return trafficNavItems;
+    
+    // Default to driver navigation for /dashboard and other common routes
     return driverNavItems;
   };
 
@@ -165,7 +170,7 @@ const Layout = ({ children }) => {
         <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg py-2' : 'bg-white/60 dark:bg-gray-900/60 backdrop-blur-md py-4'
         }`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between">
               
               {/* Logo and Brand */}

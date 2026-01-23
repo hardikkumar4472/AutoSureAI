@@ -10,7 +10,6 @@ export const getCurrentLocation = async () => {
       address: address || "Address not found"
     };
   } catch (error) {
-    console.warn("Geolocation failed, trying IP-based location:", error);
     try {
       const ipLocation = await getIPLocation();
       return ipLocation;
@@ -91,7 +90,6 @@ const getAddressFromCoords = async (lat, lon) => {
         if (address) return address;
       }
     } catch (error) {
-      console.warn(`${service.name} geocoding failed:`, error);
     }
   }
 
@@ -149,7 +147,6 @@ const getIPLocation = async () => {
         }
       }
     } catch (error) {
-      console.warn(`${service.name} IP location failed:`, error);
     }
   }
 

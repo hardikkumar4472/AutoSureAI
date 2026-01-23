@@ -17,12 +17,31 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('user');
-    if (token && savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setLoading(false);
+    const checkAuth = async () => {
+      try {
+        // Try getting user from backend (Cookie Auth)
+        const response = await api.get('/auth/profile');
+        if (response.data?.success) {
+          const userData = response.data.user;
+          setUser(userData);
+          localStorage.setItem('user', JSON.stringify(userData));
+        }
+      } catch (error) {
+        // If fetch fails, fallback to local storage
+        const savedUser = localStorage.getItem('user');
+        if (savedUser) {
+          try {
+            setUser(JSON.parse(savedUser));
+          } catch (e) {
+            localStorage.removeItem('user');
+          }
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
   }, []);
 
   const login = async (email, password, role = 'driver') => {
@@ -93,7 +112,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
@@ -110,10 +134,11 @@ export const AuthProvider = ({ children }) => {
     resetPassword,
     logout,
     isAuthenticated: !!user,
-    isAdmin: user?.role === 'admin',
-    isAgent: user?.role === 'agent',
-    isTraffic: user?.role === 'traffic',
-    isDriver: user?.role === 'driver' || !user?.role,
+    isAuthenticated: !!user,
+    isAdmin: user?.isAdmin || user?.role === 'admin',
+    isAgent: user?.isAgent || user?.role === 'agent',
+    isTraffic: user?.isTraffic || user?.role === 'traffic',
+    isDriver: user?.role === 'driver' || (!user?.isAdmin && !user?.isAgent && !user?.isTraffic), // Default state
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
