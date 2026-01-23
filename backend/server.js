@@ -1,5 +1,7 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
+
+import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -29,8 +31,17 @@ import MongoStore from "connect-mongo";
 import passport from "passport";
 import "./config/passport.js";
 
-dotenv.config();
 connectDB();
+
+// Production Environment Validation
+if (process.env.NODE_ENV === "production") {
+  const requiredEnv = ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "BACKEND_URL", "SESSION_SECRET"];
+  requiredEnv.forEach(env => {
+    if (!process.env[env]) {
+      console.warn(`⚠️ Warning: ${env} is missing in production environment!`);
+    }
+  });
+}
 
 const app = express();
 
@@ -40,10 +51,12 @@ app.use(cors({
   exposedHeaders: ["X-Cache"]
 }));
 
+app.set("trust proxy", 1);
+
 app.use(cookieParser());
 
 app.use(session({
-    secret: process.env.SESSION_SECRET ,
+    secret: process.env.SESSION_SECRET || "fallback_secret_for_dev",
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
@@ -53,7 +66,8 @@ app.use(session({
     cookie: {
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 // 1 day
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
     }
 }));
 
@@ -62,7 +76,10 @@ app.use(passport.session());
 
 app.use(express.json());
 
-app.use(helmet());
+app.use(helmet({
+  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+  contentSecurityPolicy: false, // Disabling CSP temporarily to debug 500 error, can be refined later
+}));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/accidents", accidentRoutes);
