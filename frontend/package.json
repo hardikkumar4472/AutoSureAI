@@ -10,9 +10,9 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
-    "@react-three/drei": "^9.122.0",
-    "@react-three/fiber": "9.4.3",
-    "@react-three/postprocessing": "^3.0.4",
+    "@react-three/drei": "9.96.1",
+    "@react-three/fiber": "8.15.16",
+    "@react-three/postprocessing": "2.15.0",
     "axios": "^1.6.2",
     "date-fns": "^2.30.0",
     "framer-motion": "^12.28.1",
