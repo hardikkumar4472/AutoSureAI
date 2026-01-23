@@ -1,7 +1,19 @@
 import Redis from "ioredis";
 import dotenv from "dotenv";
 dotenv.config();
-const redis = process.env.REDIS_URL
+const DISCONNECT_REDIS = true;
+
+const redis = DISCONNECT_REDIS
+  ? {
+      on: () => {},
+      get: async () => null,
+      set: async () => {},
+      del: async () => {},
+      scanStream: () => ({ on: () => {} }),
+      pipeline: () => ({ del: () => {}, exec: () => {} }),
+      status: 'mock'
+    }
+  : process.env.REDIS_URL
   ? new Redis(process.env.REDIS_URL)
   : new Redis({
       host: process.env.REDIS_HOST || "127.0.0.1",
@@ -12,6 +24,10 @@ const redis = process.env.REDIS_URL
         return delay;
       },
     });
+
+if (DISCONNECT_REDIS) {
+    console.log("⚠️ Redis Disconnected (Temporary Mock Active)");
+}
 redis.on("connect", () => {
   console.log("Redis Connected!");
 });

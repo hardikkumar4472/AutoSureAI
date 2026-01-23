@@ -7,6 +7,8 @@ import { io } from "../server.js";
 import { sendPasswordResetEmail } from "../utils/sendPasswordResetEmail.js";
 import { emailQueue } from "../config/queue.js";
 
+import { handleMongoError } from "../utils/errorHandler.js";
+
 export const registerUser = async (req, res) => {
   try {
     const { name, email, phone, vehicleNumber, password } = req.body;
@@ -34,8 +36,7 @@ export const registerUser = async (req, res) => {
 
     res.json({ success: true, message: "OTP sent to email" });
   } catch (err) {
-    console.error("registerUser error:", err);
-    res.status(500).json({ message: err.message });
+    handleMongoError(err, res);
   }
 };
 

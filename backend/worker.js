@@ -10,7 +10,11 @@ const connection = process.env.REDIS_URL || {
   password: process.env.REDIS_PASSWORD || undefined,
 };
 
-const emailWorker = new Worker('emailQueue', async job => {
+const DISCONNECT_REDIS = true;
+
+const emailWorker = DISCONNECT_REDIS
+  ? { on: () => {} }
+  : new Worker('emailQueue', async job => {
   const { type, email, otp } = job.data;
   console.log(`Processing email job: ${type} for ${email}`);
   

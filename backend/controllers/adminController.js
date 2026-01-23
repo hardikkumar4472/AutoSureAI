@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import { handleMongoError } from "../utils/errorHandler.js";
 import Claim from "../models/Claim.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -187,8 +188,7 @@ export const registerAgent = async (req, res) => {
     });
 
   } catch (err) {
-    console.error("registerAgent error:", err);
-    res.status(500).json({ message: "Something went wrong" });
+    handleMongoError(err, res);
   }
 };
 
@@ -213,8 +213,7 @@ export const updateAgent = async (req, res) => {
     if (!agent) return res.status(404).json({ message: "Agent not found" });
     res.json({ success: true, agent });
   } catch (err) {
-    console.error("updateAgent error:", err);
-    res.status(500).json({ message: err.message });
+    handleMongoError(err, res);
   }
 };
 
@@ -405,8 +404,7 @@ export const registerTraffic = async (req, res) => {
     // Invalidate Admin Traffic Cache
     await clearPattern("admin_traffic_*");
   } catch (err) {
-    console.error("registerTraffic error:", err);
-    res.status(500).json({ message: err.message });
+    handleMongoError(err, res);
   }
 };
 
@@ -555,8 +553,7 @@ export const updateTraffic = async (req, res) => {
 
     res.json({ success: true, officer });
   } catch (err) {
-    console.error("updateTraffic error:", err);
-    res.status(500).json({ message: err.message });
+    handleMongoError(err, res);
   }
 };
 
