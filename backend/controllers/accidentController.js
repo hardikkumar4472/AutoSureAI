@@ -10,12 +10,24 @@ import { generateAccidentReportPDF } from "../utils/generateAccidentReportPdf.js
 import { io } from "../server.js";
 import { notifyClaimReassigned, notifyClaimCreated, notifyClaimAssigned } from "../services/notificationService.js";
 import { clearPattern } from "../config/redis.js";
+import { validateCarImage } from "../utils/validateImage.js";
 
 export const reportAccident = async (req, res) => {
   try {
 
     const fileUrl = await uploadToSupabase(req.file);
     const { lat, lon, address } = req.body;
+
+    // Validate image using Gemini
+    const isValidImage = await validateCarImage(req.file.path, process.env.GEMINI_API_KEY);
+
+    if (!isValidImage) {
+        // Cleanup file if invalid
+        fs.unlink(req.file.path, () => {});
+        return res.status(400).json({ 
+            message: "The uploaded image does not appear to be a car or accident scene. Please provide a clear image of the claim." 
+        });
+    }
 
     const formData = new FormData();
     formData.append("image", fs.createReadStream(req.file.path));
