@@ -9,7 +9,16 @@ export const validateCarImage = async (imagePath, apiKey) => {
     const imageBuffer = fs.readFileSync(imagePath);
     const imageBase64 = imageBuffer.toString("base64");
 
-    const prompt = "Analyze this image. Does it show a car, vehicle, or a car accident? If yes, answer 'YES'. If the image is not a car or vehicle or not any accident image, answer 'NO'. Return ONLY 'YES' or 'NO'.";
+   const prompt = `Analyze this image carefully and determine if it contains any of the following:
+- A car, truck, motorcycle, bus, or any motor vehicle
+- A vehicle accident, collision, or crash scene
+- Damaged vehicles or accident aftermath
+
+Answer with ONLY one word:
+- "YES" if the image shows any vehicle OR any type of accident/collision or any type of damage
+- "NO" if the image shows neither vehicles nor accidents
+
+Do not include any explanation, punctuation, or additional text in your response.`;
 
     const result = await model.generateContent([
       prompt,
