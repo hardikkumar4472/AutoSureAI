@@ -55,8 +55,11 @@ app.set("trust proxy", 1);
 
 app.use(cookieParser());
 
+// Session Configuration
+const sessionSecret = process.env.SESSION_SECRET || "autosureai_session_secret_99887766";
+
 app.use(session({
-    secret: process.env.SESSION_SECRET || "fallback_secret_for_dev",
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
