@@ -23,7 +23,7 @@ const mockHotspots = [
   },
 ];
 
-const HotspotMap = () => {
+const HotspotMap = ({ className }) => {
   const [hotspots, setHotspots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -142,7 +142,7 @@ const HotspotMap = () => {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 bg-white/10 backdrop-blur-lg shadow-2xl text-white">
+    <div className={className || "min-h-screen py-8 px-4 bg-white/10 backdrop-blur-lg shadow-2xl text-white"}>
       <div className="max-w-7xl mx-auto">
         {}
         <div className="text-center mb-8">
