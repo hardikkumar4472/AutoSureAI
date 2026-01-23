@@ -1,13 +1,15 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import fs from "fs";
+import axios from "axios";
 
-export const validateCarImage = async (imagePath, apiKey) => {
+export const validateCarImage = async (imageUrl, apiKey) => {
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const imageBuffer = fs.readFileSync(imagePath);
-    const imageBase64 = imageBuffer.toString("base64");
+    // Fetch image from Supabase URL
+    const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
+    const imageBase64 = Buffer.from(response.data, "binary").toString("base64");
+    const mimeType = response.headers["content-type"] || "image/jpeg";
 
    const prompt = `Analyze this image carefully and determine if it contains any of the following:
 - A car, truck, motorcycle, bus, or any motor vehicle
@@ -25,13 +27,13 @@ Do not include any explanation, punctuation, or additional text in your response
       {
         inlineData: {
           data: imageBase64,
-          mimeType: "image/jpeg", 
+          mimeType: mimeType, 
         },
       },
     ]);
 
-    const response = await result.response;
-    const text = response.text().trim().toUpperCase();
+    const geminiResponse = await result.response;
+    const text = geminiResponse.text().trim().toUpperCase();
 
     return text === "YES";
   } catch (err) {

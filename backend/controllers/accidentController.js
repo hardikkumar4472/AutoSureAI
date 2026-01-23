@@ -19,7 +19,7 @@ export const reportAccident = async (req, res) => {
     const { lat, lon, address } = req.body;
 
     // Validate image using Gemini
-    const isValidImage = await validateCarImage(req.file.path, process.env.GEMINI_API_KEY);
+    const isValidImage = await validateCarImage(fileUrl, process.env.GEMINI_API_KEY);
 
     if (!isValidImage) {
         // Cleanup file if invalid
