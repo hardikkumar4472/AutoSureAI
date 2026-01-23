@@ -9,7 +9,7 @@ export const validateCarImage = async (imagePath, apiKey) => {
     const imageBuffer = fs.readFileSync(imagePath);
     const imageBase64 = imageBuffer.toString("base64");
 
-    const prompt = "Analyze this image. Does it show a car, vehicle, or a car accident? If yes, answer 'YES'. If the image is unclear, blurry, or does not contain a car or vehicle, answer 'NO'. Return ONLY 'YES' or 'NO'.";
+    const prompt = "Analyze this image. Does it show a car, vehicle, or a car accident? If yes, answer 'YES'. If the image is not a car or vehicle or not any accident image, answer 'NO'. Return ONLY 'YES' or 'NO'.";
 
     const result = await model.generateContent([
       prompt,
