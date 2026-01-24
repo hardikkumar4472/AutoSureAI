@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@hardik010190/envsync": "^1.0.1",
     "@supabase/supabase-js": "^2.78.0",
     "axios": "^1.13.2",
     "bcryptjs": "^2.4.3",
