@@ -564,6 +564,10 @@ export const adminLogin = async (req, res) => {
     const admin = await User.findOne({ email, role: "admin" }).select("+password");
     if (!admin) return res.status(400).json({ message: "Admin not found" });
 
+    if (!password || !admin.password) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
     const match = await bcrypt.compare(password, admin.password);
     if (!match) return res.status(400).json({ message: "Invalid password" });
 

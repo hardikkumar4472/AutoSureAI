@@ -10,4 +10,5 @@ export const createRateLimiter = (opts = {}) =>
   });
 
 export const authLimiter = createRateLimiter({ windowMs: 15*60*1000, max: 10 }); 
-export const uploadLimiter = createRateLimiter({ windowMs: 60*60*1000, max: 20 }); 
+export const uploadLimiter = createRateLimiter({ windowMs: 60*60*1000, max: 10 }); // reduced to 10 for better protection
+export const globalLimiter = createRateLimiter({ windowMs: 15*60*1000, max: 100 });

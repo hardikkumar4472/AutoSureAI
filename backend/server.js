@@ -20,7 +20,7 @@ import claimSettlementRoutes from "./routes/settlementRoutes.js";
 import hotspotRoutes from "./routes/hotspotRoutes.js";
 import exportRoutes from "./routes/exportRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
-import { authLimiter ,uploadLimiter} from "./middleware/rateLimiter.js";
+import { authLimiter, uploadLimiter, globalLimiter } from "./middleware/rateLimiter.js";
 import trafficRoutes from "./routes/trafficRoutes.js";
 import claimRoutes from "./routes/claimRoutes.js";
 import helmet from "helmet";
@@ -78,6 +78,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(express.json());
+app.use(globalLimiter);
 
 app.use(helmet({
   crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },

@@ -14,7 +14,6 @@ import { validateCarImage } from "../utils/validateImage.js";
 
 export const reportAccident = async (req, res) => {
   try {
-
     const fileUrl = await uploadToSupabase(req.file);
     const { lat, lon, address } = req.body;
 

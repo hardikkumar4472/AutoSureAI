@@ -92,6 +92,12 @@ export const initiateLogin = async (req, res) => {
     if (!user.isVerified)
       return res.status(401).json({ message: "Verify email first" });
 
+    if (!password || !user.password) {
+      return res.status(400).json({ 
+        message: !user.password ? "This account was created using Google. Please login with Google." : "Password is required" 
+      });
+    }
+
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ message: "Invalid credentials" });
 

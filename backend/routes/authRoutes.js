@@ -12,11 +12,13 @@ import {
 import auth from "../middleware/auth.js";
 import passport from "passport";
 
+import { authLimiter } from "../middleware/rateLimiter.js";
+
 const router = express.Router();
 
-router.post("/register", registerUser);
-router.post("/verify-email", verifyRegisterOtp);
-router.post("/login", initiateLogin);
+router.post("/register", authLimiter, registerUser);
+router.post("/verify-email", authLimiter, verifyRegisterOtp);
+router.post("/login", authLimiter, initiateLogin);
 router.post("/logout", logoutUser);
 
 // Google OAuth Routes
@@ -31,7 +33,7 @@ router.get(
 );
 
 router.get("/profile", auth, getUserProfile);
-router.post("/forgot-password", forgotPassword);
-router.post("/reset-password", resetPassword);
+router.post("/forgot-password", authLimiter, forgotPassword);
+router.post("/reset-password", authLimiter, resetPassword);
 
 export default router;
