@@ -3,15 +3,12 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { SocketProvider } from './context/SocketContext';
 import HotspotMap from './pages/driver/HotspotMap';
-
 import Home from './pages/Home';
-
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import VerifyOtp from './pages/auth/VerifyOtp';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
-
 import DriverDashboard from './pages/driver/Dashboard';
 import ReportAccident from './pages/driver/ReportAccident';
 import MyReports from './pages/driver/MyReports';
