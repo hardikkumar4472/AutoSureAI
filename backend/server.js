@@ -46,7 +46,7 @@ if (process.env.NODE_ENV === "production") {
 const app = express();
 
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:3000", "https://autosureml.onrender.com", "https://autosureai.onrender.com"], 
+  origin: ["http://localhost:5173", "http://localhost:3000", "https://autosureml.onrender.com", "https://autosureai.onrender.com", "https://autosureai.vercel.app"], 
   credentials: true,
   exposedHeaders: ["X-Cache"]
 }));
@@ -121,7 +121,10 @@ const PORT = process.env.PORT || 8000;
 const server = http.createServer(app);
 
 export const io = new IOServer(server, {
-  cors: { origin: "*" },
+  cors: { 
+    origin: ["http://localhost:5173", "http://localhost:3000", "https://autosureai.vercel.app"],
+    credentials: true 
+  },
 });
 
 import { setIO } from "./services/notificationService.js";
