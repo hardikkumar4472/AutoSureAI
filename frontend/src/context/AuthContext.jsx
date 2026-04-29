@@ -134,7 +134,6 @@ export const AuthProvider = ({ children }) => {
     resetPassword,
     logout,
     isAuthenticated: !!user,
-    isAuthenticated: !!user,
     isAdmin: user?.isAdmin || user?.role === 'admin',
     isAgent: user?.isAgent || user?.role === 'agent',
     isTraffic: user?.isTraffic || user?.role === 'traffic',
