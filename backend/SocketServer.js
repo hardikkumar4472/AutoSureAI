@@ -23,11 +23,9 @@ const io = new IOServer(server, {
 
 io.on("connection", (socket) => {
   console.log("Socket connected:", socket.id);
-
   socket.on("join", (userId) => {
     if (userId) socket.join(`user_${userId}`);
   });
-
   socket.on("join_claim", (claimId) => {
     if (claimId) socket.join(`claim_${claimId}`);
   });
